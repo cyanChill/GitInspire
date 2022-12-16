@@ -1,0 +1,4 @@
+# Don't push python virtual environment folder
+venv
+# Don't push Environment Variables file
+*/.env
