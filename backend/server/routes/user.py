@@ -27,6 +27,6 @@ def userContributions(userId):
 
 
 # Route to delete account
-@bp.route("/<int:userId>/delete", ["DELETE"])
+@bp.route("/<int:userId>/delete", methods=["DELETE"])
 def deleteAccount(userId):
     return jsonify({"message": "Deleted account."})

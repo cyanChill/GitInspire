@@ -10,9 +10,9 @@ def getRepositories():
 
 # Route to filter repositories
 @bp.route("/filter")
-def repositoryInfo():
+def filteredRepositories():
     # Look for stuff in query string
-    return jsonify({"message": "Basic repository info"})
+    return jsonify({"message": "Filtered repositories."})
 
 
 # Route to get information on a specific repository
