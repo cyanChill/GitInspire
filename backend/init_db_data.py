@@ -12,6 +12,8 @@ from server.models.Repository import Repository
 from server.models.RepoAssociations import RepoLanguage, RepoTag
 from server.models.Tag import Tag
 from server.models.User import User
+from server.models.Report import Report
+from server.models.Log import Log
 
 app = Flask(__name__, instance_relative_config=True)
 
@@ -56,6 +58,24 @@ repositories = [
         "tags": ["web_development"],
     }
 ]
+# EXPERIMENTAL Data:
+reports = [
+    {
+        "repo_id": 407959883,
+        "tag_name": None,
+        "reason": "Dummy report",
+        "reported_by": 83375816,
+    }
+]
+logs = [
+    {
+        "action": "updated",
+        "type": "repository",
+        "repo_id": 407959883,
+        "tag_name": None,
+        "enacted_by": 83375816,
+    }
+]
 
 
 def normalizeStr(input_str):
@@ -87,7 +107,7 @@ with app.app_context():
         db.session.add(new_user)
 
     found_user = db.get_or_404(User, users[0]["id"])
-    print(found_user)
+    print("\n", found_user)
 
     for tg in primary_tags:
         new_primary_tag = Tag(name=normalizeStr(tg), display_name=tg, type="primary")
@@ -103,7 +123,7 @@ with app.app_context():
         db.session.add(new_tag)
 
     ex_tag = db.get_or_404(Tag, "web_development")
-    print(ex_tag)
+    print("\n", ex_tag)
 
     for repo in repositories:
         new_repo = Repository(
@@ -132,9 +152,39 @@ with app.app_context():
             db.session.add(new_repoTag)
 
     found_repo = db.get_or_404(Repository, repositories[0]["id"])
-    print(found_repo)
-    print("Languages:\n",found_repo.languages)
-    print("Tags:\n",found_repo.tags)
+    print("\n", found_repo)
+    print("Languages:\n", found_repo.languages)
+    print("Tags:\n", found_repo.tags)
+
+    # EXPERIMENTAL Tables:
+    for rpt in reports:
+        new_report = Report(
+            repo_id=rpt["repo_id"],
+            tag_name=rpt["tag_name"],
+            reason=rpt["reason"],
+            reported_by=rpt["reported_by"],
+        )
+        db.session.add(new_report)
+
+    all_reports = Report.query.all()
+    print("\n")
+    for rpt in all_reports:
+        print(f"{rpt}\nReport Id: {rpt.id}")
+
+    for lg in logs:
+        new_log = Log(
+            action=lg["action"],
+            type=lg["type"],
+            repo_id=lg["repo_id"],
+            tag_name=lg["tag_name"],
+            enacted_by=lg["enacted_by"],
+        )
+        db.session.add(new_log)
+
+    all_logs = Log.query.all()
+    print("\n")
+    for lg in all_logs:
+        print(f"{lg}\nLog Id: {lg.id}")
 
     # Uncomment below to commit these changes to database:
     # db.session.commit()
