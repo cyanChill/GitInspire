@@ -1,10 +1,13 @@
 import os
-from flask import Flask
+from flask import Flask, Blueprint
+from flask_cors import CORS
 
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    # NOTE: Make sure the origins matches with the frontend URL
+    CORS(app, origins=["http://localhost:3000", "https://repot.vercel.app"])
     app.config.from_mapping(
         SECRET_KEY="dev",
         # SQLALCHEMY_DATABASE_URI="sqlite:///repot.db",
@@ -23,19 +26,26 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Initialize database
+    # Initialize database & OAuth
     from server.db import init_app
+    from server.oath import init_OAuth
 
     init_app(app)
+    init_OAuth(app)
 
     # Register our routes
     from server.routes import auth, languages, random, repositories, tags, user
 
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(languages.bp)
-    app.register_blueprint(random.bp)
-    app.register_blueprint(repositories.bp)
-    app.register_blueprint(tags.bp)
-    app.register_blueprint(user.bp)
+    # Create API instance for passing blueprints
+    api = Blueprint("api", __name__, url_prefix="/api")
+
+    api.register_blueprint(auth.bp)
+    api.register_blueprint(languages.bp)
+    api.register_blueprint(random.bp)
+    api.register_blueprint(repositories.bp)
+    api.register_blueprint(tags.bp)
+    api.register_blueprint(user.bp)
+
+    app.register_blueprint(api)
 
     return app
