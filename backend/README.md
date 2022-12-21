@@ -1,4 +1,4 @@
-# Repot Server
+# Repot [Server]
 
 ## Setup
 
