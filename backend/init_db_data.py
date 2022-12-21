@@ -93,7 +93,7 @@ with app.app_context():
         new_lang = Language(name=normalizeStr(lang), display_name=lang)
         db.session.add(new_lang)
 
-    found_lang = db.get_or_404(Language, "javascript")
+    found_lang = Language.query.filter_by(name="javascript").first()
     print(found_lang)
 
     for usr in users:
@@ -106,8 +106,8 @@ with app.app_context():
         )
         db.session.add(new_user)
 
-    found_user = db.get_or_404(User, users[0]["id"])
-    print("\n", found_user)
+    found_user = User.query.filter_by(id=83375816).first()
+    print(found_user)
 
     for tg in primary_tags:
         new_primary_tag = Tag(name=normalizeStr(tg), display_name=tg, type="primary")
@@ -122,8 +122,8 @@ with app.app_context():
         )
         db.session.add(new_tag)
 
-    ex_tag = db.get_or_404(Tag, "web_development")
-    print("\n", ex_tag)
+    ex_tag = Tag.query.filter_by(name="web_development").first()
+    print(ex_tag)
 
     for repo in repositories:
         new_repo = Repository(
@@ -151,7 +151,7 @@ with app.app_context():
             new_repoTag = RepoTag(repo_id=new_repo.id, tag_name=found_tg.name)
             db.session.add(new_repoTag)
 
-    found_repo = db.get_or_404(Repository, repositories[0]["id"])
+    found_repo = Repository.query.filter_by(id=repositories[0]["id"]).first()
     print("\n", found_repo)
     print("Languages:\n", found_repo.languages)
     print("Tags:\n", found_repo.tags)
