@@ -7,10 +7,10 @@ from server.db import db
 
 # https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum
 class AccountStatusEnum(enum.Enum):
+    banned = 0
     user = 1
-    banned = 2
-    admin = 3
-    owner = 4
+    admin = 50
+    owner = 100
 
 
 class User(db.Model):

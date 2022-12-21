@@ -8,9 +8,9 @@ from server.db import db
 
 
 class LogActionEnum(enum.Enum):
+    banned = 0
     updated = 1
     deleted = 2
-    banned = 3
 
 
 class LogTypeEnum(enum.Enum):
