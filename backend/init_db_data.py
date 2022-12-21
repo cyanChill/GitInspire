@@ -10,10 +10,10 @@ from flask import Flask
 from server.models.Language import Language
 from server.models.Repository import Repository
 from server.models.RepoAssociations import RepoLanguage, RepoTag
-from server.models.Tag import Tag
-from server.models.User import User
+from server.models.Tag import Tag, TagTypeEnum
+from server.models.User import User, AccountStatusEnum
 from server.models.Report import Report
-from server.models.Log import Log
+from server.models.Log import Log, LogActionEnum, LogTypeEnum
 
 app = Flask(__name__, instance_relative_config=True)
 
@@ -94,7 +94,7 @@ with app.app_context():
         db.session.add(new_lang)
 
     found_lang = Language.query.filter_by(name="javascript").first()
-    print(found_lang)
+    print("[Language] As Dictionary:\n", found_lang.as_dict())
 
     for usr in users:
         new_user = User(
@@ -102,28 +102,34 @@ with app.app_context():
             username=usr["username"],
             avatar_url=usr["avatar_url"],
             github_created_at=usr["github_created_at"],
-            account_status=usr["account_status"],
+            # Don't just plug in strings for Enum values as it unreliably
+            # sets it as an Enum or a string (for data consistency)
+            account_status=AccountStatusEnum[usr["account_status"]],
         )
         db.session.add(new_user)
 
     found_user = User.query.filter_by(id=83375816).first()
-    print(found_user)
+    print("\n")
+    print("[User] As Dictionary:\n", found_user.as_dict())
 
     for tg in primary_tags:
-        new_primary_tag = Tag(name=normalizeStr(tg), display_name=tg, type="primary")
+        new_primary_tag = Tag(
+            name=normalizeStr(tg), display_name=tg, type=TagTypeEnum["primary"]
+        )
         db.session.add(new_primary_tag)
 
     for tg in user_generated_tags:
         new_tag = Tag(
             name=normalizeStr(tg),
             display_name=tg,
-            type="user_gen",
+            type=TagTypeEnum["user_gen"],
             suggested_by=found_user.id,
         )
         db.session.add(new_tag)
 
     ex_tag = Tag.query.filter_by(name="web_development").first()
-    print(ex_tag)
+    print("\n")
+    print("[Tag] As Dictionary:\n", ex_tag.as_dict())
 
     for repo in repositories:
         new_repo = Repository(
@@ -140,21 +146,18 @@ with app.app_context():
         db.session.add(new_repo)
 
         for idx, lang in enumerate(repo["languages"]):
-            found_lang = db.get_or_404(Language, lang)
             new_repoLang = RepoLanguage(
-                repo_id=new_repo.id, language_name=found_lang.name, is_primary=idx == 0
+                repo_id=new_repo.id, language_name=lang, is_primary=idx == 0
             )
             db.session.add(new_repoLang)
 
         for idx, tg in enumerate(repo["tags"]):
-            found_tg = db.get_or_404(Tag, tg)
-            new_repoTag = RepoTag(repo_id=new_repo.id, tag_name=found_tg.name)
+            new_repoTag = RepoTag(repo_id=new_repo.id, tag_name=tg)
             db.session.add(new_repoTag)
 
     found_repo = Repository.query.filter_by(id=repositories[0]["id"]).first()
-    print("\n", found_repo)
-    print("Languages:\n", found_repo.languages)
-    print("Tags:\n", found_repo.tags)
+    print("\n")
+    print("[Repository] As Dictionary:\n", found_repo.as_dict())
 
     # EXPERIMENTAL Tables:
     for rpt in reports:
@@ -169,12 +172,12 @@ with app.app_context():
     all_reports = Report.query.all()
     print("\n")
     for rpt in all_reports:
-        print(f"{rpt}\nReport Id: {rpt.id}")
+        print("[Report] As Dictionary:\n", rpt.as_dict())
 
     for lg in logs:
         new_log = Log(
-            action=lg["action"],
-            type=lg["type"],
+            action=LogActionEnum[lg["action"]],
+            type=LogTypeEnum[lg["type"]],
             repo_id=lg["repo_id"],
             tag_name=lg["tag_name"],
             enacted_by=lg["enacted_by"],
@@ -184,7 +187,10 @@ with app.app_context():
     all_logs = Log.query.all()
     print("\n")
     for lg in all_logs:
-        print(f"{lg}\nLog Id: {lg.id}")
+        print("[Log] As Dictionary:\n", lg.as_dict())
+
+    print("\n")
+    print("[User] Contributions:\n", found_user.contributions())
 
     # Uncomment below to commit these changes to database:
     # db.session.commit()

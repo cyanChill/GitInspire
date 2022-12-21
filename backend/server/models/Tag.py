@@ -25,5 +25,15 @@ class Tag(db.Model):
     # Relations with other tables:
     user = relationship("User", back_populates="suggested_tags")
 
+    def as_dict(self):
+        return {
+            "name": self.name,
+            "display_name": self.display_name,
+            "type": self.type.name,
+            "suggested_by": self.user.as_dict() if self.user else None,
+            "created_at": self.created_at.isoformat(),
+            "last_updated": self.last_updated.isoformat(),
+        }
+
     def __repr__(self):
-        return f"<Tag display_name='{self.display_name}' type='{self.type}' suggested_by='{self.user}'>"
+        return f"<Tag display_name='{self.display_name}' type='{self.type.name}' suggested_by='{self.user}'>"

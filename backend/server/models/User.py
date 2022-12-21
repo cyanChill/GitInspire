@@ -4,11 +4,12 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from server.db import db
+from server.utils import serialize_sqlalchemy_objs
 
 # https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum
 class AccountStatusEnum(enum.Enum):
-    banned = 0
-    user = 1
+    banned = 1
+    user = 2
     admin = 50
     owner = 100
 
@@ -31,5 +32,21 @@ class User(db.Model):
     suggested_tags = relationship("Tag", back_populates="user")
     suggested_repos = relationship("Repository", back_populates="user")
 
+    def contributions(self):
+        return {
+            "suggested_tags": serialize_sqlalchemy_objs(self.suggested_tags),
+            "suggested_repos": serialize_sqlalchemy_objs(self.suggested_repos),
+        }
+
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "avatar_url": self.avatar_url,
+            "github_created_at": self.github_created_at,
+            "account_status": self.account_status.name,
+            "last_updated": self.last_updated.isoformat(),
+        }
+
     def __repr__(self):
-        return f"<User username='{self.username}' id={self.id} status={self.account_status}>"
+        return f"<User username='{self.username}' id={self.id} status={self.account_status.name}>"

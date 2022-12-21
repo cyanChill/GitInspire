@@ -3,6 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from server.db import db
+from server.utils import serialize_sqlalchemy_objs
 
 
 class Repository(db.Model):
@@ -27,6 +28,42 @@ class Repository(db.Model):
 
     # Relations with other tables:
     user = relationship("User", back_populates="suggested_repos")
+
+    def as_dict(self):
+        # Sort the serialized "RepoLanguage" array, having the "is_primary=True"
+        # entry at the front. Then return only the "language" attribute value.
+        repo_languages = [
+            item["language"]
+            for item in sorted(
+                serialize_sqlalchemy_objs(self.languages),
+                key=lambda x: x["is_primary"],
+                reverse=True,
+            )
+        ]
+
+        repo_tags = [
+            {
+                "name": item["tag"]["name"],
+                "display_name": item["tag"]["display_name"],
+                "type": item["tag"]["type"],
+            }
+            for item in serialize_sqlalchemy_objs(self.tags)
+        ]
+
+        return {
+            "id": self.id,
+            "author": self.author,
+            "repo_name": self.repo_name,
+            "description": self.description,
+            "stars": self.stars,
+            "repo_link": self.repo_link,
+            "languages": repo_languages,
+            "primary_tag": self.primary_tag,
+            "tags": repo_tags,
+            "suggested_by": self.user.as_dict(),
+            "created_at": self.created_at.isoformat(),
+            "last_updated": self.last_updated.isoformat(),
+        }
 
     def __repr__(self):
         return f"<Repository repo_name='{self.repo_name}' author='{self.author}'>"

@@ -28,7 +28,16 @@ class Report(db.Model):
     def report_type(self):
         return "repository" if self.repo_id else "tag"
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "content_id": self.content_id,
+            "type": self.report_type,
+            "reason": self.reason,
+            "reported_by": self.user.as_dict(),
+            "created_at": self.created_at.isoformat(),
+            "last_updated": self.last_updated.isoformat(),
+        }
+
     def __repr__(self):
-        return (
-            f"<Report type='{self.report_type}' content_id='{self.content_id}' reporter='{self.user.username}'>"
-        )
+        return f"<Report type='{self.report_type}' content_id='{self.content_id}' reporter='{self.user.username}'>"

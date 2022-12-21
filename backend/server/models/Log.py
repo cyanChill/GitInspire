@@ -8,9 +8,9 @@ from server.db import db
 
 
 class LogActionEnum(enum.Enum):
-    banned = 0
-    updated = 1
-    deleted = 2
+    banned = 1
+    updated = 2
+    deleted = 3
 
 
 class LogTypeEnum(enum.Enum):
@@ -38,5 +38,16 @@ class Log(db.Model):
     def content_id(self):
         return self.repo_id or self.tag_name
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "action": self.action.name,
+            "content_id": self.content_id,
+            "type": self.type.name,
+            "enacted_by": self.user.as_dict(),
+            "created_at": self.created_at.isoformat(),
+            "last_updated": self.last_updated.isoformat(),
+        }
+
     def __repr__(self):
-        return f"<Log type='{self.type}' content_id='{self.content_id}' enacted_by='{self.user.username}'>"
+        return f"<Log type='{self.type.name}' content_id='{self.content_id}' enacted_by='{self.user.username}'>"
