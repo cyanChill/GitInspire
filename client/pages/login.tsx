@@ -22,10 +22,9 @@ export default function Login() {
       window.history.pushState({}, "", newUrl[0]);
 
       const requestData = { code: newUrl[1] };
-      const proxy_url = "http://localhost:5000/api/auth/authenticate";
       setData({ ...data, isLoading: true });
 
-      fetch(proxy_url, {
+      fetch("/api/auth/authenticate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
