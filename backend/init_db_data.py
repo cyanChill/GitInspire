@@ -27,9 +27,9 @@ except OSError:
 app.config.from_pyfile("config.py")
 
 # Initialize database & tables
-from server.db import init_app, db
+from server.db import init_db, db
 
-init_app(app, reset=True)
+init_db(app, reset=True)
 
 
 # Dummy data

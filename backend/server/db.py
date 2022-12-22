@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 # Function to initialize database & create tables if they weren't created.
-def init_app(app, reset=False):
+def init_db(app, reset=False):
     from server.models import (
         Language, Repository, RepoAssociations, Tag, User, Log, Report
     )
