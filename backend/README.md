@@ -10,6 +10,10 @@ There's some setup needed such as `SECRET_KEY` and `SQLALCHEMY_DATABASE_URI`.
 4. For having Github OAuth, we need to create a [Github OAuth app](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) and obtain values for `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`.
 5. We need a `GITHUB_REDIRECT_URI` which is the `Authorization callback URL` value for the Github OAuth app.
    > This value should refer to the `login` route on the client side.
+6. For the JWTs we create, we need a `JWT_SECRET_KEY` variable as well.
+   > Since we're storing these in cookies, we need to set `JWT_TOKEN_LOCATION = 'cookies'`
+   > We also provide a `JWT_ACCESS_TOKEN_EXPIRES` to set an expire time (in seconds) for the token. With this, we need to set `JWT_SESSION_COOKIE = False` as otherwise, `JWT_ACCESS_TOKEN_EXPIRES` won't take into effect.
+   > For production, we need `JWT_COOKIE_SECURE = True`.
 
 ## Initializing the Database
 

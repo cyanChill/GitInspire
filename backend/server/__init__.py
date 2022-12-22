@@ -26,10 +26,12 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Initialize database
-    from server.db import init_app
+    # Initialize database & JWT
+    from server.db import init_db
+    from server.jwt import init_jwt
 
-    init_app(app)
+    init_db(app)
+    init_jwt(app)
 
     # Register our routes
     from server.routes import auth, languages, random, repositories, tags, user
