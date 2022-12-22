@@ -12,7 +12,7 @@ There's some setup needed such as `SECRET_KEY` and `SQLALCHEMY_DATABASE_URI`.
    > This value should refer to the `login` route on the client side.
 6. For the JWTs we create, we need a `JWT_SECRET_KEY` variable as well.
    > Since we're storing these in cookies, we need to set `JWT_TOKEN_LOCATION = 'cookies'`
-   > We also provide a `JWT_ACCESS_TOKEN_EXPIRES` to set an expire time (in seconds) for the token. With this, we need to set `JWT_SESSION_COOKIE = False` as otherwise, `JWT_ACCESS_TOKEN_EXPIRES` won't take into effect.
+   > By default, **jwt cookies will expire when the session closes**. To change this, provide a `JWT_ACCESS_TOKEN_EXPIRES` and set `JWT_SESSION_COOKIE = False`.
    > For production, we need `JWT_COOKIE_SECURE = True`.
 
 ## Initializing the Database
