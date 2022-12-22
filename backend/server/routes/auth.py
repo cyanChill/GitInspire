@@ -144,15 +144,15 @@ def refresh_token():
     # Create the new access token
     current_user_id = get_jwt_identity()
     access_token = create_access_token(identity=current_user_id)
-
+    user_data = User.query.filter_by(id=current_user_id).first()
     # Set the JWT access cookie in the response
-    resp = jsonify({"refresh": True})
+    resp = jsonify({"refresh": True, "userData": user_data.as_dict()})
     set_access_cookies(resp, access_token)
     return resp
 
 
 # Send response to frontend to delete cookies to logout.
-@bp.route("/logout")
+@bp.route("/logout", methods=["POST"])
 def logout():
     resp = jsonify({"logout": True})
     unset_jwt_cookies(resp)
