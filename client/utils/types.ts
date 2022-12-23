@@ -12,7 +12,7 @@ enum UserAccountStatusEnum {
   owner = 100
 }
 
-export interface UserDataObj {
+export interface UserObj {
   id: number;
   username: string;
   avatar_url: string;

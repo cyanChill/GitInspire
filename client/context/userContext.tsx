@@ -11,13 +11,14 @@
 import { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { ReactChildren, UserDataObj } from "~utils/types";
+import { ReactChildren, UserObj } from "~utils/types";
 import { getCookie } from "~utils/cookies";
 
 interface UserContextInterface {
-  status: { errMsg: string; authErr: boolean; isLoading: boolean };
-  loggedIn: boolean;
-  userData: UserDataObj | null;
+  errors: { errMsg: string; authErr: boolean };
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  user: UserObj | null;
   authenticateFromCode: () => void;
   refreshSession: () => void;
   logout: () => void;
@@ -30,13 +31,10 @@ export const UserContext = createContext<UserContextInterface | undefined>(
 export default function UserContextProvider({ children }: ReactChildren) {
   const router = useRouter();
 
-  const [status, setStatus] = useState({
-    errMsg: "",
-    authErr: false,
-    isLoading: false,
-  });
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [errors, setErrors] = useState({ errMsg: "", authErr: false });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
   // "Logs" in user from temporary code provided by Github
   //  - NOTE: mainly to be used in the "/login" route
@@ -49,7 +47,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
       window.history.pushState({}, "", newUrl[0]);
 
       const requestData = { code: newUrl[1] };
-      setStatus((prev) => ({ ...prev, isLoading: true }));
+      setIsLoading(true);
 
       const res = await fetch("/api/auth/authenticate", {
         method: "POST",
@@ -59,14 +57,16 @@ export default function UserContextProvider({ children }: ReactChildren) {
       const data = await res.json();
 
       if (!res.ok) {
-        setStatus({ errMsg: "Login failed.", authErr: true, isLoading: false });
+        setErrors({ errMsg: "Login failed.", authErr: true });
+        setIsLoading(false);
         return;
       }
 
       // Successfully logged in
-      setUserData(data);
-      setLoggedIn(true);
-      setStatus({ errMsg: "", authErr: false, isLoading: false });
+      setUser(data);
+      setIsAuthenticated(true);
+      setErrors({ errMsg: "", authErr: false });
+      setIsLoading(false);
       // Redirect once we successfully logged in
       router.push("/");
     }
@@ -74,7 +74,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
 
   // Attempts to refresh session with access token
   const refreshSession = async () => {
-    setStatus((prev) => ({ ...prev, isLoading: true }));
+    setIsLoading(true);
 
     const res = await fetch("/api/auth/token/refresh", {
       method: "POST",
@@ -87,23 +87,24 @@ export default function UserContextProvider({ children }: ReactChildren) {
     if (!res.ok) {
       // Failed to refresh session - Revoke access to current user
       console.log("[UserContext] Failed to refresh session.");
-      setStatus((prev) => ({ ...prev, isLoading: false }));
-      setLoggedIn(false);
-      setUserData(null);
+      setIsLoading(false);
+      setIsAuthenticated(false);
+      setUser(null);
       return;
     }
 
     // Successfully refreshed session
     console.log("[UserContext] Successfully refreshed session.");
     const data = await res.json();
-    setStatus({ errMsg: "", authErr: false, isLoading: false });
-    setLoggedIn(true);
-    setUserData(data.userData);
+    setErrors({ errMsg: "", authErr: false });
+    setIsLoading(false);
+    setIsAuthenticated(true);
+    setUser(data.userData);
   };
 
   // Logouts current user and remove any HttpOnly cookies
   const logout = async () => {
-    setStatus((prev) => ({ ...prev, isLoading: true }));
+    setIsLoading(true);
 
     const res = await fetch("/api/auth/logout", {
       method: "POST",
@@ -111,9 +112,10 @@ export default function UserContextProvider({ children }: ReactChildren) {
     });
 
     console.log("[UserContext] Successfully logged out.");
-    setStatus({ errMsg: "", authErr: false, isLoading: false });
-    setLoggedIn(false);
-    setUserData(null);
+    setErrors({ errMsg: "", authErr: false });
+    setIsLoading(false);
+    setIsAuthenticated(false);
+    setUser(null);
     router.push("/");
   };
 
@@ -125,9 +127,10 @@ export default function UserContextProvider({ children }: ReactChildren) {
   return (
     <UserContext.Provider
       value={{
-        status,
-        loggedIn,
-        userData,
+        errors,
+        isLoading,
+        isAuthenticated,
+        user,
         authenticateFromCode,
         refreshSession,
         logout,
