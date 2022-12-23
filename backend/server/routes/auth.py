@@ -107,11 +107,13 @@ def authenicateOAuth():
         return jsonify({"message": "Failed to authenticate user."}), 401
 
     user_id = github_user_data["id"]
-    # Checks to see if user exist in database, if not, create new user
-    existing_user = User.query.filter_by(id=user_id).first()
+    existing_user = None
 
-    if not existing_user:
-        try:
+    try:
+        # Checks to see if user exist in database, if not, create new user
+        existing_user = User.query.filter_by(id=user_id).first()
+
+        if not existing_user:
             # Create new user
             existing_user = User(
                 id=user_id,
@@ -122,8 +124,8 @@ def authenicateOAuth():
             )
             db.session.add(existing_user)
             db.session.commit()
-        except:
-            return jsonify({"message": "Something went wrong with creating user."}), 500
+    except:
+        return jsonify({"message": "Something went wrong with creating user."}), 500
 
     # Generate JWT we'll be sending to the user
     #  Ref: https://flask-jwt-extended.readthedocs.io/en/3.0.0_release/tokens_in_cookies/

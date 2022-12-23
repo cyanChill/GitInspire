@@ -11,16 +11,16 @@
 import { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { ReactChildren, UserDataObj } from "../utils/types";
-import { getCookie } from "../utils/cookies";
+import { ReactChildren, UserDataObj } from "~utils/types";
+import { getCookie } from "~utils/cookies";
 
 interface UserContextInterface {
-  status: { errMsg: string; isLoading: boolean };
+  status: { errMsg: string; authErr: boolean; isLoading: boolean };
   loggedIn: boolean;
   userData: UserDataObj | null;
-  authenticateFromCode: () => {};
-  refreshSession: () => {};
-  logout: () => {};
+  authenticateFromCode: () => void;
+  refreshSession: () => void;
+  logout: () => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(
@@ -30,7 +30,11 @@ export const UserContext = createContext<UserContextInterface | undefined>(
 export default function UserContextProvider({ children }: ReactChildren) {
   const router = useRouter();
 
-  const [status, setStatus] = useState({ errMsg: "", isLoading: false });
+  const [status, setStatus] = useState({
+    errMsg: "",
+    authErr: false,
+    isLoading: false,
+  });
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
 
@@ -52,17 +56,17 @@ export default function UserContextProvider({ children }: ReactChildren) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
       });
+      const data = await res.json();
 
       if (!res.ok) {
-        setStatus({ errMsg: "Failed to login.", isLoading: false });
+        setStatus({ errMsg: "Login failed.", authErr: true, isLoading: false });
         return;
       }
 
       // Successfully logged in
-      const data = await res.json();
       setUserData(data);
       setLoggedIn(true);
-      setStatus({ errMsg: "", isLoading: false });
+      setStatus({ errMsg: "", authErr: false, isLoading: false });
       // Redirect once we successfully logged in
       router.push("/");
     }
@@ -83,7 +87,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
     if (!res.ok) {
       // Failed to refresh session - Revoke access to current user
       console.log("[UserContext] Failed to refresh session.");
-      setStatus({ errMsg: "", isLoading: false });
+      setStatus((prev) => ({ ...prev, isLoading: false }));
       setLoggedIn(false);
       setUserData(null);
       return;
@@ -92,7 +96,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
     // Successfully refreshed session
     console.log("[UserContext] Successfully refreshed session.");
     const data = await res.json();
-    setStatus({ errMsg: "", isLoading: false });
+    setStatus({ errMsg: "", authErr: false, isLoading: false });
     setLoggedIn(true);
     setUserData(data.userData);
   };
@@ -106,8 +110,8 @@ export default function UserContextProvider({ children }: ReactChildren) {
       headers: { "Content-Type": "application/json" },
     });
 
-    console.log("[UserContext] Successfully logged out.")
-    setStatus({ errMsg: "", isLoading: false });
+    console.log("[UserContext] Successfully logged out.");
+    setStatus({ errMsg: "", authErr: false, isLoading: false });
     setLoggedIn(false);
     setUserData(null);
     router.push("/");
