@@ -87,9 +87,12 @@ export default function UserContextProvider({ children }: ReactChildren) {
     if (!res.ok) {
       // Failed to refresh session - Revoke access to current user
       console.log("[UserContext] Failed to refresh session.");
+      const prevAuthState = isAuthenticated;
       setIsLoading(false);
       setIsAuthenticated(false);
       setUser(null);
+
+      if (prevAuthState) router.push("/");
       return;
     }
 
