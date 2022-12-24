@@ -6,7 +6,7 @@ import { IconType } from "react-icons";
 interface PgHdrProps {
   name: string;
   description?: string;
-  icon?: IconType;
+  icon?: { iconEl: IconType };
   clr?: { bkg: string; txt: string; txtAcc: string };
   className?: string;
 }
@@ -14,6 +14,7 @@ interface PgHdrProps {
 export default function PageHeader({
   name,
   description,
+  icon,
   clr = {
     bkg: "bg-white dark:bg-slate-800",
     txt: "text-slate-900 dark:text-white",
@@ -28,8 +29,8 @@ export default function PageHeader({
       {...rest}
     >
       <h1 className="inline-flex justify-center items-center gap-x-6">
-        {rest.icon && (
-          <rest.icon className="hidden min-[400px]:block shrink-0 text-5xl" />
+        {icon && (
+          <icon.iconEl className="hidden min-[400px]:block shrink-0 text-5xl" />
         )}{" "}
         <span className="text-2xl min-[400px]:text-3xl lg:text-4xl font-bold">
           {name}
