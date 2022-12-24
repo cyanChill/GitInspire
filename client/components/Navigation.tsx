@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 
 import { NAV_ROUTES } from "~data";
 import { RouteObj } from "~utils/types";
@@ -11,7 +12,7 @@ export default function Navigation() {
   const router = useRouter();
 
   const navRoutes = NAV_ROUTES.map((route) => {
-    const { href, security } = route;
+    const { href, name, security } = route;
     // Hide route that explicitly requires NO authentication.
     if (security === "no-auth" && isAuthenticated) return undefined;
     if (security === "auth" && !isAuthenticated) return undefined;
@@ -25,7 +26,21 @@ export default function Navigation() {
         ? href
         : href(isAuthenticated ? user?.id : undefined);
 
-    return { ...route, href: linkHref };
+    return {
+      name,
+      href: linkHref,
+      icon: route.icon ? (
+        <route.icon />
+      ) : (
+        <Image
+          src={user?.avatar_url ?? "/assets/default_avatar.png"}
+          alt={`${user?.username} profile picture`}
+          width={30}
+          height={30}
+          className="max-w-fit bg-slate-800 dark:bg-white rounded-full"
+        />
+      ),
+    };
   }).filter((item): item is RouteObj => !!item);
 
   return (
@@ -49,13 +64,13 @@ interface NavItemInterface {
 }
 
 const NavItem = ({ routeInfo, isActive }: NavItemInterface) => {
-  const { href, name } = routeInfo;
+  const { href, icon, name } = routeInfo;
 
   /* Classes for icons [Mobile] */
   const mobOnlyActive =
-    "translate-y-[-1.75rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-400 dark:bg-orange-500 text-white";
+    "translate-y-[-1.75rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-500 text-white";
   const mobOnlyHover =
-    "group-hover:translate-y-[-1.75rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 dark:group-hover:bg-orange-500 group-hover:text-white";
+    "group-hover:translate-y-[-1.75rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 group-hover:text-white";
   const iconMobClass = isActive ? mobOnlyActive : mobOnlyHover;
 
   /* Classes for icons [Desktop] */
@@ -66,20 +81,18 @@ const NavItem = ({ routeInfo, isActive }: NavItemInterface) => {
   return (
     <li
       key={name}
-      className={`group relative w-16 md:w-full transition text-center text-2xl md:text-3xl md:my-2 `}
+      className={`group relative w-16 md:w-full transition text-center text-3xl md:my-2 `}
     >
       <Link
         href={href}
         className={`flex flex-col md:flex-row justify-center md:justify-start items-center md:gap-4 md:px-2 md:py-3 md:rounded-xl ${iconDeskClass}`}
       >
         <span
-          className={`md:hidden navItemTransitions w-min h-min p-2 rounded-full outline-[6px] ${iconMobClass}`}
+          className={`md:hidden navItemTransitions w-min h-min p-1 rounded-full outline-[6px] ${iconMobClass}`}
         >
-          <routeInfo.icon />
+          {icon}
         </span>
-        <span className="hidden md:block">
-          <routeInfo.icon />
-        </span>
+        <span className="hidden md:block">{icon}</span>
         <span className="max-[400px]:hidden text-sm md:text-2xl font-medium md:font-normal">
           {name}
         </span>

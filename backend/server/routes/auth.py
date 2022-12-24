@@ -133,7 +133,7 @@ def authenicateOAuth():
     jwt_refresh_token = create_refresh_token(identity=user_id)
 
     # Pass serialized user data in response
-    resp = jsonify({"user_data": existing_user.as_dict()})
+    resp = jsonify({"userData": existing_user.as_dict()})
     set_access_cookies(resp, jwt_access_token)
     set_refresh_cookies(resp, jwt_refresh_token)
     return resp

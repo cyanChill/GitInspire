@@ -17,7 +17,7 @@ export const NAV_ROUTES = [
   },
   {
     href: (userId?: number) => `/profile/${userId}`,
-    icon: FaUserCircle,
+    icon: null,
     name: "Profile",
     security: "auth",
   },

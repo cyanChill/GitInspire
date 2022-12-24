@@ -63,7 +63,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
       }
 
       // Successfully logged in
-      setUser(data);
+      setUser(data.userData);
       setIsAuthenticated(true);
       setErrors({ errMsg: "", authErr: false });
       setIsLoading(false);
