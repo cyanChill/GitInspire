@@ -9,7 +9,12 @@ module.exports = {
     container: {
       center: true,
     },
-    extend: {},
+    extend: {
+      animation: { "load-in": "load-in 250ms ease-in-out forwards" },
+      keyframes: {
+        "load-in": { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+      },
+    },
   },
   plugins: [],
 };

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .navItemTransitions {
+    --delay: 50ms;
+    --duration: 200ms;
+
+    transition: outline var(--duration) ease-in-out var(--delay),
+      transform var(--duration) ease-in-out;
+  }
+}
 
 /* 
 :root {
