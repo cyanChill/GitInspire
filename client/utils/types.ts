@@ -4,24 +4,15 @@ export interface ReactChildren {
   children: React.ReactNode;
 }
 
-
-enum UserAccountStatusEnum {
-  banned = 1,
-  user = 2,
-  admin = 50,
-  owner = 100
-}
-
 export interface UserObj {
   id: number;
   username: string;
   avatar_url: string;
   github_created_at: Date;
-  account_status: UserAccountStatusEnum;
+  account_status: "banned" | "user" | "admin" | "owner";
   last_updated: Date;
 }
 
-
 export interface Generic_Obj {
-  [key: string]: any
+  [key: string]: any;
 }

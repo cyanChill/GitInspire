@@ -34,9 +34,9 @@ export default function Navigation() {
 
     /* Classes for icons [Mobile] */
     const mobOnlyActive =
-      "translate-y-[-1.75rem] outline outline-zinc-100 dark:outline-slate-900 text-white bg-orange-400 dark:bg-orange-500";
+      "translate-y-[-1.75rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-400 dark:bg-orange-500 text-white";
     const mobOnlyHover =
-      "outline-white dark:outline-slate-800 bg-white dark:bg-slate-800 group-hover:translate-y-[-1.75rem] group-hover:outline group-hover:outline-zinc-100 dark:group-hover:outline-slate-900 group-hover:text-white group-hover:bg-orange-400 dark:group-hover:bg-orange-500";
+      "group-hover:translate-y-[-1.75rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 dark:group-hover:bg-orange-500 group-hover:text-white";
     const iconMobClass = isActive ? mobOnlyActive : mobOnlyHover;
 
     /* Classes for icons [Desktop] */
@@ -61,15 +61,17 @@ export default function Navigation() {
           <span className="hidden md:block">
             <route.icon />
           </span>
-          <span className="text-sm font-medium md:text-2xl max-[400px]:hidden">{name}</span>
+          <span className="max-[400px]:hidden text-sm md:text-2xl font-medium md:font-normal">
+            {name}
+          </span>
         </Link>
       </li>
     );
   });
 
   return (
-    <nav className="z-50 fixed md:sticky md:top-0 bottom-0 md:bottom-auto w-full md:w-60 md:h-screen md:flex md:items-center bg-white dark:bg-slate-800 shadow-inner dark:shadow-xl md:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
-      <ul className="w-full flex md:flex-col justify-evenly items-center  md:items-start gap-2 md:gap-4 p-2">
+    <nav className="z-50 fixed md:sticky md:top-0 bottom-0 md:bottom-auto w-full md:w-60 md:h-screen md:flex md:items-center bg-white dark:bg-slate-800 shadow-inner md:shadow-xl dark:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
+      <ul className="w-full flex md:flex-col justify-evenly items-center md:items-start gap-2 md:gap-4 p-2">
         {navRoutes}
       </ul>
     </nav>

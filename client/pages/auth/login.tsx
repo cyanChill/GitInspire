@@ -15,7 +15,7 @@ const lato = Lato({
   variable: "--font-lato",
 });
 
-export default function Login() {
+export default function LoginPage() {
   const { errors, isLoading, isAuthenticated, authenticateFromCode } =
     useUserContext();
 
@@ -41,12 +41,11 @@ export default function Login() {
     return <Preloadercomp />;
   }
 
-  const btnBase = `${lato.variable} font-sans inline-flex justify-center items-center gap-2 w-full my-2 px-4 py-3 rounded-md text-base font-medium tracking-tight`;
-
-  const btnClasses = `${btnBase} bg-amber-500 dark:bg-orange-500 hover:bg-amber-600 hover:dark:bg-orange-600 hover:text-white`;
+  const btnBase = `w-full inline-flex justify-center items-center gap-2 px-4 py-3 my-2 ${lato.variable} font-sans text-base font-medium tracking-tight rounded-md`;
+  const btnClasses = `${btnBase} hover:text-white bg-amber-500 hover:bg-amber-600 dark:bg-orange-500 hover:dark:bg-orange-600`;
 
   return (
-    <div className="w-full max-w-xs h-full max-h-96 grid grid-rows-2 justify-items-center items-center bg-white dark:bg-slate-800 rounded-lg px-4 py-5 sm:px-6 sm:py-8 m-auto ring-1 ring-slate-900/5 shadow-xl">
+    <div className="animate-load-in w-full max-w-xs h-full max-h-96 grid grid-rows-2 justify-items-center items-center px-4 py-5 sm:px-6 sm:py-8 m-auto rounded-lg bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl">
       <div className="w-full inline-flex items-center justify-center p-2">
         <Repot
           aria-label="Repot logo"
@@ -66,12 +65,12 @@ export default function Login() {
             Sign In with Github
             <Github
               aria-label="Github logo"
-              className="shrink-0 max-h-[24px] max-[275px]:hidden"
+              className="shrink-0 max-[275px]:hidden max-h-[24px]"
             />
           </a>
           <button
             onClick={() => router.push("/")}
-            className={`${btnBase} hover:text-orange-500 hover:underline`}
+            className={`animate-[load-in_250ms_ease-in-out_300ms_forwards] ${btnBase} opacity-0 hover:text-orange-500 hover:underline`}
           >
             Return Home
           </button>

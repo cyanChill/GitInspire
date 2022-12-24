@@ -19,9 +19,9 @@ interface UserContextInterface {
   isLoading: boolean;
   isAuthenticated: boolean;
   user: UserObj | null;
-  authenticateFromCode: () => void;
-  refreshSession: () => void;
-  logout: () => void;
+  authenticateFromCode: () => Promise<void>;
+  refreshSession: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(
