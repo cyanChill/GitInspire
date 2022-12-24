@@ -1,4 +1,5 @@
 import React from "react";
+import {IconType} from 'react-icons'
 
 export interface ReactChildren {
   children: React.ReactNode;
@@ -16,3 +17,11 @@ export interface UserObj {
 export interface Generic_Obj {
   [key: string]: any;
 }
+
+export interface RouteObj {
+  href: string;
+  icon: IconType;
+  name: string;
+  security: "" | "no-auth" | "auth" | "admin" | "owner";
+}
+
