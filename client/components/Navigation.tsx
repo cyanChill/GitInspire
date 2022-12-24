@@ -58,12 +58,12 @@ export default function Navigation() {
   );
 }
 
-interface NavItemInterface {
+interface NavItemProps {
   routeInfo: RouteObj;
   isActive: boolean;
 }
 
-const NavItem = ({ routeInfo, isActive }: NavItemInterface) => {
+const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
   const { href, icon, name } = routeInfo;
 
   /* Classes for icons [Mobile] */
@@ -75,8 +75,8 @@ const NavItem = ({ routeInfo, isActive }: NavItemInterface) => {
 
   /* Classes for icons [Desktop] */
   const iconDeskClass = isActive
-    ? "md:bg-orange-500 md:text-white"
-    : "md:hover:bg-orange-400 md:hover:text-white";
+    ? "md:bg-gradient-to-r md:from-orange-500 md:to-amber-500 md:text-white"
+    : "md:hover:bg-gradient-to-r md:from-orange-400 md:to-amber-400 md:hover:text-white";
 
   return (
     <li

@@ -42,7 +42,8 @@ export default function LoginPage() {
   }
 
   const btnBase = `w-full inline-flex justify-center items-center gap-2 px-4 py-3 my-2 ${lato.variable} font-sans text-base font-medium tracking-tight rounded-md`;
-  const btnClasses = `${btnBase} hover:text-white bg-amber-500 hover:bg-amber-600 dark:bg-orange-500 hover:dark:bg-orange-600`;
+  const btnClasses = `${btnBase} hover:text-white bg-gradient-to-r from-amber-500 hover:from-amber-600 to-orange-500 hover:to-orange-600
+  `;
 
   return (
     <div className="animate-load-in w-full max-w-xs h-full max-h-96 grid grid-rows-2 justify-items-center items-center px-4 py-5 sm:px-6 sm:py-8 m-auto rounded-lg bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl">
