@@ -129,7 +129,7 @@ export default function Select({
         >
           <FiX />
         </button>
-        <span className="w-0.5 self-stretch bg-slate-900 dark:bg-white" />
+        <span className="w-0.5 self-stretch bg-slate-500 dark:bg-zinc-400" />
         <FiChevronDown />
       </div>
       {/* Selection menu (list of options) */}
