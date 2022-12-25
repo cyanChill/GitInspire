@@ -79,11 +79,8 @@ logs = [
 
 
 def normalizeStr(input_str):
-    normalized = (
-        "".join(ch for ch in input_str if ch.isalnum() or ch.isspace())
-        .lower()
-        .replace(" ", "_")
-    )
+    normalized = input_str.lower().replace(" ", "_")
+
     return normalized
 
 
