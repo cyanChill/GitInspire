@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { NAV_ROUTES } from "~data";
 import { RouteObj } from "~utils/types";
+import Repot from "~public/assets/repot.svg";
 import useUserContext from "~hooks/useUserContext";
 
 export default function Navigation() {
@@ -44,8 +45,13 @@ export default function Navigation() {
   }).filter((item): item is RouteObj => !!item);
 
   return (
-    <nav className="z-50 fixed md:sticky md:top-0 bottom-0 md:bottom-auto w-full md:w-60 md:h-screen md:flex md:items-center bg-white dark:bg-slate-800 shadow-inner md:shadow-xl dark:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
-      <ul className="w-full flex md:flex-col justify-evenly items-center md:items-start gap-2 md:gap-4 p-2">
+    <nav className="z-50 fixed sm:sticky sm:top-0 bottom-0 sm:bottom-auto w-full sm:w-24 sm:h-screen sm:flex sm:flex-col sm:items-center sm:gap-3 bg-white dark:bg-slate-800 shadow-inner sm:shadow-xl dark:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
+      <Repot
+        aria-label="Repot logo"
+        className="hidden sm:block max-w-[64px] max-h-[64px] my-5"
+      />
+
+      <ul className="w-full h-full flex sm:flex-col justify-evenly sm:justify-start items-center sm:items-start gap-3 p-2">
         {navRoutes.map((route) => (
           <NavItem
             key={route.name}
@@ -70,32 +76,38 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
   const mobOnlyActive =
     "translate-y-[-1.75rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-500 text-white";
   const mobOnlyHover =
-    "group-hover:translate-y-[-1.75rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 group-hover:text-white";
+    "group-hover:translate-y-[-1.75rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 text-slate-500 dark:text-zinc-400 group-hover:text-white";
   const iconMobClass = isActive ? mobOnlyActive : mobOnlyHover;
 
   /* Classes for icons [Desktop] */
   const iconDeskClass = isActive
-    ? "md:bg-gradient-to-r md:from-orange-500 md:to-amber-500 md:text-white"
-    : "md:hover:bg-gradient-to-r md:from-orange-400 md:to-amber-400 md:hover:text-white";
+    ? "sm:bg-gradient-to-r sm:from-orange-500 sm:to-amber-500 sm:text-white"
+    : "sm:hover:bg-gradient-to-r sm:from-orange-400 sm:to-amber-400 sm:hover:text-white";
 
   return (
     <li
       key={name}
-      className={`group relative w-16 md:w-full transition text-center text-3xl md:my-2 `}
+      className="group relative w-16 sm:w-full transition text-center text-2xl"
     >
       <Link
         href={href}
-        className={`flex flex-col md:flex-row justify-center md:justify-start items-center md:gap-4 md:px-2 md:py-3 md:rounded-xl ${iconDeskClass}`}
+        className={`flex flex-col justify-center items-center sm:gap-2 sm:p-1.5 sm:py-2 sm:rounded-xl ${iconDeskClass}`}
       >
         <span
-          className={`md:hidden navItemTransitions w-min h-min p-1 rounded-full outline-[6px] ${iconMobClass}`}
+          className={`sm:hidden navItemTransitions p-1 rounded-full outline-[6px] ${iconMobClass}`}
         >
           {icon}
         </span>
-        <span className="hidden md:block">{icon}</span>
-        <span className="max-[400px]:hidden text-sm md:text-2xl font-medium md:font-normal">
-          {name}
+        <span
+          className={`hidden sm:block ${
+            isActive
+              ? "text-white"
+              : "text-slate-500 dark:text-zinc-400 group-hover:text-white"
+          }`}
+        >
+          {icon}
         </span>
+        <span className="max-[400px]:hidden text-base font-medium">{name}</span>
       </Link>
     </li>
   );

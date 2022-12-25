@@ -14,9 +14,9 @@ export default function Layout({ children }: ReactChildren) {
   }
 
   return (
-    <div className="md:relative md:grid md:grid-cols-[min-content_1fr] max-w-full min-h-screen">
+    <div className="sm:relative sm:grid sm:grid-cols-[min-content_1fr] max-w-full min-h-screen">
       <Navigation />
-      <div className="container max-w-5xl min-h-screen p-4 md:px-6 overflow-x-hidden">{children}</div>
+      <div className="container max-w-5xl min-h-screen p-4 sm:px-6 overflow-x-hidden">{children}</div>
     </div>
   );
 }

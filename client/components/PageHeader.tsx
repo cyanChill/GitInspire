@@ -20,7 +20,7 @@ export default function PageHeader({
     txt: "text-slate-900 dark:text-white",
     txtAcc: "text-slate-500 dark:text-zinc-300",
   },
-  className,
+  className = "",
   ...rest
 }: PgHdrProps) {
   return (
