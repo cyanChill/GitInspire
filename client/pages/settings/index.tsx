@@ -1,5 +1,7 @@
 import useUserContext from "~hooks/useUserContext";
 import useThemeContext from "~hooks/useThemeContext";
+import Button from "~components/form/Button";
+
 
 export default function SettingsPage() {
   const { isAuthenticated, logout } = useUserContext();
@@ -7,9 +9,9 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <button onClick={toggleTheme}>Toggle Theme</button>
+      <Button onClick={toggleTheme}>Toggle Theme</Button>
 
-      {isAuthenticated && <button onClick={logout}>Logout</button>}
+      {isAuthenticated && <Button onClick={logout}>Logout</Button>}
     </div>
   );
 }

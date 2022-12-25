@@ -1,19 +1,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Lato } from "@next/font/google";
 import toast from "react-hot-toast";
 
 import useUserContext from "~hooks/useUserContext";
 import Repot from "~public/assets/repot.svg";
 import Github from "~public/assets/github.svg";
 import Preloadercomp from "~components/PreloaderComp";
+import Button from "~components/form/Button";
 
-const GITHUB_AUTH_URL = process.env.NEXT_PUBLIC_GITHUB_AUTH_URL;
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-lato",
-});
+const GITHUB_AUTH_URL = process.env.NEXT_PUBLIC_GITHUB_AUTH_URL || "";
 
 export default function LoginPage() {
   const { errors, isLoading, isAuthenticated, authenticateFromCode } =
@@ -41,10 +36,6 @@ export default function LoginPage() {
     return <Preloadercomp />;
   }
 
-  const btnBase = `w-full inline-flex justify-center items-center gap-2 px-4 py-3 my-2 ${lato.variable} font-sans text-base font-medium tracking-tight rounded-md`;
-  const btnClasses = `${btnBase} hover:text-white bg-gradient-to-r from-amber-500 hover:from-amber-600 to-orange-500 hover:to-orange-600
-  `;
-
   return (
     <div className="animate-load-in w-full max-w-xs h-full max-h-96 grid grid-rows-2 justify-items-center items-center px-4 py-5 sm:px-6 sm:py-8 m-auto rounded-lg bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl">
       <div className="w-full inline-flex items-center justify-center p-2">
@@ -62,19 +53,24 @@ export default function LoginPage() {
         </div>
       ) : (
         <div className="self-end w-full text-center">
-          <a href={GITHUB_AUTH_URL} className={`${btnClasses}`}>
+          <Button
+            href={GITHUB_AUTH_URL}
+            link={true}
+            className="w-full !p-4 !py-3"
+          >
             Sign In with Github
             <Github
               aria-label="Github logo"
               className="shrink-0 max-[275px]:hidden max-h-[24px]"
             />
-          </a>
-          <button
+          </Button>
+          <Button
             onClick={() => router.push("/")}
-            className={`animate-[load-in_250ms_ease-in-out_300ms_forwards] ${btnBase} opacity-0 hover:text-orange-500 hover:underline`}
+            clr={{ bkg: "", txt: "" }}
+            className="animate-[load-in_250ms_ease-in-out_300ms_forwards] opacity-0 hover:text-orange-500 hover:underline !shadow-none"
           >
             Return Home
-          </button>
+          </Button>
         </div>
       )}
     </div>
