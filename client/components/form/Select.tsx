@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FiCheck, FiChevronDown, FiX } from "react-icons/fi";
 
 export type SelectOption = {
@@ -43,7 +43,7 @@ export default function Select({
 
   const clearOptions = () => (multiple ? onChange([]) : onChange(undefined));
 
-  const selectOption = useCallback(
+  const selOption = useCallback(
     (opt: SelectOption) => {
       if (optionSelected(opt)) {
         multiple
@@ -63,7 +63,7 @@ export default function Select({
       // Open list when in focused
       if (["Enter", "Space"].includes(e.code)) {
         setIsOpen((prev) => !prev);
-        if (isOpen) selectOption(options[highlightedIdx]);
+        if (isOpen) selOption(options[highlightedIdx]);
       }
       // Moving up & down through the list
       if (["ArrowUp", "ArrowDown"].includes(e.code)) {
@@ -83,7 +83,7 @@ export default function Select({
     return () => {
       window.removeEventListener("keydown", handleKeyAction);
     };
-  }, [highlightedIdx, isOpen, options, selectOption]);
+  }, [highlightedIdx, isOpen, options, selOption]);
 
   const baseClasses =
     "w-full rounded-md bg-slate-100 dark:bg-slate-700 shadow-[inset_0_0_4px_0_rgba(0,0,0,0.5)] shadow-slate-300 dark:shadow-slate-600";
@@ -106,7 +106,7 @@ export default function Select({
               key={v.value}
               onClick={(e) => {
                 e.stopPropagation();
-                selectOption(v);
+                selOption(v);
               }}
               className="group inline-flex items-center gap-2 p-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500"
             >
@@ -145,7 +145,11 @@ export default function Select({
             label={o.label}
             isSel={optionSelected(o)}
             isHov={highlightedIdx === idx}
-            onClick={() => selectOption(o)}
+            onClick={(e) => {
+              e.stopPropagation();
+              selOption(o);
+              setIsOpen(false);
+            }}
             onMouseIn={() => setHighlightedIdx(idx)}
           />
         ))}
@@ -158,7 +162,7 @@ interface OptItemProps {
   label: string;
   isSel: boolean;
   isHov: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   onMouseIn: () => void;
 }
 
