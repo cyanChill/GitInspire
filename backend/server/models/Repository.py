@@ -1,6 +1,7 @@
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from server.db import db
 from server.utils import serialize_sqlalchemy_objs
@@ -15,7 +16,13 @@ class Repository(db.Model):
     repo_name = Column(String, nullable=False)
     description = Column(String)
     stars = Column(Integer, nullable=False)
-    repo_link = Column(String, nullable=False)
+    maintain_link = Column(String)
+
+    @hybrid_property
+    def repo_link(self):
+        # Will be a valid link as author & repo_name have specific naming
+        # conventions
+        return f"https://github.com/{self.author}/{self.repo_name}"
 
     # Stuff populated by our database
     languages = relationship("RepoLanguage", uselist=True, backref="repositories")
@@ -57,6 +64,7 @@ class Repository(db.Model):
             "description": self.description,
             "stars": self.stars,
             "repo_link": self.repo_link,
+            "maintain_link": self.maintain_link,
             "languages": repo_languages,
             "primary_tag": self.primary_tag,
             "tags": repo_tags,

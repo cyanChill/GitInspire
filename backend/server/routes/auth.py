@@ -85,6 +85,12 @@ def authenicateOAuth():
     try:
         # Get temporary code from frontend
         code = request.json["code"]
+        # Reduce calls to API by checking code length - at the time of writing,
+        # the code is 20 characters long
+        #   - Not sure if this number is fixed but 10 is a "safe" number
+        #     of characters for invalid code length
+        if len(code) < 10:
+            raise Exception("Invalid code")
         # Get access token (ie: Returns "access_token=blahblahblahblah")
         acs_tk_resp = requests.post(
             "https://github.com/login/oauth/access_token",
@@ -97,7 +103,7 @@ def authenicateOAuth():
         )
         access_token = parse_qs(acs_tk_resp.text)["access_token"][0]
 
-        # Request user data of authenticated user
+        # Get user data of authenticated user with their access token
         usr_dt_resp = requests.get(
             "https://api.github.com/user",
             headers={"Authorization": f"token {access_token}"},

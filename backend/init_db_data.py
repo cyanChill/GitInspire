@@ -14,6 +14,7 @@ from server.models.Tag import Tag, TagTypeEnum
 from server.models.User import User, AccountStatusEnum
 from server.models.Report import Report
 from server.models.Log import Log, LogActionEnum, LogTypeEnum
+from server.utils import normalizeStr
 
 app = Flask(__name__, instance_relative_config=True)
 
@@ -52,7 +53,6 @@ repositories = [
         "repo_name": "Battleship",
         "description": None,
         "stars": 0,
-        "repo_link": "https://github.com/cyanChill/Battleship",
         "languages": ["javascript", "css", "html"],
         "primary_tag": "project_idea",
         "tags": ["web_development"],
@@ -76,12 +76,6 @@ logs = [
         "enacted_by": 83375816,
     }
 ]
-
-
-def normalizeStr(input_str):
-    normalized = input_str.lower().replace(" ", "_")
-
-    return normalized
 
 
 with app.app_context():
@@ -135,7 +129,6 @@ with app.app_context():
             repo_name=repo["repo_name"],
             description=repo["description"],
             stars=repo["stars"],
-            repo_link=repo["repo_link"],
             primary_tag=repo["primary_tag"],
             suggested_by=found_user.id,
         )
