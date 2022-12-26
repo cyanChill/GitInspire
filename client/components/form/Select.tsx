@@ -99,12 +99,12 @@ export default function Select({
       tabIndex={0}
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
-      className={`relative flex justify-between items-center min-h-[2.5rem] p-1.5 ${baseClasses} hover:cursor-pointer`}
+      className={`relative flex justify-between items-center gap-x-1 min-h-[2.5rem] p-1.5 ${baseClasses} hover:cursor-pointer`}
     >
       {/* Displaying selected items */}
-      <span className="flex flex-wrap gap-2">
+      <span className="flex flex-wrap gap-2 overflow-hidden">
         {!multiple ? (
-          <>{value?.label || ""}</>
+          <span className="truncate">{value?.label || ""}</span>
         ) : (
           value.map((v) => (
             <button
@@ -113,10 +113,10 @@ export default function Select({
                 e.stopPropagation();
                 selOption(v);
               }}
-              className="group inline-flex items-center gap-2 p-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500"
+              className="truncate group inline-flex items-center gap-2 p-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500"
             >
-              {v.label}{" "}
-              <FiX className="group-hover:text-red-500 group-focus:text-red-500" />
+              <span className="truncate">{v.label}</span>
+              <FiX className="shrink-0 group-hover:text-red-500 group-focus:text-red-500" />
             </button>
           ))
         )}

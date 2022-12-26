@@ -1,3 +1,3 @@
 export const normalizeStr = (str: string) => {
-  return str.toLowerCase().trim().replace(" ", "_");
+  return str.toLowerCase().trim().replaceAll(" ", "_");
 };
