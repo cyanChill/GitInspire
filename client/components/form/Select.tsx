@@ -51,7 +51,12 @@ export default function Select({
           : onChange(undefined);
       } else {
         if (!multiple) onChange(opt);
-        else value.length !== max ? onChange([...value, opt]) : null;
+        else {
+          // Check to see if there's a similar "invalid object" in the value
+          // list and replace that value if it does
+          const filteredVals = value.filter((o) => o.value !== opt.value);
+          if (filteredVals.length !== max) onChange([...filteredVals, opt]);
+        }
       }
     },
     [max, multiple, onChange, value, optionSelected]

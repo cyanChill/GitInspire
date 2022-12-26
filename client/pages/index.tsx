@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { GiRollingDices } from "react-icons/gi";
 
+import { normalizeStr } from "~utils/helpers";
 import { SelectOption } from "~components/form/Select";
 import SEO from "~components/SEO";
 import PageHeader from "~components/PageHeader";
@@ -32,7 +33,7 @@ export default function Home() {
           description="Take a chance and find something new"
           icon={{ iconEl: GiRollingDices }}
           clr={{
-            bkg: "bg-gradient-to-r from-violet-500 dark:from-violet-600 via-purple-500 dark:via-purple-600 to-fuchsia-500 dark:to-fuchsia-600",
+            bkg: "bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600",
             txt: "text-slate-100 dark:text-white",
             txtAcc: "text-gray-100 dark:text-gray-200",
           }}
@@ -52,20 +53,40 @@ type StarType = {
   max: number | string;
 };
 
+type ResultType = {
+  data: { [x: string]: any } | null;
+  errMsg: string;
+};
+
+const MAX_LANG = 3;
+
 const RandomRepoForm = () => {
   const [langVals, setLangVals] = useState<SelectOption[]>([]);
+  const [suggLang, setSuggLang] = useState("");
   const [stars, setStars] = useState<StarType>({
     min: "",
     max: "",
   });
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<ResultType>({ data: null, errMsg: "" });
+
+  const addToLang = () => {
+    if (suggLang) {
+      if (langVals.length === MAX_LANG) return;
+      const newLang = { label: suggLang, value: normalizeStr(suggLang) };
+      // If suggested language is not in list of language criterias
+      if (!langVals.find((o) => o.value === newLang.value)) {
+        setLangVals((prev) => [...prev, newLang]);
+      }
+      setSuggLang("");
+    }
+  };
 
   const clearForm = () => {
     setLangVals([]);
     setStars({ min: "", max: "" });
   };
 
-  const findRepo = async (e: React.FormEvent<HTMLFormElement>) => {
+  const findRepo = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(
       `Form Data:\nLanguages: ${langVals.map((lng) => lng.label)}\nMin Stars: ${
@@ -91,9 +112,34 @@ const RandomRepoForm = () => {
         multiple={true}
         options={DUMMY_OPTIONS}
         value={langVals}
-        max={3}
+        max={MAX_LANG}
         onChange={setLangVals}
       />
+      <InputGroup label="Or Suggest Your Own" className="mt-3">
+        <div className="flex flex-nowrap">
+          <Input
+            type="text"
+            value={suggLang}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSuggLang(e.target.value)
+            }
+            onKeyDown={(e: KeyboardEvent) => {
+              if (e.code === "Enter") addToLang();
+            }}
+            className="w-full max-w-[10rem] rounded-r-none"
+          />
+          <Button
+            onClick={addToLang}
+            clr={{
+              bkg: "bg-gradient-to-r from-rose-400 hover:from-rose-500 to-pink-400 hover:to-pink-500",
+              txt: "text-white",
+            }}
+            className="rounded-l-none !m-0"
+          >
+            Add
+          </Button>
+        </div>
+      </InputGroup>
 
       <h2 className="overflow-y-clip text-xl font-semibold mt-4 mb-2">
         Star Range
@@ -104,7 +150,7 @@ const RandomRepoForm = () => {
             type="number"
             min={0}
             value={stars.min}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setStars((prev) => ({ ...prev, min: +e.target.value }))
             }
             className="w-full max-w-[10rem] text-right"
@@ -114,7 +160,7 @@ const RandomRepoForm = () => {
           <Input
             type="number"
             value={stars.max}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setStars((prev) => ({ ...prev, max: +e.target.value }))
             }
             className="w-full max-w-[10rem] text-right"
@@ -145,9 +191,10 @@ const RandomRepoForm = () => {
         </Button>
       </div>
 
-      {!!result && (
+      {(result.data || result.errMsg) && (
         <div>
           <hr />
+          {result.errMsg && <p>No repos found with these search criterias.</p>}
           <h2>Search Response</h2>
         </div>
       )}
