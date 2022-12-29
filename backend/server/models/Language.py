@@ -6,7 +6,7 @@ from server.db import db
 class Language(db.Model):
     __tablename__ = "languages"
 
-    # Stuff populated by Github
+    # Stuff populated by GitHub
     name = Column(String, primary_key=True)
     display_name = Column(String, nullable=False)
 

@@ -17,14 +17,14 @@ class AccountStatusEnum(enum.Enum):
 class User(db.Model):
     __tablename__ = "users"
 
-    # Stuff populated by Github
+    # Stuff populated by GitHub
     id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False)
     avatar_url = Column(String, nullable=False)
     github_created_at = Column(DateTime, nullable=False)
 
     account_status = Column(Enum(AccountStatusEnum), nullable=False)
-    user_notes = Column(String)
+    ban_reason = Column(String)
 
     last_updated = Column(DateTime, server_default=func.now(), onupdate=func.now())
 

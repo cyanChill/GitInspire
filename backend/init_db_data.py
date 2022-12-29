@@ -8,12 +8,11 @@ import os
 from flask import Flask
 
 from server.models.Language import Language
-from server.models.Repository import Repository
-from server.models.RepoAssociations import RepoLanguage, RepoTag
+from server.models.Repository import Repository, RepoLanguage, RepoTag
 from server.models.Tag import Tag, TagTypeEnum
 from server.models.User import User, AccountStatusEnum
-from server.models.Report import Report
-from server.models.Log import Log, LogActionEnum, LogTypeEnum
+from server.models.Report import Report, ContentTypeEnum
+from server.models.Log import Log, LogActionEnum
 from server.utils import normalizeStr
 
 app = Flask(__name__, instance_relative_config=True)
@@ -61,8 +60,8 @@ repositories = [
 # EXPERIMENTAL Data:
 reports = [
     {
-        "repo_id": 407959883,
-        "tag_name": None,
+        "type": "repository",
+        "content_id": 407959883,
         "reason": "Dummy report",
         "reported_by": 83375816,
     }
@@ -71,8 +70,7 @@ logs = [
     {
         "action": "updated",
         "type": "repository",
-        "repo_id": 407959883,
-        "tag_name": None,
+        "content_id": 407959883,
         "enacted_by": 83375816,
     }
 ]
@@ -152,8 +150,8 @@ with app.app_context():
     # EXPERIMENTAL Tables:
     for rpt in reports:
         new_report = Report(
-            repo_id=rpt["repo_id"],
-            tag_name=rpt["tag_name"],
+            type=ContentTypeEnum[rpt["type"]],
+            content_id=rpt["content_id"],
             reason=rpt["reason"],
             reported_by=rpt["reported_by"],
         )
@@ -167,9 +165,8 @@ with app.app_context():
     for lg in logs:
         new_log = Log(
             action=LogActionEnum[lg["action"]],
-            type=LogTypeEnum[lg["type"]],
-            repo_id=lg["repo_id"],
-            tag_name=lg["tag_name"],
+            type=ContentTypeEnum[lg["type"]],
+            content_id=lg["content_id"],
             enacted_by=lg["enacted_by"],
         )
         db.session.add(new_log)
