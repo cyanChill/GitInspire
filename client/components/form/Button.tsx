@@ -15,7 +15,7 @@ type ButtonProps = {
 } & (LinkBtnProps | BtnProps);
 
 const DEFAULT_COLORS = {
-  bkg: "bg-gradient-to-r from-amber-500 hover:from-amber-600 to-orange-500 hover:to-orange-600",
+  bkg: "bg-gradient-to-r from-amber-500 enabled:hover:from-amber-600 to-orange-500 enabled:hover:to-orange-600 disabled:opacity-25",
   txt: "text-white",
 };
 
@@ -27,7 +27,7 @@ export default function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const btnStyles = `inline-flex justify-center items-center gap-2 p-3 py-1.5 my-2 font-medium tracking-tight rounded-md shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
+  const btnStyles = `flex justify-center items-center gap-2 p-3 py-1.5 my-2 font-medium tracking-tight rounded-md shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
 
   if (link) {
     return (

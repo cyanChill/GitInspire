@@ -18,9 +18,7 @@ def getRandomRepository():
 
     # Get query string for "language" filter
     filtered_lang = [
-        normalizeStr(lang)
-        for lang in langs.lower().split(",")
-        if lang.strip() != ""
+        normalizeStr(lang) for lang in langs.lower().split(",") if lang.strip() != ""
     ]
     if len(filtered_lang) > 3:
         return jsonify({"message": "Too many languages."}), 422
@@ -32,7 +30,7 @@ def getRandomRepository():
     )
     # Get query string for "stars" filter
     #  - Create a random "min" value to reduce the chance of getting the
-    #    same results from the Github API route
+    #    same results from the GitHub API route
     randMin = random.randint(minStars, maxStars if maxStars != None else 10000)
     starsQuery = (
         f"stars:>={randMin}" if maxStars == None else f"stars:{randMin}..{maxStars}"
@@ -55,18 +53,7 @@ def getRandomRepository():
 
         if resp.status_code == 200:
             # Return up to 100 results to save on rate limit
-            return (
-                jsonify(
-                    {
-                        "query": {
-                            "languages": filtered_lang,
-                            "stars": {"min": minStars, "max": maxStars},
-                        },
-                        "results": data["items"],
-                    }
-                ),
-                200,
-            )
+            return jsonify({"results": data["items"]}), 200
         else:
             return jsonify({"message": "Something went wrong with your request."}), 503
     except:

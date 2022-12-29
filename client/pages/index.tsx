@@ -1,7 +1,9 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent } from "react";
+import toast from "react-hot-toast";
 import { GiRollingDices } from "react-icons/gi";
 
 import { normalizeStr } from "~utils/helpers";
+import { Generic_Obj } from "~utils/types";
 import { SelectOption } from "~components/form/Select";
 import SEO from "~components/SEO";
 import PageHeader from "~components/PageHeader";
@@ -9,6 +11,8 @@ import Select from "~components/form/Select";
 import Input from "~components/form/Input";
 import InputGroup from "~components/form/InputGroup";
 import Button from "~components/form/Button";
+import Spinner from "~components/Spinner";
+import BriefWidget from "~components/repository/BriefWidget";
 
 const DUMMY_OPTIONS = [
   { label: "JavaScript", value: "javascript" },
@@ -53,21 +57,15 @@ type StarType = {
   max: number | string;
 };
 
-type ResultType = {
-  data: { [x: string]: any } | null;
-  errMsg: string;
-};
-
 const MAX_LANG = 3;
 
 const RandomRepoForm = () => {
   const [langVals, setLangVals] = useState<SelectOption[]>([]);
   const [suggLang, setSuggLang] = useState("");
-  const [stars, setStars] = useState<StarType>({
-    min: "",
-    max: "",
-  });
-  const [result, setResult] = useState<ResultType>({ data: null, errMsg: "" });
+  const [stars, setStars] = useState<StarType>({ min: "", max: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState<Generic_Obj[] | null>(null);
+  const [display, setDisplay] = useState<Generic_Obj | null>(null);
 
   const addToLang = () => {
     if (suggLang) {
@@ -83,21 +81,72 @@ const RandomRepoForm = () => {
 
   const clearForm = () => {
     setLangVals([]);
+    setSuggLang("");
     setStars({ min: "", max: "" });
+    setResults(null);
+    setDisplay(null);
   };
 
-  const findRepo = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(
-      `Form Data:\nLanguages: ${langVals.map((lng) => lng.label)}\nMin Stars: ${
-        stars.min
-      }\nMax Stars: ${stars.max}`
+  const findRepo = async () => {
+    // Validation
+    const errors = [];
+    const langs = langVals
+      .map((lg) => `${lg.value}`)
+      .filter((lg) => !!lg.trim());
+    const langQueryString = langs.join(",");
+    if (stars.min < 0 || (stars.max !== "" && stars.min >= stars.max)) {
+      errors.push("Invalid values for star range.");
+    }
+    if (langs.length > MAX_LANG) {
+      errors.push(`Too many languages (max: ${MAX_LANG}).`);
+    }
+    if (errors.length > 0) {
+      errors.forEach((err) => toast.error(err));
+      return;
+    }
+
+    setIsLoading(true);
+    setResults(null);
+    setDisplay(null);
+    const res = await fetch(
+      `/api/random?minStars=${stars.min}&maxStars=${stars.max}&languages=${langQueryString}`
     );
 
-    /*
-      TODO: Send request to backend (/api/random?<query params>)
-        - Do form validation (ie: minStars < maxStars)
-    */
+    try {
+      const data = await res.json();
+      console.log(data);
+      if (!res.ok) {
+        toast.error(data.message);
+      } else if (data.results.length === 0) {
+        toast.error("No repos found with this search criteria.", {
+          duration: 5000,
+        });
+      } else {
+        const foundRepos: Generic_Obj[] = data.results;
+        const randIdx = Math.floor(Math.random() * foundRepos.length);
+        setDisplay(foundRepos[randIdx]);
+        setResults(foundRepos.filter((_, idx) => idx != randIdx));
+      }
+      setIsLoading(false);
+    } catch (err) {
+      toast.error("Something went wrong.");
+      setIsLoading(false);
+    }
+  };
+
+  const newDisplayRepo = () => {
+    if (!results || results.length === 0) {
+      // If no cached results, search with the current query
+      setDisplay(null);
+      findRepo();
+    } else {
+      // Get random value from cached results
+      const randIdx = Math.floor(Math.random() * results.length);
+      setDisplay(results[randIdx]);
+      setResults((prev) =>
+        !prev ? null : prev.filter((_, idx) => idx != randIdx)
+      );
+    }
   };
 
   return (
@@ -180,9 +229,10 @@ const RandomRepoForm = () => {
           Reset Filters
         </Button>
         <Button
+          disabled={isLoading}
           onClick={findRepo}
           clr={{
-            bkg: "bg-gradient-to-r from-cyan-500 hover:from-sky-500 to-blue-500 hover:to-indigo-500",
+            bkg: "bg-gradient-to-r from-cyan-500 enabled:hover:from-sky-500 to-blue-500 enabled:hover:to-indigo-500 disabled:opacity-25",
             txt: "text-white",
           }}
           className="!tracking-wide"
@@ -191,12 +241,19 @@ const RandomRepoForm = () => {
         </Button>
       </div>
 
-      {(result.data || result.errMsg) && (
-        <div>
+      {isLoading && <Spinner />}
+
+      {display && (
+        <>
           <hr />
-          {result.errMsg && <p>No repos found with these search criterias.</p>}
-          <h2>Search Response</h2>
-        </div>
+          <div className="mt-1.5">
+            <h2 className="my-3 mb-2 text-xl font-semibold">Result:</h2>
+            <BriefWidget data={display} fixedDim={true} />
+            <Button onClick={newDisplayRepo} className="ml-auto">
+              Next
+            </Button>
+          </div>
+        </>
       )}
     </section>
   );
