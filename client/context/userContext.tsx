@@ -34,7 +34,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
   const [errors, setErrors] = useState({ errMsg: "", authErr: false });
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserObj | null>(null);
 
   // "Logs" in user from temporary code provided by Github
   //  - NOTE: mainly to be used in the "/login" route

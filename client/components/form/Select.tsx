@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { FiCheck, FiChevronDown, FiX } from "react-icons/fi";
 
 export type SelectOption = {
@@ -31,7 +31,6 @@ export default function Select({
   onChange,
   options,
 }: SelectProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const optRef = useRef<HTMLUListElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIdx, setHighlightedIdx] = useState(0);
@@ -62,43 +61,34 @@ export default function Select({
     [max, multiple, onChange, value, optionSelected]
   );
 
-  useEffect(() => {
-    const handleKeyAction = (e: KeyboardEvent) => {
-      if (e.target !== containerRef.current) return;
-      // Open list when in focused
-      if (["Enter", "Space"].includes(e.code)) {
-        setIsOpen((prev) => !prev);
-        if (isOpen) selOption(options[highlightedIdx]);
-      }
-      // Moving up & down through the list
-      if (["ArrowUp", "ArrowDown"].includes(e.code)) {
-        if (!isOpen) setIsOpen(true);
-        // Keeping index in check (don't go beyond)
-        const scalar = e.code === "ArrowDown" ? 1 : -1;
-        const newVal = highlightedIdx + scalar;
-        if (newVal >= 0 && newVal < options.length) setHighlightedIdx(newVal);
-        optRef.current?.scrollBy({ top: scalar * 40 });
-      }
-      // Leave selection menu
-      if (e.code === "Escape") setIsOpen(false);
-    };
-
-    window.addEventListener("keydown", handleKeyAction);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyAction);
-    };
-  }, [highlightedIdx, isOpen, options, selOption]);
+  const handleKeyAction = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Open list when in focused
+    if (["Enter", "Space"].includes(e.code)) {
+      setIsOpen((prev) => !prev);
+      if (isOpen) selOption(options[highlightedIdx]);
+    }
+    // Moving up & down through the list
+    if (["ArrowUp", "ArrowDown"].includes(e.code)) {
+      if (!isOpen) setIsOpen(true);
+      // Keeping index in check (don't go beyond)
+      const scalar = e.code === "ArrowDown" ? 1 : -1;
+      const newVal = highlightedIdx + scalar;
+      if (newVal >= 0 && newVal < options.length) setHighlightedIdx(newVal);
+      optRef.current?.scrollBy({ top: scalar * 40 });
+    }
+    // Leave selection menu
+    if (e.code === "Escape") setIsOpen(false);
+  };
 
   const baseClasses =
     "w-full rounded-md bg-slate-100 dark:bg-slate-700 shadow-[inset_0_0_4px_0_rgba(0,0,0,0.5)] shadow-slate-300 dark:shadow-slate-600";
 
   return (
     <div
-      ref={containerRef}
       tabIndex={0}
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
+      onKeyDown={handleKeyAction}
       className={`relative flex justify-between items-center gap-x-1 min-h-[2.5rem] p-1.5 ${baseClasses} hover:cursor-pointer`}
     >
       {/* Displaying selected items */}
@@ -108,7 +98,11 @@ export default function Select({
         ) : (
           value.map((v) => (
             <button
+              type="button"
               key={v.value}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+              }}
               onClick={(e) => {
                 e.stopPropagation();
                 selOption(v);
@@ -124,6 +118,10 @@ export default function Select({
       {/* Controls (clear selection, open drop down) */}
       <div className="shrink-0 flex gap-1">
         <button
+          type="button"
+          onKeyDown={(e) => {
+            e.stopPropagation();
+          }}
           onClick={(e) => {
             e.stopPropagation();
             clearOptions();
