@@ -33,9 +33,9 @@ init_db(app, reset=True)
 
 
 # Dummy data
-languages = ["JavaScript", "HTML", "CSS", "Ruby on Rails"]
+languages = ["JavaScript", "HTML", "CSS", "TypeScript", "Python"]
 primary_tags = ["Abandoned", "Project Idea", "Tutorial", "Open Source"]
-user_generated_tags = ["Web Development", "Machine Learning"]
+user_generated_tags = ["Web Development", "Machine Learning", "Frontend", "Backend"]
 users = [
     {
         "id": 83375816,
@@ -45,6 +45,7 @@ users = [
         "account_status": "owner",
     }
 ]
+
 repositories = [
     {
         "id": 407959883,
@@ -119,6 +120,9 @@ with app.app_context():
     ex_tag = Tag.query.filter_by(name="web_development").first()
     print("\n")
     print("[Tag] As Dictionary:\n", ex_tag.as_dict())
+
+    print("\n[Database] Commited Languages, Tags, and Owner to database.\n")
+    db.session.commit()
 
     for repo in repositories:
         new_repo = Repository(

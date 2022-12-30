@@ -1,11 +1,23 @@
 from flask import Blueprint, g, request, jsonify, url_for
 
+from server.db import db
+from server.models.Tag import Tag, TagTypeEnum
+from server.utils import serialize_sqlalchemy_objs
+
 bp = Blueprint("tags", __name__, url_prefix="/tags")
 
 # Route to get all tags
 @bp.route("/")
 def getTags():
-    return jsonify({"primary": [], "user-gen": []})
+    primary_tags = Tag.query.filter_by(type="primary").all()
+    user_gen_tags = Tag.query.filter_by(type="user_gen").all()
+
+    return jsonify(
+        {
+            "primary": serialize_sqlalchemy_objs(primary_tags),
+            "user_gen": serialize_sqlalchemy_objs(user_gen_tags),
+        }
+    )
 
 
 # Route to create a tag

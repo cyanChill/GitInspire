@@ -1,9 +1,10 @@
-import { useState, ChangeEvent } from "react";
+import { useState, useMemo, ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { GiRollingDices } from "react-icons/gi";
 
 import { normalizeStr } from "~utils/helpers";
 import { Generic_Obj } from "~utils/types";
+import useRepotContext from "~hooks/useRepotContext";
 import { SelectOption } from "~components/form/Select";
 import SEO from "~components/SEO";
 import PageHeader from "~components/PageHeader";
@@ -13,18 +14,6 @@ import InputGroup from "~components/form/InputGroup";
 import Button from "~components/form/Button";
 import Spinner from "~components/Spinner";
 import BriefWidget from "~components/repository/BriefWidget";
-
-const DUMMY_OPTIONS = [
-  { label: "JavaScript", value: "javascript" },
-  { label: "TypeScript", value: "typescript" },
-  { label: "CSS", value: "css" },
-  { label: "HTML", value: "html" },
-  { label: "Ruby on Rails", value: "ruby_on_rails" },
-  { label: "Python", value: "python" },
-  { label: "Shell", value: "shell" },
-  { label: "C++", value: "c++" },
-  { label: "C#", value: "c#" },
-];
 
 export default function Home() {
   return (
@@ -60,12 +49,21 @@ type StarType = {
 const MAX_LANG = 3;
 
 const RandomRepoForm = () => {
+  const { languages } = useRepotContext();
+
   const [langVals, setLangVals] = useState<SelectOption[]>([]);
   const [suggLang, setSuggLang] = useState("");
   const [stars, setStars] = useState<StarType>({ min: "", max: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<Generic_Obj[] | null>(null);
   const [display, setDisplay] = useState<Generic_Obj | null>(null);
+
+  const SELECT_OPTS = useMemo(() => {
+    return languages.map((lang) => ({
+      label: lang.display_name,
+      value: lang.name,
+    }));
+  }, [languages]);
 
   const addToLang = () => {
     if (suggLang) {
@@ -159,7 +157,7 @@ const RandomRepoForm = () => {
       </h2>
       <Select
         multiple={true}
-        options={DUMMY_OPTIONS}
+        options={SELECT_OPTS}
         value={langVals}
         max={MAX_LANG}
         onChange={setLangVals}

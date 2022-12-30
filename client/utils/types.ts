@@ -13,6 +13,18 @@ export interface UserObj {
   last_updated: Date;
 }
 
+export interface LangObj {
+  name: string;
+  display_name: string;
+}
+
+export interface TagObj {
+  name: string;
+  display_name: string;
+  type: string;
+  suggested_by: UserObj | null;
+}
+
 export interface Generic_Obj {
   [key: string]: any;
 }
