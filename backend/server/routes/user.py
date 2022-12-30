@@ -14,7 +14,7 @@ def userInfo(userId):
     return jsonify({"message": "Basic user info"})
 
 
-# Route to refresh user info from Github API
+# Route to refresh user info from GitHub API
 @bp.route("/<int:userId>/refresh")
 def refreshUserInfo(userId):
     return jsonify({"message": "Route to 'refresh' user info."})

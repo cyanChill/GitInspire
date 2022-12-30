@@ -27,7 +27,7 @@ def suggestRepository():
     return jsonify({"message": "Suggested repository."})
 
 
-# Route to refresh repository info from Github API
+# Route to refresh repository info from GitHub API
 @bp.route("/<int:repoId>/refresh")
 def refreshRepositoryInfo(repoId):
     return jsonify({"message": "Route to 'refresh' repository info."})

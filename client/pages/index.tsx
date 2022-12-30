@@ -6,8 +6,8 @@ import { normalizeStr } from "~utils/helpers";
 import { Generic_Obj } from "~utils/types";
 import useRepotContext from "~hooks/useRepotContext";
 import { SelectOption } from "~components/form/Select";
-import SEO from "~components/SEO";
-import PageHeader from "~components/PageHeader";
+import SEO from "~components/layout/SEO";
+import PageHeader from "~components/layout/PageHeader";
 import Select from "~components/form/Select";
 import Input from "~components/form/Input";
 import InputGroup from "~components/form/InputGroup";
@@ -27,8 +27,8 @@ export default function Home() {
           icon={{ iconEl: GiRollingDices }}
           clr={{
             bkg: "bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600",
-            txt: "text-slate-100 dark:text-white",
-            txtAcc: "text-gray-100 dark:text-gray-200",
+            txt: "text-slate-100",
+            txtAcc: "text-gray-100",
           }}
         />
         <RandomRepoForm />

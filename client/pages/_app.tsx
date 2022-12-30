@@ -5,7 +5,7 @@ import type { AppProps } from "next/app";
 import RepotContextProvider from "~context/repotContext";
 import UserContextProvider from "~context/userContext";
 import ThemeContextProvider from "~context/themeContext";
-import Layout from "~components/Layout";
+import Layout from "~components/layout/Layout";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

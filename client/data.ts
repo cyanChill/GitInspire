@@ -5,6 +5,7 @@ import {
   FaHome,
   FaUserCircle,
 } from "react-icons/fa";
+import { IoCreate } from "react-icons/io5";
 
 export const NAV_ROUTES = [
   { href: "/", icon: FaHome, name: "Home", security: "" },
@@ -14,6 +15,12 @@ export const NAV_ROUTES = [
     icon: FaUserCircle,
     name: "Login",
     security: "no-auth",
+  },
+  {
+    href: "/create",
+    icon: IoCreate,
+    name: "Create",
+    security: "auth",
   },
   {
     href: (userId?: number) => `/profile/${userId}`,
@@ -27,5 +34,5 @@ export const NAV_ROUTES = [
     name: "Admin",
     security: "admin",
   },
-  { href: "/settings", icon: FaCog, name: "Settings", security: "" },
+  { href: "/misc", icon: FaCog, name: "Misc.", security: "" },
 ];

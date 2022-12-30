@@ -36,8 +36,8 @@ export default function Navigation() {
         <Image
           src={user?.avatar_url ?? "/assets/default_avatar.png"}
           alt={`${user?.username} profile picture`}
-          width={30}
-          height={30}
+          width={24}
+          height={24}
           className="max-w-fit bg-slate-800 dark:bg-white rounded-full"
         />
       ),
@@ -74,9 +74,9 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
 
   /* Classes for icons [Mobile] */
   const mobOnlyActive =
-    "translate-y-[-1.75rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-500 text-white";
+    "translate-y-[-1.5rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-500 text-white";
   const mobOnlyHover =
-    "group-hover:translate-y-[-1.75rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 text-slate-500 dark:text-zinc-400 group-hover:text-white";
+    "group-hover:translate-y-[-1.5rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 text-slate-500 dark:text-zinc-400 group-hover:text-white";
   const iconMobClass = isActive ? mobOnlyActive : mobOnlyHover;
 
   /* Classes for icons [Desktop] */
@@ -107,7 +107,7 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
         >
           {icon}
         </span>
-        <span className="max-[400px]:hidden text-base font-medium">{name}</span>
+        <span className="max-[400px]:hidden text-sm sm:text-base sm:font-medium">{name}</span>
       </Link>
     </li>
   );
