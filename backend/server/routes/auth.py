@@ -13,6 +13,9 @@ from flask_jwt_extended import (
     unset_jwt_cookies,
 )
 
+# For debugging
+import traceback
+
 from server.db import db
 from server.models.User import User, AccountStatusEnum
 
@@ -76,10 +79,10 @@ def get_user_from_jwt():
         g.user = None
 
 
-# The "login" route based off of temporary Github OAuth code (from frontend)
+# The "login" route based off of temporary GitHub OAuth code (from frontend)
 @bp.route("/authenticate", methods=["POST"])
 def authenicateOAuth():
-    # What we want as a response from Github API for authentication
+    # What we want as a response from GitHub API for authentication
     github_user_data = None
 
     try:
@@ -131,6 +134,8 @@ def authenicateOAuth():
             db.session.add(existing_user)
             db.session.commit()
     except:
+        # Randomly fails to log in sometimes
+        print(traceback.format_exc())
         return jsonify({"message": "Something went wrong with creating user."}), 500
 
     # Generate JWT we'll be sending to the user
@@ -153,6 +158,8 @@ def refresh_token():
     current_user_id = get_jwt_identity()
     access_token = create_access_token(identity=current_user_id)
     user_data = User.query.filter_by(id=current_user_id).first()
+    if user_data == None:
+        return jsonify({"message": "User not found."}), 500
     # Set the JWT access cookie in the response
     resp = jsonify({"refresh": True, "userData": user_data.as_dict()})
     set_access_cookies(resp, access_token)

@@ -5,14 +5,12 @@ import toast from "react-hot-toast";
 import useUserContext from "~hooks/useUserContext";
 import Repot from "~public/assets/repot.svg";
 import Github from "~public/assets/github.svg";
-import Preloadercomp from "~components/PreloaderComp";
 import Button from "~components/form/Button";
 
 const GITHUB_AUTH_URL = process.env.NEXT_PUBLIC_GITHUB_AUTH_URL || "";
 
 export default function LoginPage() {
-  const { errors, isLoading, isAuthenticated, authenticateFromCode } =
-    useUserContext();
+  const { errors, isAuthenticated, authenticateFromCode } = useUserContext();
 
   const router = useRouter();
   const [urlHasCode, setUrlHasCode] = useState(false);
@@ -31,10 +29,6 @@ export default function LoginPage() {
       toast.error(errors.errMsg);
     }
   }, [errors]);
-
-  if (isLoading || isAuthenticated) {
-    return <Preloadercomp />;
-  }
 
   return (
     <div className="animate-load-in w-full max-w-xs h-full max-h-96 grid grid-rows-2 justify-items-center items-center px-4 py-5 sm:px-6 sm:py-8 m-auto rounded-lg bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl">
@@ -67,7 +61,7 @@ export default function LoginPage() {
           <Button
             onClick={() => router.push("/")}
             clr={{ bkg: "", txt: "" }}
-            className="animate-[load-in_250ms_ease-in-out_300ms_forwards] opacity-0 hover:text-orange-500 hover:underline !shadow-none"
+            className="animate-[load-in_250ms_ease-in-out_300ms_forwards] opacity-0 hover:text-orange-500 hover:underline mx-auto !shadow-none"
           >
             Return Home
           </Button>

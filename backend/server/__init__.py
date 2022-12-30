@@ -12,6 +12,9 @@ def create_app(test_config=None):
         SECRET_KEY="dev",
         # SQLALCHEMY_DATABASE_URI="sqlite:///repot.db",
     )
+    # Fix issue with unexpected server connection closure
+    #  Ref: https://stackoverflow.com/a/61739721
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
