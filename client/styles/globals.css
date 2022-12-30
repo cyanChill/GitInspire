@@ -21,4 +21,15 @@
     transition: outline var(--duration) ease-in-out var(--delay),
       transform var(--duration) ease-in-out;
   }
+
+  .progress-bar-border {
+    --angle-width: calc(100% - 0.75rem);
+    clip-path: polygon(
+      /* Top Left */ 0% 0%,
+      /* Top Right */ var(--angle-width) 0,
+      /* Center Right*/ 100% 50%,
+      /* Bottom Right*/ var(--angle-width) 100%,
+      /* Bottom Left*/ 0% 100%
+    );
+  }
 }

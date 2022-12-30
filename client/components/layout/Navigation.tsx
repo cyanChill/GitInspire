@@ -45,7 +45,7 @@ export default function Navigation() {
   }).filter((item): item is RouteObj => !!item);
 
   return (
-    <nav className="z-50 fixed sm:sticky sm:top-0 bottom-0 sm:bottom-auto w-full sm:w-24 sm:h-screen sm:flex sm:flex-col sm:items-center sm:gap-3 bg-white dark:bg-slate-800 shadow-inner sm:shadow-xl dark:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
+    <nav className="z-50 sm:overflow-y-auto fixed sm:sticky sm:top-0 bottom-0 sm:bottom-auto w-full sm:w-24 sm:h-screen sm:flex sm:flex-col sm:items-center sm:gap-3 bg-white dark:bg-slate-800 shadow-inner sm:shadow-xl dark:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
       <Repot
         aria-label="Repot logo"
         className="hidden sm:block max-w-[64px] max-h-[64px] my-5"
