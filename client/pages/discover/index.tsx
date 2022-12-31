@@ -8,7 +8,7 @@ export default function DiscoverPage() {
   const callNotify = () => toast.success("Toast to discovering new things!");
 
   return (
-    <>
+    <div className="animate-load-in">
       <PageHeader
         name="Discover"
         description="Find inspiration from repositories suggested by fellow developers."
@@ -23,6 +23,6 @@ export default function DiscoverPage() {
       <Button onClick={callNotify} className="mt-10">
         Click for Toast
       </Button>
-    </>
+    </div>
   );
 }

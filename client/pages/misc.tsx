@@ -13,39 +13,41 @@ export default function MiscPage() {
   return (
     <>
       <SEO pageName="Misc." />
-      <PageHeader
-        name="Miscellaneous"
-        icon={{ iconEl: FaCog }}
-        clr={{
-          bkg: "bg-gradient-to-r from-teal-700 to-cyan-800",
-          txt: "text-slate-100",
-          txtAcc: "text-gray-100",
-        }}
-        className="dark:!shadow-slate-800"
-      />
-
-      <div className="flex flex-col gap-2 mt-8">
-        <Button
-          onClick={toggleTheme}
+      <div className="animate-load-in">
+        <PageHeader
+          name="Miscellaneous"
+          icon={{ iconEl: FaCog }}
           clr={{
-            bkg: "bg-gradient-to-r from-cyan-500 hover:from-sky-500 to-blue-500 hover:to-indigo-500",
-            txt: "text-white",
+            bkg: "bg-gradient-to-r from-teal-700 to-cyan-800",
+            txt: "text-slate-100",
+            txtAcc: "text-gray-100",
           }}
-        >
-          Toggle Theme
-        </Button>
+          className="dark:!shadow-slate-800"
+        />
 
-        {isAuthenticated && (
+        <div className="flex flex-col gap-2 mt-8">
           <Button
-            onClick={logout}
+            onClick={toggleTheme}
             clr={{
-              bkg: "bg-gradient-to-r from-orange-600 hover:from-red-600 to-red-500 hover:to-red-800",
+              bkg: "bg-gradient-to-r from-cyan-500 hover:from-sky-500 to-blue-500 hover:to-indigo-500",
               txt: "text-white",
             }}
           >
-            Logout
+            Toggle Theme
           </Button>
-        )}
+
+          {isAuthenticated && (
+            <Button
+              onClick={logout}
+              clr={{
+                bkg: "bg-gradient-to-r from-orange-600 hover:from-red-600 to-red-500 hover:to-red-800",
+                txt: "text-white",
+              }}
+            >
+              Logout
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );

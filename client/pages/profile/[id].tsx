@@ -1,3 +1,3 @@
 export default function UserProfilePage() {
-  return <div>User Profile Page</div>;
+  return <div className="animate-load-in">User Profile Page</div>;
 }

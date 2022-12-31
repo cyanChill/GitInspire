@@ -1,3 +1,3 @@
 export default function AdminPage() {
-  return <div>Admin Panel</div>;
+  return <div className="animate-load-in">Admin Panel</div>;
 }

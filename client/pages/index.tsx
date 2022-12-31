@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <SEO pageName="Home" />
 
-      <div className="relative rounded-3xl">
+      <div className="animate-load-in relative rounded-3xl">
         <PageHeader
           name="Find a Random Repository"
           description="Take a chance and find something new"
