@@ -1,5 +1,6 @@
 interface InputGroupProps {
   label: string;
+  required?: boolean;
   className?: string;
   children: JSX.Element;
   [x: string]: any;
@@ -7,6 +8,7 @@ interface InputGroupProps {
 
 export default function InputGroup({
   label,
+  required = false,
   className = "",
   children,
   ...rest
@@ -16,7 +18,10 @@ export default function InputGroup({
       <span
         className={`block mb-1 text-xs font-semibold tracking-wide ${className}`}
       >
-        {label}
+        {label}{" "}
+        {required && (
+          <span className="text-red-500 dark:text-red-400">*Required</span>
+        )}
       </span>
       {children}
     </label>

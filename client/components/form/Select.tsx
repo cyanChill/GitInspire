@@ -140,7 +140,7 @@ export default function Select({
         ref={optRef}
         className={`${
           isOpen ? "visible" : "hidden"
-        } overflow-y-auto absolute left-0 top-[calc(100%+1rem)] max-h-48 ${baseClasses}`}
+        } z-[1] overflow-y-auto absolute left-0 top-[calc(100%+1rem)] max-h-48 ${baseClasses}`}
       >
         {options.map((o, idx) => (
           <OptItem
