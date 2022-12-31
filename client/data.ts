@@ -17,9 +17,9 @@ export const NAV_ROUTES = [
     security: "no-auth",
   },
   {
-    href: "/create",
+    href: "/contribute",
     icon: IoCreate,
-    name: "Create",
+    name: "Contribute",
     security: "auth",
   },
   {
