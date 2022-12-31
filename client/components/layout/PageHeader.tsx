@@ -25,7 +25,7 @@ export default function PageHeader({
 }: PgHdrProps) {
   return (
     <header
-      className={`z-10 relative w-full inline-flex flex-col justify-center items-center p-4 py-6 rounded-2xl text-center shadow-xl shadow-neutral-300 dark:shadow-slate-700 ${clr.txt} ${clr.bkg} ${className}`}
+      className={`z-10 relative w-full inline-flex flex-col justify-center items-center p-4 py-6 rounded-2xl text-center shadow-lg shadow-neutral-300 dark:shadow-slate-700 ${clr.txt} ${clr.bkg} ${className}`}
       {...rest}
     >
       <h1 className="inline-flex justify-center items-center gap-x-6">

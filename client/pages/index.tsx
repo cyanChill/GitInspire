@@ -29,6 +29,7 @@ export default function Home() {
             txt: "text-slate-100",
             txtAcc: "text-gray-100",
           }}
+          className="shadow-xl"
         />
         <RandomRepoForm />
       </div>

@@ -1,3 +1,7 @@
+/*
+  Design Reference: https://tailwindui.com/components/application-ui/navigation/steps#component-ef491b1515ff05e8cc7429f37bc0fae5
+*/
+
 import { useEffect, useRef } from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
 
@@ -22,7 +26,7 @@ export default function ProgressBar({ steps, completed }: ProgressBarProps) {
   return (
     <div
       ref={barRef}
-      className="[&::-webkit-scrollbar]:hidden overflow-x-auto flex flex-wrap-none m-2 rounded-lg border-[3px] border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800"
+      className="[&::-webkit-scrollbar]:hidden overflow-x-auto flex flex-wrap-none my-2 rounded-lg border-[3px] border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800"
     >
       {steps.map((title, idx) => (
         <div
@@ -35,7 +39,7 @@ export default function ProgressBar({ steps, completed }: ProgressBarProps) {
               <AiFillCheckCircle className="shrink-0 h-7 sm:h-10 w-7 sm:w-10 text-orange-400" />
             ) : (
               <div
-                className={`shrink-0 h-7 sm:h-10 w-7 sm:w-10 flex items-center justify-center rounded-full border-2 text-sm sm:text-base font-semibold ${
+                className={`shrink-0 h-7 sm:h-10 w-7 sm:w-10 flex items-center justify-center rounded-full transition-colors border-2 text-sm sm:text-base font-semibold ${
                   idx == completed
                     ? "text-orange-400 border-orange-400"
                     : "text-gray-400 dark:text-gray-300"
@@ -46,7 +50,7 @@ export default function ProgressBar({ steps, completed }: ProgressBarProps) {
             )}
 
             <span
-              className={`pr-3 font-semibold ${
+              className={`pr-3 transition-colors font-semibold ${
                 idx == completed
                   ? "text-orange-400"
                   : idx > completed

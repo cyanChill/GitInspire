@@ -18,7 +18,6 @@ export default function DiscoverPage() {
           txt: "text-slate-100",
           txtAcc: "text-gray-100",
         }}
-        className="shadow-lg"
       />
 
       <Button onClick={callNotify} className="mt-10">
