@@ -16,13 +16,17 @@ export default function LoginPage() {
   const [urlHasCode, setUrlHasCode] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) router.replace("/");
-
-    if (router.asPath.startsWith("/auth/login?code=")) setUrlHasCode(true);
-    else setUrlHasCode(false);
-
-    authenticateFromCode();
+    if (router.asPath.startsWith("/auth/login?code=")) {
+      setUrlHasCode(true);
+      authenticateFromCode();
+    } else {
+      setUrlHasCode(false);
+    }
   }, []); /* eslint-disable-line */
+
+  useEffect(() => {
+    if (isAuthenticated) router.replace("/");
+  }, [isAuthenticated]); /* eslint-disable-line */
 
   useEffect(() => {
     if (errors.errMsg && errors.authErr) {

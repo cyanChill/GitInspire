@@ -40,12 +40,23 @@ export default function RepotContextProvider({ children }: ReactChildren) {
 
       if (langRes.ok) {
         const langData = await langRes.json();
-        setLanguages(langData.languages);
+        setLanguages(
+          langData.languages.sort((a: LangObj, b: LangObj) =>
+            a.name.localeCompare(b.name)
+          )
+        );
       }
 
       if (tagRes.ok) {
         const tagData = await tagRes.json();
-        setTags({ primary: tagData.primary, user_gen: tagData.user_gen });
+        setTags({
+          primary: tagData.primary.sort((a: TagObj, b: TagObj) =>
+            a.name.localeCompare(b.name)
+          ),
+          user_gen: tagData.user_gen.sort((a: TagObj, b: TagObj) =>
+            a.name.localeCompare(b.name)
+          ),
+        });
       }
     } catch (err) {
       console.log("Failed to get response from server.");

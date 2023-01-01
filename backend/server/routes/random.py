@@ -14,14 +14,14 @@ def getRandomRepository():
     maxStars = request.args.get("maxStars", default=None, type=int)
 
     if minStars < 0 or (maxStars != None and minStars >= maxStars):
-        return jsonify({"message": "Invalid values for star parameters."}), 422
+        return jsonify({"message": "Invalid values for star parameters."}), 400
 
     # Get query string for "language" filter
     filtered_lang = [
         normalizeStr(lang) for lang in langs.lower().split(",") if lang.strip() != ""
     ]
     if len(filtered_lang) > 3:
-        return jsonify({"message": "Too many languages."}), 422
+        return jsonify({"message": "Too many languages."}), 400
 
     langQuery = (
         ""
