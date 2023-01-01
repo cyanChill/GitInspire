@@ -53,8 +53,17 @@ def createTag():
     )
 
     # Check if tag already exists in our database
-    if Tag.query.filter_by(name=name).first() != None:
-        return jsonify({"message": "Tag already exists in our database."}), 200
+    existing_tag = Tag.query.filter_by(name=name).first()
+    if existing_tag != None:
+        return (
+            jsonify(
+                {
+                    "message": "Tag already exists in our database.",
+                    "tag": existing_tag.as_dict(),
+                }
+            ),
+            200,
+        )
 
     try:
         new_tag = Tag(
@@ -66,7 +75,10 @@ def createTag():
         db.session.add(new_tag)
         db.session.commit()
 
-        return jsonify({"message": "Successfully create tag."}), 200
+        return (
+            jsonify({"message": "Successfully create tag.", "tag": new_tag.as_dict()}),
+            200,
+        )
     except:
         print(traceback.format_exc())
         return jsonify({"message": "Failed to create tag."}), 500

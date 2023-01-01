@@ -81,7 +81,7 @@ export default function Select({
   };
 
   const baseClasses =
-    "w-full rounded-md bg-slate-100 dark:bg-slate-700 shadow-[inset_0_0_4px_0_rgba(0,0,0,0.5)] shadow-slate-300 dark:shadow-slate-600";
+    "w-full rounded-md bg-zinc-50 dark:bg-slate-700 shadow-[inset_0_0_4px_0_rgba(0,0,0,0.5)] shadow-slate-400 dark:shadow-slate-600";
 
   return (
     <div

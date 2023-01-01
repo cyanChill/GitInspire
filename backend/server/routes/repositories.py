@@ -80,12 +80,13 @@ def suggestRepository():
         return jsonify({"message": "Repository was not found."}), 500
 
     # Check if repository already exists in our database
-    if Repository.query.filter_by(id=repo_data["id"]).first() != None:
+    existing_repo = Repository.query.filter_by(id=repo_data["id"]).first()
+    if existing_repo != None:
         return (
             jsonify(
                 {
                     "message": "Repository already exists in our database.",
-                    "repo_id": repo_data["id"],
+                    "repository": existing_repo.as_dict(),
                 }
             ),
             200,
@@ -123,7 +124,7 @@ def suggestRepository():
         return jsonify({"message": "Failed to create repository."}), 500
 
     try:
-        # Create langauge relations with repository (if languages exist)
+        # Create langauge relations with repository
         if sorted_langs:
             for idx, lg in enumerate(sorted_langs):
                 new_lang_rel = RepoLanguage(
@@ -153,7 +154,6 @@ def suggestRepository():
                 "repository": Repository.query.filter_by(id=repo_data["id"])
                 .first()
                 .as_dict(),
-                "repo_id": repo_data["id"],
             }
         ),
         200,

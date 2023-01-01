@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FormEvent } from "react";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { IoCreate } from "react-icons/io5";
 
@@ -18,6 +19,7 @@ import TagSuggForm from "~components/page_forms/TagSuggForm";
 import ContributeSubmitForm, {
   FormDataType,
 } from "~components/page_forms/ContributeSubmitForm";
+import Spinner from "~components/Spinner";
 
 const DEFAULT_DATA: FormDataType = {
   formType: "",
@@ -30,10 +32,15 @@ const DEFAULT_DATA: FormDataType = {
 };
 
 export default function ContributePage() {
-  const { isBanned, isAccAge } = useUserContext();
+  const router = useRouter();
+
+  const { isAuthenticated, isLoading, isBanned, isAccAge } = useUserContext();
   const { tags } = useRepotContext();
 
   const [data, setData] = useState(DEFAULT_DATA);
+  const [doneInfo, setDoneInfo] = useState<{ redirect_link: string } | null>(
+    null
+  );
 
   const handleTypeSelection = (value: string) => {
     setData((prev) => ({ ...prev, formType: value }));
@@ -44,15 +51,20 @@ export default function ContributePage() {
     setData((prev) => ({ ...prev, ...fields }));
   };
 
-  const { completed, currStep, isLastStep, next, back } = useMultistepForm([
-    <ContributeTypeForm key="Step 1" handler={handleTypeSelection} />,
-    data.formType === "tag" ? (
-      <TagSuggForm key="Step 2" {...data} updateFields={updateField} />
-    ) : (
-      <RepoSuggForm key="Step 2" {...data} updateFields={updateField} />
-    ),
-    <ContributeSubmitForm key="Step 3" {...data} />,
-  ]);
+  const { completed, currStep, isLastStep, goTo, next, back } =
+    useMultistepForm([
+      <ContributeTypeForm key="Step 1" handler={handleTypeSelection} />,
+      data.formType === "tag" ? (
+        <TagSuggForm key="Step 2" {...data} updateFields={updateField} />
+      ) : (
+        <RepoSuggForm key="Step 2" {...data} updateFields={updateField} />
+      ),
+      <ContributeSubmitForm
+        key="Step 3"
+        {...data}
+        propCompleteState={setDoneInfo}
+      />,
+    ]);
 
   const handleNext = (e: FormEvent) => {
     e.preventDefault();
@@ -79,9 +91,45 @@ export default function ContributePage() {
     next();
   };
 
-  useEffect(() => {
+  const resetForm = () => {
     setData(DEFAULT_DATA);
-  }, []);
+    goTo(0);
+    setDoneInfo(null);
+  };
+
+  useEffect(() => {
+    resetForm();
+  }, []); /* eslint-disable-line */
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (doneInfo) {
+      next();
+      // Redirect to repository page after retrieval of completion data from
+      // final form
+      if (doneInfo.redirect_link) {
+        timeout = setTimeout(() => {
+          router.push(doneInfo.redirect_link);
+        }, 3000);
+      }
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [doneInfo, next]); /* eslint-disable-line */
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) router.push("/auth/login");
+  }, [isAuthenticated, isLoading]); /* eslint-disable-line */
+
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   if (isBanned) {
     return (
@@ -126,7 +174,7 @@ export default function ContributePage() {
         <form onSubmit={handleNext} className="animate-load-in mt-7">
           {currStep}
 
-          {completed !== 0 && (
+          {completed !== 0 && !doneInfo && (
             <div className="flex justify-end gap-3 mt-3">
               <Button type="button" onClick={back}>
                 Back
@@ -135,6 +183,31 @@ export default function ContributePage() {
             </div>
           )}
         </form>
+
+        {completed === 3 && (
+          <div className="animate-load-in flex flex-col items-center mt-10 text-center">
+            <p className="text-xl font-bold">
+              Successfully contributed to Repot!
+            </p>
+            {doneInfo?.redirect_link ? (
+              <p className="mt-1 italic">
+                Redirecting you to newly suggested repository...
+              </p>
+            ) : (
+              <Button
+                type="button"
+                onClick={resetForm}
+                clr={{
+                  bkg: "bg-gradient-to-r from-green-500 enabled:hover:from-green-500 to-emerald-500 enabled:hover:to-emerald-600",
+                  txt: "text-white",
+                }}
+                className="mt-5"
+              >
+                Submit
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </ContributePageWrapper>
   );

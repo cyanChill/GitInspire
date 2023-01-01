@@ -19,7 +19,7 @@ def isXMonthOld(datetimeObj, months):
 
 def filterLangs(langDict):
     if len(langDict) == 0:
-        return None
+        return []
 
     sortedLang = sorted(langDict.items(), key=lambda x: x[1], reverse=True)
     # 1st index in array is the primary language

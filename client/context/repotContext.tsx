@@ -22,13 +22,15 @@ export default function RepotContextProvider({ children }: ReactChildren) {
 
   // Function to add locally a tag [does not add to backend database]
   const addTag = (newTag: TagObj) => {
-    const exists = tags.user_gen.findIndex((el) => el.name === newTag.name);
-    if (exists > -1) return;
-
-    setTags((prev) => ({
-      primary: prev.primary,
-      user_gen: [...prev.user_gen, newTag],
-    }));
+    if (newTag.type === "user_gen") {
+      if (tags.user_gen.findIndex((el) => el.name === newTag.name) === -1) {
+        setTags((prev) => ({ ...prev, user_gen: [...prev.user_gen, newTag] }));
+      }
+    } else if (newTag.type === "primary") {
+      if (tags.primary.findIndex((el) => el.name === newTag.name) === -1) {
+        setTags((prev) => ({ ...prev, primary: [...prev.primary, newTag] }));
+      }
+    }
   };
 
   const loadData = async () => {
