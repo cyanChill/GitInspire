@@ -43,6 +43,7 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "avatar_url": self.avatar_url,
+            # A datetime.datetime object:
             "github_created_at": self.github_created_at,
             "account_status": self.account_status.name,
             "last_updated": self.last_updated.isoformat(),

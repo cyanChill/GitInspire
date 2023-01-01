@@ -22,6 +22,26 @@ from server.models.User import User, AccountStatusEnum
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+
+def not_banned():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            try:
+                verify_jwt_in_request()
+
+                if g.user.account_status.value > 1:
+                    return fn(*args, **kwargs)
+                else:
+                    return jsonify({"message": "Banned user is not allowed."}), 403
+            except:
+                return jsonify({"message": "User is not authenticated."}), 401
+
+        return decorator
+
+    return wrapper
+
+
 # Will can put "@admin_required" before routes that requires admin permissions
 #  Ref: https://flask-jwt-extended.readthedocs.io/en/stable/custom_decorators/
 def admin_required():

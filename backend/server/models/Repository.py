@@ -28,7 +28,8 @@ class Repository(db.Model):
 
     languages = relationship("RepoLanguage", uselist=True)
 
-    primary_tag = Column(String, ForeignKey("tags.name"))
+    _primary_tag = Column(String, ForeignKey("tags.name"))
+    primary_tag = relationship("Tag")
     tags = relationship("RepoTag", uselist=True)
 
     suggested_by = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -48,6 +49,12 @@ class Repository(db.Model):
             )
         ]
 
+        _p_tag = self.primary_tag.as_dict()
+        p_tag = {
+            "name": _p_tag["name"],
+            "display_name": _p_tag["display_name"],
+            "type": _p_tag["type"],
+        }
         repo_tags = [
             {
                 "name": item["tag"]["name"],
@@ -66,7 +73,7 @@ class Repository(db.Model):
             "repo_link": self.repo_link,
             "maintain_link": self.maintain_link,
             "languages": repo_languages,
-            "primary_tag": self.primary_tag,
+            "primary_tag": p_tag,
             "tags": repo_tags,
             "suggested_by": self.user.as_dict(),
             "last_updated": self.last_updated.isoformat(),

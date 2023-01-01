@@ -131,7 +131,7 @@ with app.app_context():
             repo_name=repo["repo_name"],
             description=repo["description"],
             stars=repo["stars"],
-            primary_tag=repo["primary_tag"],
+            _primary_tag=repo["primary_tag"],
             suggested_by=found_user.id,
         )
 
