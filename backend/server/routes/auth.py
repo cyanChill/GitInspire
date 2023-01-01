@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from flask import Blueprint, g, request, jsonify, current_app as app
 from functools import wraps
 import requests
@@ -5,6 +6,7 @@ from urllib.parse import parse_qs
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
+    get_jwt,
     get_jwt_identity,
     jwt_required,
     set_access_cookies,
@@ -97,6 +99,24 @@ def get_user_from_jwt():
         # No JWT token, didn't provide "X-CSRF-TOKEN" in request, or
         # error is thrown from query for user
         g.user = None
+
+
+# Runs after every request, regardless of route
+#  - Will refresh token 30 minutes before expiration
+#  - Ref: https://flask-jwt-extended.readthedocs.io/en/stable/refreshing_tokens/#implicit-refreshing-with-cookies
+@bp.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            set_access_cookies(response, access_token)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original response
+        return response
 
 
 # The "login" route based off of temporary GitHub OAuth code (from frontend)

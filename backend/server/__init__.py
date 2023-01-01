@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from flask import Flask, Blueprint
 from flask_cors import CORS
 
@@ -15,6 +16,8 @@ def create_app(test_config=None):
     # Fix issue with unexpected server connection closure
     #  Ref: https://stackoverflow.com/a/61739721
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
+    # Have access token expire after 3 hours
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
