@@ -104,7 +104,10 @@ with app.app_context():
 
     for tg in primary_tags:
         new_primary_tag = Tag(
-            name=normalizeStr(tg), display_name=tg, type=TagTypeEnum["primary"]
+            name=normalizeStr(tg),
+            display_name=tg,
+            type=TagTypeEnum["primary"],
+            suggested_by=found_user.id,
         )
         db.session.add(new_primary_tag)
 
@@ -120,9 +123,6 @@ with app.app_context():
     ex_tag = Tag.query.filter_by(name="web_development").first()
     print("\n")
     print("[Tag] As Dictionary:\n", ex_tag.as_dict())
-
-    print("\n[Database] Commited Languages, Tags, and Owner to database.\n")
-    db.session.commit()
 
     for repo in repositories:
         new_repo = Repository(
@@ -184,4 +184,4 @@ with app.app_context():
     print("[User] Contributions:\n", found_user.contributions())
 
     # Uncomment below to commit these changes to database:
-    # db.session.commit()
+    db.session.commit()

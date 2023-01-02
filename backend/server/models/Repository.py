@@ -28,7 +28,7 @@ class Repository(db.Model):
 
     languages = relationship("RepoLanguage", uselist=True)
 
-    _primary_tag = Column(String, ForeignKey("tags.name"))
+    _primary_tag = Column(String, ForeignKey("tags.name"), nullable=False)
     primary_tag = relationship("Tag")
     tags = relationship("RepoTag", uselist=True)
 

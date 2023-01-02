@@ -17,7 +17,7 @@ class Tag(db.Model):
     display_name = Column(String, nullable=False)
     type = Column(Enum(TagTypeEnum), nullable=False)
 
-    suggested_by = Column(Integer, ForeignKey("users.id"))
+    suggested_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="suggested_tags")
 
     def as_dict(self):
