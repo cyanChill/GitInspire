@@ -53,7 +53,7 @@ const useUserContext = () => {
       const redirectPath = sessionStorage.getItem("redirectPath");
       console.log("[redirectIfAuth] redirect path:", redirectPath);
       sessionStorage.removeItem("redirectPath");
-      router.push(redirectPath || "/");
+      router.replace(redirectPath || "/");
     }
   }, [isAuthenticated]); /* eslint-disable-line */
 

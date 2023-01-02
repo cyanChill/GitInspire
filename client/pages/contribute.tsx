@@ -203,7 +203,7 @@ export default function ContributePage() {
                 }}
                 className="mt-5"
               >
-                Submit
+                Contribute more?
               </Button>
             )}
           </div>
