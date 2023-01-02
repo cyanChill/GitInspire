@@ -10,7 +10,8 @@ import Button from "~components/form/Button";
 const GITHUB_AUTH_URL = process.env.NEXT_PUBLIC_GITHUB_AUTH_URL || "";
 
 export default function LoginPage() {
-  const { errors, isAuthenticated, authenticateFromCode } = useUserContext();
+  const { errors, isAuthenticated, redirectIfAuth, authenticateFromCode } =
+    useUserContext();
 
   const router = useRouter();
   const [urlHasCode, setUrlHasCode] = useState(false);
@@ -24,14 +25,13 @@ export default function LoginPage() {
     }
   }, []); /* eslint-disable-line */
 
+  // Handle redirect on succesfully authentication
   useEffect(() => {
-    if (isAuthenticated) router.replace("/");
+    if (isAuthenticated) redirectIfAuth();
   }, [isAuthenticated]); /* eslint-disable-line */
 
   useEffect(() => {
-    if (errors.errMsg && errors.authErr) {
-      toast.error(errors.errMsg);
-    }
+    if (errors.errMsg && errors.authErr) toast.error(errors.errMsg);
   }, [errors]);
 
   return (

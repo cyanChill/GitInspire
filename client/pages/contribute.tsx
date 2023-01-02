@@ -34,7 +34,7 @@ const DEFAULT_DATA: FormDataType = {
 export default function ContributePage() {
   const router = useRouter();
 
-  const { isAuthenticated, isLoading, isBanned, isAccAge } = useUserContext();
+  const { redirectIfNotAuth, isLoading, isBanned, isAccAge } = useUserContext();
   const { tags } = useRepotContext();
 
   const [data, setData] = useState(DEFAULT_DATA);
@@ -120,8 +120,8 @@ export default function ContributePage() {
   }, [doneInfo, next]); /* eslint-disable-line */
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) router.push("/auth/login");
-  }, [isAuthenticated, isLoading]); /* eslint-disable-line */
+    redirectIfNotAuth();
+  }, [redirectIfNotAuth]);
 
   if (isLoading) {
     return (

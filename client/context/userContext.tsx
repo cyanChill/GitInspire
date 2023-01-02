@@ -67,8 +67,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
       setIsAuthenticated(true);
       setErrors({ errMsg: "", authErr: false });
       setIsLoading(false);
-      // Redirect once we successfully logged in
-      router.push("/");
+      // Note: Handle redirect where we place this function
     }
   };
 
