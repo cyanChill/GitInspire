@@ -23,23 +23,47 @@ def getRepositories():
 def filteredRepositories():
     # Look for stuff in query string
     limit = request.args.get("limit", default=15, type=int)
-    if limit <= 0:
+    if limit != None and limit <= 0:
         limit = 15
     page = request.args.get("page", default=0, type=int)
-    if page < 0:
+    if page != None and page < 0:
         page = 0
 
     minStars = request.args.get("minStars", default=0, type=int)
-    if minStars < 0:
+    if minStars != None and minStars < 0:
         minStars = 0
     maxStars = request.args.get("maxStars", type=int)
-    if maxStars < 0:
+    if maxStars != None and maxStars < 0:
         maxStars = None
 
     primary_tag = request.args.get("primary_tag", type=str)
     tags = request.args.get("tags", type=str)
 
-    return jsonify({"message": "Filtered repositories."})
+    languages = request.args.get("languages", type=str)
+
+    print(
+        "Input Arguments\n",
+        page,
+        limit,
+        minStars,
+        maxStars,
+        primary_tag,
+        tags,
+        languages,
+    )
+
+    totalPages = 0
+    repositories = []
+    errors = []
+
+    return jsonify(
+        {
+            "page": page,
+            "totalPages": totalPages,
+            "repositories": repositories,
+            "errors": errors,
+        }
+    )
 
 
 # Route to get information on a specific repository
