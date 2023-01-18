@@ -56,7 +56,12 @@ export default function Navigation() {
           <NavItem
             key={route.name}
             routeInfo={route}
-            isActive={router.asPath === route.href}
+            /* To match navlink with routes with query params */
+            isActive={
+              route.href !== "/"
+                ? router.asPath.startsWith(route.href)
+                : router.asPath === route.href
+            }
           />
         ))}
       </ul>
@@ -107,7 +112,9 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
         >
           {icon}
         </span>
-        <span className="max-[400px]:hidden text-sm sm:text-base sm:font-medium">{name}</span>
+        <span className="max-[400px]:hidden text-sm sm:text-base sm:font-medium">
+          {name}
+        </span>
       </Link>
     </li>
   );

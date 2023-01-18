@@ -22,6 +22,23 @@ def getRepositories():
 @bp.route("/filter")
 def filteredRepositories():
     # Look for stuff in query string
+    limit = request.args.get("limit", default=15, type=int)
+    if limit <= 0:
+        limit = 15
+    page = request.args.get("page", default=0, type=int)
+    if page < 0:
+        page = 0
+
+    minStars = request.args.get("minStars", default=0, type=int)
+    if minStars < 0:
+        minStars = 0
+    maxStars = request.args.get("maxStars", type=int)
+    if maxStars < 0:
+        maxStars = None
+
+    primary_tag = request.args.get("primary_tag", type=str)
+    tags = request.args.get("tags", type=str)
+
     return jsonify({"message": "Filtered repositories."})
 
 
