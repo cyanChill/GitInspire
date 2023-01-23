@@ -25,7 +25,7 @@ const DEFAULT_DATA: FormDataType = {
   formType: "",
   author: "",
   repo_name: "",
-  primary_tag: { label: "", value: "" },
+  primary_tag: undefined,
   add_tags: [],
   new_tag_name: "",
   new_tag_type: "user_gen",
@@ -69,7 +69,11 @@ export default function ContributePage() {
   const handleNext = (e: FormEvent) => {
     e.preventDefault();
 
-    if (data.formType === "repository" && data.primary_tag.value === "") {
+    // Make sure a primary tag is selected & not empty
+    if (
+      data.formType === "repository" &&
+      (!data.primary_tag || data.primary_tag.value === "")
+    ) {
       toast.error(
         "Please select a primary tag for this repository that best fits."
       );

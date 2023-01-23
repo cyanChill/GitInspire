@@ -11,14 +11,14 @@
 import { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { ReactChildren, UserObj } from "~utils/types";
+import { ReactChildren, UserObjType } from "~utils/types";
 import { getCookie } from "~utils/cookies";
 
 interface UserContextInterface {
   errors: { errMsg: string; authErr: boolean };
   isLoading: boolean;
   isAuthenticated: boolean;
-  user: UserObj | null;
+  user: UserObjType | null;
   authenticateFromCode: () => Promise<void>;
   refreshSession: () => Promise<void>;
   logout: () => Promise<void>;
@@ -34,7 +34,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
   const [errors, setErrors] = useState({ errMsg: "", authErr: false });
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<UserObj | null>(null);
+  const [user, setUser] = useState<UserObjType | null>(null);
 
   // "Logs" in user from temporary code provided by Github
   //  - NOTE: mainly to be used in the "/login" route

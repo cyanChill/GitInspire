@@ -1,15 +1,15 @@
 import { createContext, useState, useEffect } from "react";
-import { LangObj, TagObj, ReactChildren } from "~utils/types";
+import { LangObjType, TagObjType, ReactChildren } from "~utils/types";
 
 interface TagsType {
-  primary: TagObj[];
-  user_gen: TagObj[];
+  primary: TagObjType[];
+  user_gen: TagObjType[];
 }
 
 interface RepotContextInterface {
-  languages: LangObj[];
+  languages: LangObjType[];
   tags: TagsType;
-  addTag: (newTag: TagObj) => void;
+  addTag: (newTag: TagObjType) => void;
 }
 
 export const RepotContext = createContext<RepotContextInterface | undefined>(
@@ -17,11 +17,11 @@ export const RepotContext = createContext<RepotContextInterface | undefined>(
 );
 
 export default function RepotContextProvider({ children }: ReactChildren) {
-  const [languages, setLanguages] = useState<LangObj[]>([]);
+  const [languages, setLanguages] = useState<LangObjType[]>([]);
   const [tags, setTags] = useState<TagsType>({ primary: [], user_gen: [] });
 
   // Function to add locally a tag [does not add to backend database]
-  const addTag = (newTag: TagObj) => {
+  const addTag = (newTag: TagObjType) => {
     if (newTag.type === "user_gen") {
       if (tags.user_gen.findIndex((el) => el.name === newTag.name) === -1) {
         setTags((prev) => ({ ...prev, user_gen: [...prev.user_gen, newTag] }));
@@ -43,7 +43,7 @@ export default function RepotContextProvider({ children }: ReactChildren) {
       if (langRes.ok) {
         const langData = await langRes.json();
         setLanguages(
-          langData.languages.sort((a: LangObj, b: LangObj) =>
+          langData.languages.sort((a: LangObjType, b: LangObjType) =>
             a.name.localeCompare(b.name)
           )
         );
@@ -52,10 +52,10 @@ export default function RepotContextProvider({ children }: ReactChildren) {
       if (tagRes.ok) {
         const tagData = await tagRes.json();
         setTags({
-          primary: tagData.primary.sort((a: TagObj, b: TagObj) =>
+          primary: tagData.primary.sort((a: TagObjType, b: TagObjType) =>
             a.name.localeCompare(b.name)
           ),
-          user_gen: tagData.user_gen.sort((a: TagObj, b: TagObj) =>
+          user_gen: tagData.user_gen.sort((a: TagObjType, b: TagObjType) =>
             a.name.localeCompare(b.name)
           ),
         });

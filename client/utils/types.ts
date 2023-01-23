@@ -4,28 +4,28 @@ export interface ReactChildren {
   children: React.ReactNode;
 }
 
-export interface UserObj {
+export type UserObjType = {
   id: number;
   username: string;
   avatar_url: string;
   github_created_at: Date;
   account_status: "banned" | "user" | "admin" | "owner";
   last_updated: Date;
-}
+};
 
-export interface LangObj {
+export type LangObjType = {
   name: string;
   display_name: string;
-}
+};
 
-export interface TagObj {
+export type TagObjType = {
   name: string;
   display_name: string;
   type: string;
-  suggested_by: UserObj | null;
-}
+  suggested_by: UserObjType | null;
+};
 
-export interface RepositoryObj {
+export type RepositoryObjType = {
   id: number;
   author: string;
   repo_name: string;
@@ -33,19 +33,21 @@ export interface RepositoryObj {
   stars: number;
   repo_link: string;
   maintain_link: string | null;
-  languages: LangObj[];
-  primary_tag: TagObj;
-  tags: TagObj[];
-  suggested_by: UserObj;
+  languages: LangObjType[];
+  primary_tag: TagObjType;
+  tags: TagObjType[];
+  suggested_by: UserObjType;
   last_updated: Date;
-}
+};
 
 export interface Generic_Obj {
   [key: string]: any;
 }
 
-export interface RouteObj {
+export type RouteObjType = {
   href: string;
   icon: JSX.Element;
   name: string;
-}
+};
+
+export type URLQueryValType = string | string[] | undefined;

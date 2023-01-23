@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
-import { RepositoryObj } from "~utils/types";
+import { RepositoryObjType } from "~utils/types";
 
 type RepoInfoCardProps = {
-  handleRefresh: (exists: boolean, refreshData?: RepositoryObj) => void;
+  handleRefresh: (exists: boolean, refreshData?: RepositoryObjType) => void;
   handleClose: () => void;
-  repository: RepositoryObj;
+  repository: RepositoryObjType;
 };
 
 export default function RepoInfoCard({

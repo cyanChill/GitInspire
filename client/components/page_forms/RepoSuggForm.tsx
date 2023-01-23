@@ -8,7 +8,7 @@ import InputGroup from "~components/form/InputGroup";
 type RepoSuggFormData = {
   author: string;
   repo_name: string;
-  primary_tag: SelectOption;
+  primary_tag: SelectOption | undefined;
   add_tags: SelectOption[];
 };
 

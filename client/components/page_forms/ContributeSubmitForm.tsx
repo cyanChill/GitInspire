@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 import useRepotContext from "~hooks/useRepotContext";
 import { getCookie } from "~utils/cookies";
-import { TagObj, RepositoryObj } from "~utils/types";
+import { TagObjType, RepositoryObjType } from "~utils/types";
 import { SelectOption } from "~components/form/Select";
 import Button from "~components/form/Button";
 
@@ -11,7 +11,7 @@ export type FormDataType = {
   formType: string;
   author: string;
   repo_name: string;
-  primary_tag: SelectOption;
+  primary_tag: SelectOption | undefined;
   add_tags: SelectOption[];
   new_tag_name: string;
   new_tag_type: "user_gen" | "primary";
@@ -19,8 +19,8 @@ export type FormDataType = {
 
 type ResponseType = {
   error?: string;
-  repository?: RepositoryObj;
-  tag?: TagObj;
+  repository?: RepositoryObjType;
+  tag?: TagObjType;
 };
 
 type ContributeFormProps = {

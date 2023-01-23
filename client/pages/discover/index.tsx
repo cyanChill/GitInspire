@@ -1,9 +1,11 @@
+import _ from "lodash";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { FaCompass } from "react-icons/fa";
 
-import { RepositoryObj } from "~utils/types";
+import { RepositoryObjType } from "~utils/types";
+import { fromURLQueryVal } from "~utils/helpers";
 import useRepotContext from "~hooks/useRepotContext";
 import PageHeader from "~components/layout/PageHeader";
 import Button from "~components/form/Button";
@@ -11,7 +13,7 @@ import RepoInfoCard from "~components/repository/RepoInfoCard";
 
 // Key is the page number of results for current search filter
 interface RepoResults {
-  [x: number]: RepositoryObj[];
+  [x: number]: RepositoryObjType[];
 }
 
 type SearchFilters = {
@@ -54,27 +56,16 @@ export default function DiscoverPage() {
     // Fetch results from database based on selected filters
     const { languages, minStars, maxStars, primary_tag, tags, page } =
       router.query;
-    let newPg: number = page && !isNaN(+page) ? +page : 0;
 
     /* Get filters based on URL query parameters */
+    let newPg: number = page && !isNaN(+page) && +page >= 0 ? +page : 0;
     let newFilters: SearchFilters = {};
-    if (languages) {
-      newFilters.languages = Array.isArray(languages)
-        ? languages
-        : languages.split(",");
-    }
-    if (minStars && Number.isInteger(+minStars)) {
-      newFilters.minStars = +minStars;
-    }
-    if (maxStars && Number.isInteger(+maxStars)) {
-      newFilters.maxStars = +maxStars;
-    }
-    if (primary_tag && !Array.isArray(primary_tag)) {
-      newFilters.primary_tag = primary_tag;
-    }
-    if (tags) {
-      newFilters.tags = Array.isArray(tags) ? tags : tags.split(",");
-    }
+
+    newFilters.languages = fromURLQueryVal.toArr(languages, ",");
+    newFilters.minStars = fromURLQueryVal.toPosInt(minStars);
+    newFilters.maxStars = fromURLQueryVal.toPosInt(maxStars);
+    newFilters.primary_tag = fromURLQueryVal.onlyStr(primary_tag);
+    newFilters.tags = fromURLQueryVal.toArr(tags, ",");
 
     console.log("newFilters:", newFilters);
     console.log("newPg:", newPg);
@@ -82,19 +73,21 @@ export default function DiscoverPage() {
     /* Get Fetch Query String */
     let fetchURL = `/api/repositories/filter?page=${newPg}`;
     for (const [k, v] of Object.entries(newFilters)) {
+      if (!v) continue;
       fetchURL += `&${k}=${Array.isArray(v) ? v.join(",") : v}`;
     }
     console.log(fetchURL);
 
     /*
       Determine whether we have a new filter or if we just changed pages
-        - If we just changed pages, add new results to cached results
-          - NOTE: Make sure the specified page doesn't exist in the cache;
-                  if it exists in the cache, serve that instead
+        - If we just changed pages, add new results to cached results if
+          not cached
         - If we have a new filter clear the cached results
     */
-    const isSameFilter = false;
-    // Return if the filter remained the same & the result already exists
+    // Use lodash's "isEqual" function to compare our filter objects for
+    // equality
+    const isSameFilter = _.isEqual(currFilters, newFilters);
+    // Return if the filter remained the same & result is cached
     if (isSameFilter && results[newPg]) return;
 
     /* Make Request (Let backend handle input validation) */
