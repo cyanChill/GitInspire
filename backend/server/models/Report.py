@@ -11,8 +11,9 @@ class ContentTypeEnum(enum.Enum):
     repository = 2
     tag = 3
     bug = 4
+    suggestion=5
     # Below won't be an option in an actual report
-    report = 5
+    report = 6
 
 
 class Report(db.Model):

@@ -3,6 +3,8 @@
 #  our database provider (such as Render) back to the database (or a
 #  new Postgres database as Render allows these database to last for
 #  90 days before we have to make a new one).
+#   - Based on "pull_db_data.py", we expect the database CSV files to be
+#     in the "instance" folder with the default naming scheme
 # ----------------------------------------------------------------------
 
 import os

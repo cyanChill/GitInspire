@@ -8,6 +8,9 @@
 #     planned closure and upload that data in a new instance of a
 #     Postgres database [can only have 1 free Postgres database
 #     instance at a time in Render which closes after 90 days]
+#
+# In the current configuration, the data pulled from the database will
+# be stored in CSV files in the "instance" folder 
 # ----------------------------------------------------------------------
 
 import os

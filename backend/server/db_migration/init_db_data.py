@@ -2,6 +2,7 @@
 # File to help with populating the database as since we're using "Render"
 # to host our PostgreSQL database & it's their policy to delete free-tier
 # databases after 90 days, this helps with preserving data.
+#  - This will RESET the database and load DUMMY DATA onto the database
 # ----------------------------------------------------------------------
 
 import os
