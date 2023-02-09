@@ -17,7 +17,15 @@ There's some setup needed such as `SECRET_KEY` and `SQLALCHEMY_DATABASE_URI`.
 
 ## Initializing the Database
 
-We can run `python init_db_data.py` within the `backend` directory to populate the database.
+We can run `python init_db_data.py` within the `backend` directory to populate the database with dummy data.
+
+### Pulling Data from Database & Pushing CSV data
+
+If for example we're using a provider that provides a database with a finite lifespan, you can utilize the provided `pull_db_data.py` file to pull the data from the database and store data from each class in it's own CSV file in the `instance` folder.
+> We run `python pull_db_data.py` to pull data from our database.
+
+To push the data from the CSV files created from the `pull_db_data.py` file, we run `python push_csv_data.py` to populate the database with previous data.
+> **Note:** This will reset all data in the database.
 
 ## Running the Server
 
