@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-import useRepotContext from "~hooks/useRepotContext";
+import useAppContext from "~hooks/useAppContext";
 import { getCookie } from "~utils/cookies";
 import { TagObjType, RepositoryObjType } from "~utils/types";
 import { SelectOption } from "~components/form/Select";
@@ -37,7 +37,7 @@ export default function ContributeSubmitForm({
   new_tag_type,
   propCompleteState,
 }: ContributeFormProps) {
-  const { addTag } = useRepotContext();
+  const { addTag } = useAppContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -107,7 +107,7 @@ export default function ContributeSubmitForm({
     <div className="animate-load-in flex flex-col items-center mt-10 text-center">
       <p className="text-xl font-bold">You&apos;re approaching the end.</p>
       <p className="mt-1">
-        There&apos;s one click left before you helped contributed to Repot!
+        There&apos;s one click left before you helped contributed to GitInspire!
       </p>
 
       <Button

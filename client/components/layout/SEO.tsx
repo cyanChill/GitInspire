@@ -16,7 +16,7 @@ interface SEOProps {
 }
 
 export default function SEO({
-  title = "Repot",
+  title = "GitInspire",
   description = "A platform to discover and bring life back to abandoned repositories and more.",
   pageName,
   canocical = DOMAIN,

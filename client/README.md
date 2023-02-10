@@ -1,4 +1,4 @@
-# Repot [Client]
+# GitInspire [Client]
 
 ## Setup
 

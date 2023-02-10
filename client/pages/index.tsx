@@ -4,7 +4,7 @@ import { GiRollingDices } from "react-icons/gi";
 
 import { normalizeStr } from "~utils/helpers";
 import { Generic_Obj } from "~utils/types";
-import useRepotContext from "~hooks/useRepotContext";
+import useAppContext from "~hooks/useAppContext";
 import Select, { SelectOption } from "~components/form/Select";
 import SEO from "~components/layout/SEO";
 import PageHeader from "~components/layout/PageHeader";
@@ -35,7 +35,7 @@ export default function Home() {
       </div>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold">Repot Stats</h2>
+        <h2 className="text-xl font-semibold">GitInspire Stats</h2>
       </section>
     </>
   );
@@ -49,7 +49,7 @@ type StarType = {
 const MAX_LANG = 3;
 
 const RandomRepoForm = () => {
-  const { languages } = useRepotContext();
+  const { languages } = useAppContext();
 
   const [langVals, setLangVals] = useState<SelectOption[]>([]);
   const [suggLang, setSuggLang] = useState("");

@@ -46,7 +46,7 @@ def getRandomRepository():
             auth=(app.config["GITHUB_CLIENT_ID"], app.config["GITHUB_CLIENT_SECRET"]),
             headers={
                 "Accept": "application/vnd.github.text-match+json",
-                "User-Agent": "repot-server",
+                "User-Agent": "gitinspire-server",
             },
         )
         data = resp.json()

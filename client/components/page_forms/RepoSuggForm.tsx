@@ -1,6 +1,6 @@
 import { useMemo, ChangeEvent } from "react";
 
-import useRepotContext from "~hooks/useRepotContext";
+import useAppContext from "~hooks/useAppContext";
 import Select, { SelectOption } from "~components/form/Select";
 import Input from "~components/form/Input";
 import InputGroup from "~components/form/InputGroup";
@@ -23,7 +23,7 @@ export default function RepoSuggForm({
   add_tags,
   updateFields,
 }: RepoSuggFormProps) {
-  const { tags } = useRepotContext();
+  const { tags } = useAppContext();
 
   const PRIMARY_TAGS = useMemo(
     () =>

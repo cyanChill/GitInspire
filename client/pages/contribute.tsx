@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { IoCreate } from "react-icons/io5";
 
 import useUserContext from "~hooks/useUserContext";
-import useRepotContext from "~hooks/useRepotContext";
+import useAppContext from "~hooks/useAppContext";
 import useMultistepForm from "~hooks/useMultistepForm";
 import { normalizeStr } from "~utils/helpers";
 import { ReactChildren } from "~utils/types";
@@ -35,7 +35,7 @@ export default function ContributePage() {
   const router = useRouter();
 
   const { redirectIfNotAuth, isLoading, isBanned, isAccAge } = useUserContext();
-  const { tags } = useRepotContext();
+  const { tags } = useAppContext();
 
   const [data, setData] = useState(DEFAULT_DATA);
   const [doneInfo, setDoneInfo] = useState<{ redirect_link: string } | null>(
@@ -150,7 +150,7 @@ export default function ContributePage() {
     return (
       <ContributePageWrapper>
         <p className="mt-10 font-bold sm:text-xl text-amber-500">
-          Sorry, but your account isn&apos;t old enough to contribute to Repot.
+          Sorry, but your account isn&apos;t old enough to contribute to GitInspire.
           Accounts may suggest the following given they meet the criterias:
         </p>
         <ul className="ml-10 list-disc text-sm sm:text-base">
@@ -191,7 +191,7 @@ export default function ContributePage() {
         {completed === 3 && (
           <div className="animate-load-in flex flex-col items-center mt-10 text-center">
             <p className="text-xl font-bold">
-              Successfully contributed to Repot!
+              Successfully contributed to GitInspire!
             </p>
             {doneInfo?.redirect_link ? (
               <p className="mt-1 italic">
@@ -223,7 +223,7 @@ const ContributePageWrapper = ({ children }: ReactChildren) => {
       <SEO pageName="Contribute" />
       <div className="animate-load-in">
         <PageHeader
-          name="Contribute to Repot"
+          name="Contribute to GitInspire"
           icon={{ iconEl: IoCreate }}
           clr={{
             bkg: "bg-gradient-to-r from-red-500 to-red-800",

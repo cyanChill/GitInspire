@@ -8,10 +8,10 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     # NOTE: Make sure the origins matches with the frontend URL
-    CORS(app, origins=["http://localhost:3000", "https://repot.vercel.app"])
+    CORS(app, origins=["http://localhost:3000", "https://gitinspire.vercel.app"])
     app.config.from_mapping(
         SECRET_KEY="dev",
-        # SQLALCHEMY_DATABASE_URI="sqlite:///repot.db",
+        # SQLALCHEMY_DATABASE_URI="sqlite:///gitinspire.db",
     )
     # Fix issue with unexpected server connection closure
     #  Ref: https://stackoverflow.com/a/61739721

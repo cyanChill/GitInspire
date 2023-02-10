@@ -6,7 +6,7 @@ import { FaCompass } from "react-icons/fa";
 
 import { RepositoryObjType } from "~utils/types";
 import { fromURLQueryVal } from "~utils/helpers";
-import useRepotContext from "~hooks/useRepotContext";
+import useAppContext from "~hooks/useAppContext";
 import PageHeader from "~components/layout/PageHeader";
 import Button from "~components/form/Button";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
@@ -25,7 +25,7 @@ type SearchFilters = {
 };
 
 export default function DiscoverPage() {
-  const { languages, tags } = useRepotContext();
+  const { languages, tags } = useAppContext();
 
   const router = useRouter();
 

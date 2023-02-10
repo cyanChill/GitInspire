@@ -20,7 +20,7 @@ def refreshUserInfo(userId):
     return jsonify({"message": "Route to 'refresh' user info."})
 
 
-# Route to get the tags & repositories user has contributed to Repot
+# Route to get the tags & repositories user has contributed to GitInspire
 @bp.route("/<int:userId>/contributions")
 def userContributions(userId):
     return jsonify({"tags": [], "repositories": []})

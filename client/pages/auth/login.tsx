@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
 import useUserContext from "~hooks/useUserContext";
-import Repot from "~public/assets/repot.svg";
+import GitInspire from "~public/assets/gitinspire.svg";
 import Github from "~public/assets/github.svg";
 import Button from "~components/form/Button";
 
@@ -35,22 +35,22 @@ export default function LoginPage() {
   }, [errors]);
 
   return (
-    <div className="animate-load-in w-full max-w-xs h-full max-h-96 grid grid-rows-2 justify-items-center items-center px-4 py-5 sm:px-6 sm:py-8 m-auto rounded-lg bg-white dark:bg-slate-800 ring-1 ring-slate-900/5 shadow-xl">
-      <div className="w-full inline-flex items-center justify-center p-2">
-        <Repot
-          aria-label="Repot logo"
-          className="max-w-[150px] max-h-[150px]"
+    <div className="m-auto grid h-full max-h-96 w-full max-w-xs animate-load-in grid-rows-2 items-center justify-items-center rounded-lg bg-white px-4 py-5 shadow-xl ring-1 ring-slate-900/5 dark:bg-slate-800 sm:px-6 sm:py-8">
+      <div className="inline-flex w-full items-center justify-center p-2">
+        <GitInspire
+          aria-label="GitInspire logo"
+          className="max-h-[150px] max-w-[150px]"
         />
       </div>
 
       {(urlHasCode || isAuthenticated) && !errors.authErr ? (
         <div className="w-full text-center">
-          <h3 className="animate-pulse my-4 text-lg min-[400px]:text-2xl font-semibold tracking-tight text-center">
+          <h3 className="my-4 animate-pulse text-center text-lg font-semibold tracking-tight min-[400px]:text-2xl">
             Logging in with Github
           </h3>
         </div>
       ) : (
-        <div className="self-end w-full text-center">
+        <div className="w-full self-end text-center">
           <Button
             href={GITHUB_AUTH_URL}
             link={true}
@@ -59,13 +59,16 @@ export default function LoginPage() {
             Sign In with Github
             <Github
               aria-label="Github logo"
-              className="shrink-0 max-[275px]:hidden max-h-[24px]"
+              className="max-h-[24px] shrink-0 max-[275px]:hidden"
             />
           </Button>
           <Button
-            onClick={() => router.push("/")}
+            onClick={() => {
+              sessionStorage.removeItem("redirectPath"); // Clear any redirects
+              router.push("/");
+            }}
             clr={{ bkg: "", txt: "" }}
-            className="animate-[load-in_250ms_ease-in-out_300ms_forwards] opacity-0 hover:text-orange-500 hover:underline mx-auto !shadow-none"
+            className="mx-auto animate-[load-in_250ms_ease-in-out_300ms_forwards] opacity-0 !shadow-none hover:text-orange-500 hover:underline"
           >
             Return Home
           </Button>

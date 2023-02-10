@@ -6,17 +6,17 @@ interface TagsType {
   user_gen: TagObjType[];
 }
 
-interface RepotContextInterface {
+interface AppContextInterface {
   languages: LangObjType[];
   tags: TagsType;
   addTag: (newTag: TagObjType) => void;
 }
 
-export const RepotContext = createContext<RepotContextInterface | undefined>(
+export const AppContext = createContext<AppContextInterface | undefined>(
   undefined
 );
 
-export default function RepotContextProvider({ children }: ReactChildren) {
+export default function AppContextProvider({ children }: ReactChildren) {
   const [languages, setLanguages] = useState<LangObjType[]>([]);
   const [tags, setTags] = useState<TagsType>({ primary: [], user_gen: [] });
 
@@ -70,8 +70,8 @@ export default function RepotContextProvider({ children }: ReactChildren) {
   }, []);
 
   return (
-    <RepotContext.Provider value={{ languages, tags, addTag }}>
+    <AppContext.Provider value={{ languages, tags, addTag }}>
       {children}
-    </RepotContext.Provider>
+    </AppContext.Provider>
   );
 }

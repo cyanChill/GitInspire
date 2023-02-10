@@ -1,4 +1,4 @@
-# Repot [Server]
+# GitInspire [Server]
 
 ## Setup
 
