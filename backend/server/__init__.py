@@ -3,28 +3,27 @@ from datetime import timedelta
 from flask import Flask, Blueprint
 from flask_cors import CORS
 
+import server.configuration as configuration
 
-def create_app(test_config=None):
+
+def create_app(configName=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     # NOTE: Make sure the origins matches with the frontend URL
     CORS(app, origins=["http://localhost:3000", "https://gitinspire.vercel.app"])
-    app.config.from_mapping(
-        SECRET_KEY="dev",
-        # SQLALCHEMY_DATABASE_URI="sqlite:///gitinspire.db",
-    )
+
     # Fix issue with unexpected server connection closure
     #  Ref: https://stackoverflow.com/a/61739721
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_pre_ping": True}
     # Have access token expire after 3 hours
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+    # load the default config values
+    app.config.from_pyfile("config.py", silent=True)
+
+    # Load configs to override production values if provided
+    if configName is not None:
+        app.config.from_object(configuration.configuration[configName](app))
 
     # ensure the instance folder exists
     try:
