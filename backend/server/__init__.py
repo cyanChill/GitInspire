@@ -41,6 +41,9 @@ def create_app(configName=None):
     # Register our routes
     from server.routes import auth, languages, random, repositories, tags, user
 
+    # Disable redirecting to URL with trailing slash when visiting URL
+    # without trailing slash
+    app.url_map.strict_slashes = False
     # Create API instance for passing blueprints
     api = Blueprint("api", __name__, url_prefix="/api")
 
