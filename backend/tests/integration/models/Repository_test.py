@@ -5,11 +5,6 @@ from server.models.Repository import Repository, RepoLanguage
 
 
 class RepositoryTest(testBase.TestBase):
-    def assert_lang_response(self, response, expected_languages):
-        actual_names = [lang.language_name for lang in response]
-        expected_names = [lang.language_name for lang in expected_languages]
-        self.assertCountEqual(expected_names, actual_names)
-
     def test_repo_link_property(self):
         with self.app.app_context():
             repo_info = Repository.query.filter_by(id=0).first()
@@ -51,7 +46,15 @@ class RepositoryTest(testBase.TestBase):
             for test_case in test_cases:
                 with self.subTest(msg=test_case.test_name):
                     actual_val = test_case.repository.languages
-                    self.assert_lang_response(actual_val, test_case.expected_langs)
+
+                    # Check if we have the same language objects via "name" property
+                    actual_lang_names = [lang.language_name for lang in actual_val]
+                    expected_lang_names = [
+                        lang.language_name for lang in test_case.expected_langs
+                    ]
+                    self.assertEqual(
+                        sorted(actual_lang_names), sorted(expected_lang_names)
+                    )
 
     def test_repo_response_lang_order(self):
         with self.app.app_context():

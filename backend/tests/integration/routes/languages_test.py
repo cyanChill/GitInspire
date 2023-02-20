@@ -6,11 +6,6 @@ from server.models.Language import Language
 
 
 class Languages_Route_Test(testBase.TestBase):
-    def assert_response(self, response, expected_languages):
-        actual_names = [lang["name"] for lang in response]
-        expected_names = [lang["name"] for lang in expected_languages]
-        self.assertCountEqual(expected_names, actual_names)
-
     def test_getLanguages(self):
         with self.app.app_context():
             all_langs = Language.query.all()
@@ -33,4 +28,10 @@ class Languages_Route_Test(testBase.TestBase):
                     response = self.webtest_app.get(test_case.request_url).json
                     res_data = response["languages"]
                     self.assertEqual(len(res_data), len(test_case.expected_languages))
-                    self.assert_response(res_data, test_case.expected_languages)
+
+                    # Check if we have the same language objects via "name" property
+                    actual_lang_names = [lang["name"] for lang in res_data]
+                    expected_lang_names = [
+                        lang["name"] for lang in test_case.expected_languages
+                    ]
+                    self.assertEqual(sorted(actual_lang_names), sorted(expected_lang_names))

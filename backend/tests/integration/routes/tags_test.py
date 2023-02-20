@@ -5,10 +5,10 @@ from server.models.User import User
 
 
 class Tags_Route_Test(testBase.TestBase):
-    def assert_response(self, response, expected_tags):
+    def assert_tag_response(self, response, expected_tags):
         actual_names = [tag["name"] for tag in response]
         expected_names = [tag["name"] for tag in expected_tags]
-        self.assertCountEqual(expected_names, actual_names)
+        self.assertEqual(sorted(expected_names), sorted(actual_names))
 
     def test_getTags(self):
         with self.app.app_context():
@@ -44,10 +44,10 @@ class Tags_Route_Test(testBase.TestBase):
             for test_case in test_cases:
                 with self.subTest(msg=test_case.test_name):
                     response = self.webtest_app.get(test_case.request_url).json
-                    self.assert_response(
+                    self.assert_tag_response(
                         response["primary"], test_case.expected_response["primary"]
                     )
-                    self.assert_response(
+                    self.assert_tag_response(
                         response["user_gen"], test_case.expected_response["user_gen"]
                     )
 

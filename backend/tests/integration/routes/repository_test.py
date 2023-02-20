@@ -4,11 +4,6 @@ from tests import testBase
 
 
 class Repository_Route_Test(testBase.TestBase):
-    def assert_tags(self, response_tags, expected_tags):
-        actual_names = [tag["name"] for tag in response_tags]
-        expected_names = [tag["name"] for tag in expected_tags]
-        self.assertCountEqual(expected_names, actual_names)
-
     def test_suggestRepository(self):
         with self.app.app_context():
             TestCase = collections.namedtuple(
@@ -75,4 +70,9 @@ class Repository_Route_Test(testBase.TestBase):
                         repo["primary_tag"]["name"],
                         expected_repo["primary_tag"]["name"],
                     )
-                    self.assert_tags(repo["tags"], expected_repo["tags"])
+
+                    actual_tag_names = [tag["name"] for tag in repo["tags"]]
+                    expected_tag_names = [tag["name"] for tag in expected_repo["tags"]]
+                    self.assertEqual(
+                        sorted(actual_tag_names), sorted(expected_tag_names)
+                    )
