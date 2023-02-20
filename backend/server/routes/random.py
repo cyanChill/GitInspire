@@ -9,6 +9,8 @@ bp = Blueprint("random", __name__, url_prefix="/random")
 
 @bp.route("/")
 def getRandomRepository():
+    limit = request.args.get("limit", default=100, type=int)
+
     langs = request.args.get("languages", default="", type=str)
     minStars = request.args.get("minStars", default=0, type=int)
     maxStars = request.args.get("maxStars", default=None, type=int)
@@ -38,7 +40,7 @@ def getRandomRepository():
 
     try:
         # Will fetch up to 100 results for this "page" (allows pagination)
-        request_url = f"https://api.github.com/search/repositories?q={starsQuery}{langQuery}&per_page=100&sort=stars&order=asc"
+        request_url = f"https://api.github.com/search/repositories?q={starsQuery}{langQuery}&per_page={limit}&sort=stars&order=asc"
         print(request_url)
         resp = requests.get(
             request_url,

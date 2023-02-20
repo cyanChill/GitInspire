@@ -1,5 +1,6 @@
 import unittest
 import webtest
+from flask_jwt_extended import create_access_token
 
 from server import create_app
 import server.configuration as configuration
@@ -24,5 +25,12 @@ class TestBase(unittest.TestCase):
                 db.session.add(entry)
             db.session.commit()
 
+            # Generate fake user credentials for accessing protected
+            # API routes (Dummy user account id: 0)
+            jwt_access_token = create_access_token(identity=0)
+
         self.app = api
         self.webtest_app = webtest.TestApp(api)
+        # Set authorization header to access token to access protected
+        # routes
+        self.webtest_app.authorization = ("Bearer", jwt_access_token)

@@ -17,6 +17,8 @@ def isXMonthOld(datetimeObj, months):
     return dateObj_date < time_threshold
 
 
+# Use to sort the languages of a repository from the GitHub API from
+# most used language to least used
 def filterLangs(langDict):
     if len(langDict) == 0:
         return []

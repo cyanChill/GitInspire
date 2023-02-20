@@ -35,8 +35,7 @@ class ProductionConfiguration(Configuration):
         self.clientId = app.config["PROD_GITHUB_CLIENT_ID"]
         self.clientSecret = app.config["PROD_GITHUB_CLIENT_ID"]
 
-    # Should be set to True in production:
-    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_SECURE = True  # Should be set to True in production
 
     # Fetch values from "instance/config.py" for production values
     @property
@@ -54,6 +53,8 @@ class TestingConfiguration(Configuration):
 
     TESTING = True
     JWT_COOKIE_SECURE = False
+    JWT_COOKIE_CSRF_PROTECT = False
+    JWT_TOKEN_LOCATION = 'headers'
 
     # Override SQLALCHEMY_DATABASE_URI in "instance/config.py" which contains
     # production DATABASE URI
