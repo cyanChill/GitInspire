@@ -76,3 +76,44 @@ class Repository_Route_Test(testBase.TestBase):
                     self.assertEqual(
                         sorted(actual_tag_names), sorted(expected_tag_names)
                     )
+
+    def test_getRepositoryInfo(self):
+        with self.app.app_context():
+            TestCase = collections.namedtuple(
+                "TestCase",
+                ["test_name", "request_url", "expected_response"],
+            )
+
+            test_cases = [
+                TestCase(
+                    test_name="Get specific repository (that exists)",
+                    request_url="/api/repositories/0",
+                    expected_response={
+                        "message": "Repository found.",
+                        "repo_exerpt": {"id": 0},
+                    },
+                ),
+                TestCase(
+                    test_name="Get specific repository (that doesn't exists)",
+                    request_url="/api/repositories/23423423",
+                    expected_response={
+                        "message": "Repository not found.",
+                        "repo_exerpt": None,
+                    },
+                ),
+            ]
+
+            for test_case in test_cases:
+                with self.subTest(msg=test_case.test_name):
+                    response = self.webtest_app.get(test_case.request_url).json
+                    self.assertEqual(
+                        response["message"], test_case.expected_response["message"]
+                    )
+
+                    repo = response["repository"]
+                    expected_repo = test_case.expected_response["repo_exerpt"]
+                    # We want to see if the ids match from request route
+                    if repo != None:  # Repo found
+                        self.assertEqual(repo["id"], expected_repo["id"])
+                    else:  # Repo not found
+                        self.assertTrue(expected_repo == None)

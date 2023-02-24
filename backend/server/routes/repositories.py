@@ -12,11 +12,6 @@ from server.models.Repository import Repository, RepoLanguage, RepoTag
 
 bp = Blueprint("repositories", __name__, url_prefix="/repositories")
 
-# Route to get all repositories
-@bp.route("/")
-def getRepositories():
-    return jsonify({"repositories": []})
-
 
 # Route to filter repositories
 @bp.route("/filter")
@@ -69,7 +64,12 @@ def filteredRepositories():
 # Route to get information on a specific repository
 @bp.route("/<int:repoId>")
 def repositoryInfo(repoId):
-    return jsonify({"message": "Basic repository info"})
+    repo = Repository.query.filter_by(id=repoId).first()
+
+    if repo != None:
+        return jsonify({"message": "Repository found.", "repository": repo.as_dict()}), 200
+    else:
+        return jsonify({"message": "Repository not found.", "repository": None}), 200
 
 
 # Route to suggest a repository
