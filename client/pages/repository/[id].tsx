@@ -12,6 +12,25 @@ export default function RepositoryPage() {
   const [repo, setRepo] = useState<RepositoryObjType>();
   const [isLoading, setIsLoading] = useState(true);
 
+  const onRepoClose = () => {
+    // Redirect to homepage
+    router.push("/");
+  };
+
+  const onRepoRefresh = (
+    exists: boolean,
+    refreshData: RepositoryObjType | undefined
+  ) => {
+    if (!exists) {
+      // Redirect to homepage as repository no longer exists in backend
+      toast.error("Redirecting to homepage...");
+      router.push("/");
+    } else {
+      toast.success("Successfully refreshed repository data.");
+      setRepo(refreshData);
+    }
+  };
+
   useEffect(() => {
     let abortCtrl = new AbortController();
 
@@ -58,8 +77,8 @@ export default function RepositoryPage() {
     <div className="h-full animate-load-in">
       <RepoInfoCard
         repository={repo}
-        handleRefresh={() => {}}
-        handleClose={() => {console.log("Closing Card")}}
+        handleRefresh={onRepoRefresh}
+        handleClose={onRepoClose}
       />
     </div>
   );

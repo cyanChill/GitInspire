@@ -35,7 +35,7 @@ export const cleanDate = (date: Date) => {
 };
 
 export const isXDaysOld = (date: Date, days: number) => {
-  return isBefore(sub(new Date(), { days: days }), new Date(date));
+  return isBefore(new Date(date), sub(new Date(), { days: days }));
 };
 
 export const shrinkNum = (num: number) => {

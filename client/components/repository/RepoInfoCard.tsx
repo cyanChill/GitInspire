@@ -1,11 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import { RxCross2, RxStarFilled, RxExternalLink } from "react-icons/rx";
 
+import useUserContext from "~hooks/useUserContext";
 import { RepositoryObjType } from "~utils/types";
 import { cleanDate, isXDaysOld, shrinkNum } from "~utils/helpers";
 import Button from "~components/form/Button";
 
+/*
+  The idea of "handleRefresh" is to:
+    1. Pass whether the repository still publically visible on GitHub
+    2. If it's visible, pass the updated (or same) repository data.
+*/
 type RepoInfoCardProps = {
   handleRefresh: (exists: boolean, refreshData?: RepositoryObjType) => void;
   handleClose: () => void;
@@ -17,11 +25,40 @@ export default function RepoInfoCard({
   handleClose,
   repository,
 }: RepoInfoCardProps) {
-  const refreshInfo = () => {};
+  const router = useRouter();
+  const { isAuthenticated } = useUserContext();
 
-  useEffect(() => {
-    console.log(repository);
-  }, [repository]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleReport = () => {
+    // Redirect to the report route with some information in the URL params
+    router.push(`/report?type=repository&id=${repository.id}`);
+  };
+
+  const refreshInfo = async () => {
+    // Repository data has been refreshed recently
+    if (!isXDaysOld(repository.last_updated, 1)) return;
+
+    setIsRefreshing(true);
+    const res = await fetch(`/api/repositories/${repository.id}/refresh`);
+    if (!res.ok) {
+      /* Error occurred */
+      // Note: Status Code 410 indicates repo can't be found with GitHub API
+      // and thus repository suggestion has been deleted from database
+      if (res.status == 410) {
+        toast.error(
+          "Repository is no longer found on GitHub and has been deleted from our database."
+        );
+        handleRefresh(false);
+      } else {
+        toast.error("Something went wrong on our servers.");
+      }
+    } else {
+      /* Found repository */
+      const data = await res.json();
+      handleRefresh(true, data.repository);
+    }
+  };
 
   return (
     <div className="flex h-full w-full animate-load-in flex-col bg-white shadow-md dark:bg-slate-800 dark:shadow-slate-700">
@@ -30,7 +67,7 @@ export default function RepoInfoCard({
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="fixed top-2 left-2 text-lg hover:text-red-500"
+          className="fixed top-2 right-2 text-2xl hover:text-red-500"
         >
           <RxCross2 />
         </button>
@@ -124,9 +161,15 @@ export default function RepoInfoCard({
       {/* Action */}
       <hr className="mx-2" />
       <div className="flex justify-end px-2 py-1 text-sm">
-        <button className="text-slate-500 hover:underline dark:text-gray-50">
-          Report a Problem
-        </button>
+        {isAuthenticated && (
+          <button
+            className="text-slate-500 hover:underline dark:text-gray-50"
+            onClick={handleReport}
+          >
+            Report a Problem
+          </button>
+        )}
+        {/* Allow refresh button for non-authenticated users */}
         <Button
           className="ml-3 w-max"
           clr={{
@@ -134,7 +177,7 @@ export default function RepoInfoCard({
             txt: "text-white",
           }}
           onClick={refreshInfo}
-          disabled={isXDaysOld(repository.last_updated, 1)}
+          disabled={!isXDaysOld(repository.last_updated, 1) || isRefreshing}
         >
           Refresh Data
         </Button>
