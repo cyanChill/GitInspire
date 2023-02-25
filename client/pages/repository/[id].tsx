@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { RepositoryObjType } from "~utils/types";
 import Spinner from "~components/Spinner";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
+import PageRedirectForm from "~components/page_forms/PageRedirectForm";
 
 export default function RepositoryPage() {
   const router = useRouter();
@@ -52,9 +53,12 @@ export default function RepositoryPage() {
           setIsLoading(false);
         })
         .catch((err) => {
-          setRepo(undefined);
-          toast.error("Something went wrong with fetching repository.");
-          setIsLoading(false);
+          // Handle non-AbortError(s)
+          if (err.name !== "AbortError") {
+            setRepo(undefined);
+            toast.error("Something went wrong with fetching repository.");
+            setIsLoading(false);
+          }
         });
     }
 
@@ -64,11 +68,22 @@ export default function RepositoryPage() {
   }, [router.query]);
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
   } else if (!repo) {
     return (
-      <div>
-        <h1>Repository doesn&apos;t exist.</h1>
+      <div className="flex h-full animate-load-in flex-col items-center justify-center">
+        <h1 className="text-center text-4xl font-bold">
+          This repository does not exist
+        </h1>
+        <p className="my-6 text-center">
+          Sorry, but we couldn&apos;t find this repository in our database.
+        </p>
+
+        <PageRedirectForm />
       </div>
     );
   }

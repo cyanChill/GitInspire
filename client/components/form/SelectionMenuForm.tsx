@@ -11,13 +11,16 @@ export type SelectMenuOption = {
   bkgClr: string;
 };
 
-type SelectionMenuFormType = {
-  title: string;
-  description: string;
+type SelectionMenuFormOptionsType = {
   options: SelectMenuOption[];
   selectOption: (value: string) => void;
   className?: string;
 };
+
+type SelectionMenuFormType = {
+  title: string;
+  description: string;
+} & SelectionMenuFormOptionsType;
 
 export default function SelectionMenuForm({
   title,
@@ -29,30 +32,44 @@ export default function SelectionMenuForm({
   return (
     <div className={className}>
       <h2 className="text-xl font-bold">{title}</h2>
-      <p className="text-sm mt-2">{description}</p>
+      <p className="mt-2 text-sm">{description}</p>
 
-      <ul className="mt-7 border-y-2 border-gray-200 dark:border-slate-700">
-        {options.map((opt, idx) => (
-          <li
-            key={idx}
-            className="group hover:cursor-pointer flex gap-2 py-4 border-b-[1px] border-gray-200 dark:border-slate-700 last:border-0"
-            onClick={() => selectOption(opt.value)}
-          >
-            <div className={`shrink-0 p-2 rounded-lg ${opt.bkgClr} text-3xl text-white`}>
-              {opt.icon}
-            </div>
-            
-            <div className="min-w-0">
-              <p className="truncate flex items-center gap-1 font-semibold">
-                {opt.title}
-              </p>
-              <p className="truncate text-sm">{opt.description}</p>
-            </div>
-
-            <MdKeyboardArrowRight className="shrink-0 self-center ml-auto text-3xl text-gray-300 group-hover:text-gray-400 dark:text-slate-700 group-hover:dark:text-slate-500" />
-          </li>
-        ))}
-      </ul>
+      <SelectionMenuFormOptions options={options} selectOption={selectOption} />
     </div>
+  );
+}
+
+export function SelectionMenuFormOptions({
+  options,
+  selectOption,
+  className,
+}: SelectionMenuFormOptionsType) {
+  return (
+    <ul
+      className={`mt-7 border-y-2 border-gray-200 dark:border-slate-700 ${className}`}
+    >
+      {options.map((opt, idx) => (
+        <li
+          key={idx}
+          className="group flex gap-2 border-b-[1px] border-gray-200 py-4 last:border-0 hover:cursor-pointer dark:border-slate-700"
+          onClick={() => selectOption(opt.value)}
+        >
+          <div
+            className={`shrink-0 rounded-lg p-2 ${opt.bkgClr} text-3xl text-white`}
+          >
+            {opt.icon}
+          </div>
+
+          <div className="min-w-0">
+            <p className="flex items-center gap-1 truncate font-semibold">
+              {opt.title}
+            </p>
+            <p className="truncate text-sm">{opt.description}</p>
+          </div>
+
+          <MdKeyboardArrowRight className="ml-auto shrink-0 self-center text-3xl text-gray-300 group-hover:text-gray-400 dark:text-slate-700 group-hover:dark:text-slate-500" />
+        </li>
+      ))}
+    </ul>
   );
 }

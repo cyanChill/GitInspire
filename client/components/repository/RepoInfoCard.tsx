@@ -94,7 +94,7 @@ export default function RepoInfoCard({
 
         {/* Stars */}
         <p className="fixed bottom-[-1.5rem] left-[5.5rem] flex items-center justify-center gap-1 rounded-xl bg-yellow-200 px-2 text-sm text-black dark:bg-yellow-400">
-          <RxStarFilled className="shrink-0" /> {shrinkNum(15286)}
+          <RxStarFilled className="shrink-0" /> {shrinkNum(repository.stars)}
         </p>
       </div>
 

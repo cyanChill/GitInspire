@@ -9,14 +9,16 @@ export default function Layout({ children }: ReactChildren) {
   // Hide navigation menu on login page
   if (router.pathname.startsWith("/auth/login")) {
     return (
-      <div className="container flex max-w-2xl h-screen p-4">{children}</div>
+      <div className="container flex h-screen max-w-2xl p-4">{children}</div>
     );
   }
 
   return (
-    <div className="sm:relative sm:grid sm:grid-cols-[min-content_1fr] max-w-full min-h-screen">
+    <div className="min-h-screen max-w-full sm:relative sm:grid sm:grid-cols-[min-content_1fr]">
       <Navigation />
-      <div className="container max-w-5xl min-h-screen p-4 sm:px-6 overflow-x-hidden">{children}</div>
+      <div className="container min-h-screen max-w-5xl overflow-x-hidden p-4 pb-20 sm:px-6">
+        {children}
+      </div>
     </div>
   );
 }
