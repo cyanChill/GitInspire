@@ -63,20 +63,23 @@ def filteredRepositories():
 
 # Route to get information on a specific repository
 @bp.route("/<int:repoId>")
-def repositoryInfo(repoId):
+def get_repository(repoId):
     repo = Repository.query.filter_by(id=repoId).first()
 
     if repo != None:
-        return jsonify({"message": "Repository found.", "repository": repo.as_dict()}), 200
+        return (
+            jsonify({"message": "Repository found.", "repository": repo.as_dict()}),
+            200,
+        )
     else:
         return jsonify({"message": "Repository not found.", "repository": None}), 200
 
 
 # Route to suggest a repository
-@bp.route("/create", methods=["POST"])
+@bp.route("/", methods=["POST"])
 @jwt_required()
 @not_banned()
-def suggestRepository():
+def create_repository():
     user = g.user.as_dict()
 
     if not isXMonthOld(user["github_created_at"], 3):
@@ -203,17 +206,33 @@ def suggestRepository():
 
 # Route to refresh repository info from GitHub API
 @bp.route("/<int:repoId>/refresh")
-def refreshRepositoryInfo(repoId):
-    return jsonify({"message": "Route to 'refresh' repository info."})
+def refresh_repository(repoId):
+    # TODO:
+    # 1. Get local copy of repository & check it's last updated
+    #     - If was recently updated, return local copy
+    #     - If it doesn't exist locally, throw an error
+    # 2. If it's allowed to be refreshed (last updated > 1 day), call
+    #    GitHub API for new data.
+    # 3. If doesn't exist, handle deletion protocols
+    #     - Delete RepoLanguage Relations
+    #     - Delete RepoTag Relations
+    #     - NOTE: Probably consider whether we want to delete upvotes/downvotes
+    #             and reports on this now non-existent repository as this
+    #             can be abused by bad actors who have a poor upvote/downvote
+    #             rating or multiple outstanding reports
+    # 4. If exists, update GitHub-specific attributes in Repository Object
+    #    and return it to the client
+
+    return jsonify({"message": "Refreshed repository information.", "repository": ""})
 
 
 # Route to update a repository
-@bp.route("/<int:repoId>/update", methods=["PATCH"])
-def updateRepository(repoId):
+@bp.route("/<int:repoId>", methods=["PATCH"])
+def update_repository(repoId):
     return jsonify({"message": "Updated repository."})
 
 
 # Route to delete a repository
-@bp.route("/<int:repoId>/delete", methods=["DELETE"])
-def deleteRepository(repoId):
+@bp.route("/<int:repoId>", methods=["DELETE"])
+def delete_repository(repoId):
     return jsonify({"message": "Delete repository."})

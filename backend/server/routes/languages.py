@@ -7,6 +7,6 @@ bp = Blueprint("languages", __name__, url_prefix="/languages")
 
 # Route to get all languages
 @bp.route("/")
-def getLanguages():
+def get_languages():
     languages = Language.query.all()
     return jsonify({"languages": serialize_sqlalchemy_objs(languages)})

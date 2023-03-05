@@ -70,9 +70,9 @@ class UtilTest(testBase.TestBase):
                 expected_result=True,
             ),
             TestCase(
-                test_name="Seeing if account created on 01/28/2023 is at least 3 months old.",
+                test_name="Seeing if account created on 01/28/2023 is at least 1200 months old.",
                 datetimeObj=date_2,
-                months=3,
+                months=1200,  # Prevent tests from breaking with intended use
                 expected_result=False,
             ),
         ]

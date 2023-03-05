@@ -43,7 +43,7 @@ export default function ContributeSubmitForm({
   const [error, setError] = useState(false);
 
   const submitNewRepo = async () => {
-    const res = await fetch("/api/repositories/create", {
+    const res = await fetch("/api/repositories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function ContributeSubmitForm({
   };
 
   const submitNewTag = async () => {
-    const res = await fetch("/api/tags/create", {
+    const res = await fetch("/api/tags", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

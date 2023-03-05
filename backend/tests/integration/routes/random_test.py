@@ -4,7 +4,7 @@ from tests import testBase
 
 
 class Random_Route_Test(testBase.TestBase):
-    def test_getRandomRepository(self):
+    def test_get_random_repository(self):
         with self.app.app_context():
             TestCase = collections.namedtuple(
                 "TestCase", ["test_name", "request_url", "expected_properties"]

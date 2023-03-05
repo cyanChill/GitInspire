@@ -8,7 +8,7 @@ bp = Blueprint("random", __name__, url_prefix="/random")
 
 
 @bp.route("/")
-def getRandomRepository():
+def get_random_repository():
     limit = request.args.get("limit", default=100, type=int)
 
     langs = request.args.get("languages", default="", type=str)

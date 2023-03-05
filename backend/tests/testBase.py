@@ -31,6 +31,5 @@ class TestBase(unittest.TestCase):
 
         self.app = api
         self.webtest_app = webtest.TestApp(api)
-        # Set authorization header to access token to access protected
-        # routes
+        # Set authorization header to access token to access protected routes
         self.webtest_app.authorization = ("Bearer", jwt_access_token)

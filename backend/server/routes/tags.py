@@ -11,7 +11,7 @@ bp = Blueprint("tags", __name__, url_prefix="/tags")
 
 # Route to get all tags
 @bp.route("/")
-def getTags():
+def get_tags():
     primary_tags = Tag.query.filter_by(type="primary").all()
     user_gen_tags = Tag.query.filter_by(type="user_gen").all()
 
@@ -24,10 +24,10 @@ def getTags():
 
 
 # Route to create a tag
-@bp.route("/create", methods=["POST"])
+@bp.route("/", methods=["POST"])
 @jwt_required()
 @not_banned()
-def createTag():
+def create_tag():
     user = g.user.as_dict()
 
     if not isXMonthOld(user["github_created_at"], 12):
@@ -85,12 +85,12 @@ def createTag():
 
 
 # Route to update a tag
-@bp.route("/<string:tagName>/update", methods=["PATCH"])
-def updateTag(tagName):
+@bp.route("/<string:tagName>", methods=["PATCH"])
+def update_tag(tagName):
     return jsonify({"message": "Updated tag."})
 
 
 # Route to delete a tag
-@bp.route("/<string:tagName>/delete", methods=["DELETE"])
-def deleteTag(tagName):
+@bp.route("/<string:tagName>", methods=["DELETE"])
+def delete_tag(tagName):
     return jsonify({"message": "Delete tag."})
