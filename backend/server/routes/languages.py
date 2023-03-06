@@ -5,8 +5,13 @@ from server.utils import serialize_sqlalchemy_objs
 
 bp = Blueprint("languages", __name__, url_prefix="/languages")
 
-# Route to get all languages
+
 @bp.route("/")
 def get_languages():
     languages = Language.query.all()
-    return jsonify({"languages": serialize_sqlalchemy_objs(languages)})
+
+    response = {
+        "message": "Successfully obtained all messages.",
+        "languages": serialize_sqlalchemy_objs(languages),
+    }
+    return jsonify(response), 200

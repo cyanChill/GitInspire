@@ -8,12 +8,21 @@ from server.utils import normalizeStr
 
 
 def gen_dummyData():
-    d_user = User(
+    d_user_0 = User(
         id=0,
-        username="dummyUser",
+        username="oldUser",
         avatar_url="https://avatars.githubusercontent.com/u/83375816?v=4",
         github_created_at=datetime.strptime(
             "2021-04-28T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
+        ),
+        account_status=AccountStatusEnum["user"],
+    )
+    d_user_1 = User(
+        id=1,
+        username="youngUser",
+        avatar_url="https://avatars.githubusercontent.com/u/83375816?v=4",
+        github_created_at=datetime.strptime(
+            "3021-04-28T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
         ),
         account_status=AccountStatusEnum["user"],
     )
@@ -22,13 +31,13 @@ def gen_dummyData():
         name=normalizeStr("Project Idea"),
         display_name="Project Idea",
         type=TagTypeEnum["primary"],
-        suggested_by=d_user.id,
+        suggested_by=d_user_0.id,
     )
     d_tag = Tag(
         name=normalizeStr("Frontend"),
         display_name="Frontend",
         type=TagTypeEnum["user_gen"],
-        suggested_by=d_user.id,
+        suggested_by=d_user_0.id,
     )
 
     d_language_1 = Language(
@@ -43,7 +52,7 @@ def gen_dummyData():
         description="This is a non-existent repository",
         stars=1337,
         _primary_tag=d_primary_tag.name,
-        suggested_by=d_user.id,
+        suggested_by=d_user_0.id,
     )
 
     d_repo_lang_relation_1 = RepoLanguage(
@@ -60,7 +69,8 @@ def gen_dummyData():
     d_repo_tag_relation = RepoTag(repo_id=d_repo.id, tag_name=d_tag.name)
 
     return [
-        d_user,
+        d_user_0,
+        d_user_1,
         d_primary_tag,
         d_tag,
         d_language_1,

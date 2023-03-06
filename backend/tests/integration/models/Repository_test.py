@@ -6,12 +6,12 @@ from server.models.Repository import Repository, RepoLanguage
 
 class RepositoryTest(testBase.TestBase):
     def test_repo_link_property(self):
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "repository", "expected_link"]
+        )
+
         with self.app.app_context():
             repo_info = Repository.query.filter_by(id=0).first()
-
-            TestCase = collections.namedtuple(
-                "TestCase", ["test_name", "repository", "expected_link"]
-            )
 
             test_cases = [
                 TestCase(
@@ -27,13 +27,13 @@ class RepositoryTest(testBase.TestBase):
                     self.assertEqual(actual_link, test_case.expected_link)
 
     def test_repository_language_relation(self):
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "repository", "expected_langs"]
+        )
+
         with self.app.app_context():
             repo_info = Repository.query.filter_by(id=0).first()
             repo_lang = RepoLanguage.query.filter_by(repo_id=0).all()
-
-            TestCase = collections.namedtuple(
-                "TestCase", ["test_name", "repository", "expected_langs"]
-            )
 
             test_cases = [
                 TestCase(
@@ -57,12 +57,12 @@ class RepositoryTest(testBase.TestBase):
                     )
 
     def test_repo_response_lang_order(self):
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "repository", "expected_order"]
+        )
+
         with self.app.app_context():
             repo_info = Repository.query.filter_by(id=0).first()
-
-            TestCase = collections.namedtuple(
-                "TestCase", ["test_name", "repository", "expected_order"]
-            )
 
             test_cases = [
                 TestCase(

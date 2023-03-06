@@ -80,6 +80,15 @@ export default function ContributePage() {
       return;
     }
 
+    // Make sure tag name isn't empty
+    if (
+      data.formType === "tag" &&
+      (!data.new_tag_name || data.new_tag_name.trim() === "")
+    ) {
+      toast.error("The tag name should not be empty.");
+      return;
+    }
+
     const inPrimary = tags.primary.find(
       (val) => val.name === normalizeStr(data.new_tag_name)
     );
@@ -129,7 +138,7 @@ export default function ContributePage() {
 
   if (isLoading) {
     return (
-      <div className="h-full flex items-center">
+      <div className="flex h-full items-center">
         <Spinner />
       </div>
     );
@@ -138,7 +147,7 @@ export default function ContributePage() {
   if (isBanned) {
     return (
       <ContributePageWrapper>
-        <p className="mt-10 font-bold text-2xl text-center text-red-500 dark:text-red-400">
+        <p className="mt-10 text-center text-2xl font-bold text-red-500 dark:text-red-400">
           Sorry, but your account is banned and doesn&apos;t have access to this
           feature.
         </p>
@@ -149,9 +158,10 @@ export default function ContributePage() {
   if (!isAccAge(3)) {
     return (
       <ContributePageWrapper>
-        <p className="mt-10 font-bold sm:text-xl text-amber-500">
-          Sorry, but your account isn&apos;t old enough to contribute to GitInspire.
-          Accounts may suggest the following given they meet the criterias:
+        <p className="mt-10 font-bold text-amber-500 sm:text-xl">
+          Sorry, but your account isn&apos;t old enough to contribute to
+          GitInspire. Accounts may suggest the following given they meet the
+          criterias:
         </p>
         <ul className="ml-10 list-disc text-sm sm:text-base">
           <li>
@@ -169,17 +179,17 @@ export default function ContributePage() {
 
   return (
     <ContributePageWrapper>
-      <div className="sm:m-10 mt-10">
+      <div className="mt-10 sm:m-10">
         <ProgressBar
           steps={["Contribution Type", "Submission Form", "Submit"]}
           completed={completed}
         />
 
-        <form onSubmit={handleNext} className="animate-load-in mt-7">
+        <form onSubmit={handleNext} className="mt-7 animate-load-in">
           {currStep}
 
           {completed !== 0 && !doneInfo && (
-            <div className="flex justify-end gap-3 mt-3">
+            <div className="mt-3 flex justify-end gap-3">
               <Button type="button" onClick={back}>
                 Back
               </Button>
@@ -189,7 +199,7 @@ export default function ContributePage() {
         </form>
 
         {completed === 3 && (
-          <div className="animate-load-in flex flex-col items-center mt-10 text-center">
+          <div className="mt-10 flex animate-load-in flex-col items-center text-center">
             <p className="text-xl font-bold">
               Successfully contributed to GitInspire!
             </p>

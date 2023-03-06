@@ -26,10 +26,9 @@ class TestBase(unittest.TestCase):
             db.session.commit()
 
             # Generate fake user credentials for accessing protected
-            # API routes (Dummy user account id: 0)
-            jwt_access_token = create_access_token(identity=0)
+            # API routes (User Age >1 year id: 0, User Age <3 Months id: 1)
+            self.user_0_token = create_access_token(identity=0)
+            self.user_1_token = create_access_token(identity=1)
 
         self.app = api
         self.webtest_app = webtest.TestApp(api)
-        # Set authorization header to access token to access protected routes
-        self.webtest_app.authorization = ("Bearer", jwt_access_token)

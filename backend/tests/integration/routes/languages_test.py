@@ -16,13 +16,13 @@ class Languages_Route_Test(testBase.TestBase):
         self.assertCountEqual(actual_names, expected_names)
 
     def test_get_languages(self):
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "request_url", "expected_languages"]
+        )
+
         with self.app.app_context():
             all_langs = Language.query.all()
             serialized_langs = serialize_sqlalchemy_objs(all_langs)
-
-            TestCase = collections.namedtuple(
-                "TestCase", ["test_name", "request_url", "expected_languages"]
-            )
 
             test_cases = [
                 TestCase(

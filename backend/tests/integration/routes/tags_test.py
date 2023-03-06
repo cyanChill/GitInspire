@@ -1,5 +1,6 @@
 import collections
 import pytest
+import webtest
 
 from tests import testBase
 from server.models.User import User
@@ -16,22 +17,22 @@ class Tags_Route_Test(testBase.TestBase):
         self.assertCountEqual(actual_names, expected_names)
 
     def test_get_tags(self):
-        with self.app.app_context():
-            TestCase = collections.namedtuple(
-                "TestCase", ["test_name", "request_url", "expected_response"]
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "request_url", "expected_response"]
+        )
+
+        test_cases = [
+            TestCase(
+                test_name="Retrieve all tags",
+                request_url="/api/tags",
+                expected_response={
+                    "primary": [{"name": "project_idea"}],
+                    "user_gen": [{"name": "frontend"}],
+                },
             )
+        ]
 
-            test_cases = [
-                TestCase(
-                    test_name="Retrieve all tags",
-                    request_url="/api/tags",
-                    expected_response={
-                        "primary": [{"name": "project_idea"}],
-                        "user_gen": [{"name": "frontend"}],
-                    },
-                )
-            ]
-
+        with self.app.app_context():
             for test_case in test_cases:
                 with self.subTest(msg=test_case.test_name):
                     response = self.webtest_app.get(test_case.request_url).json
@@ -53,30 +54,29 @@ class Tags_Route_Test(testBase.TestBase):
                     )
 
     def test_createTag(self):
+        request_body = {"display_name": "Full Stack", "type": "user_gen"}
+
+        TestCase = collections.namedtuple("TestCase", ["test_name", "expected_message"])
+
+        test_cases = [
+            TestCase(
+                test_name="Create a new tag.",
+                expected_message="Successfully create tag.",
+            ),
+            TestCase(
+                test_name="Create an existing tag.",
+                expected_message="Tag already exists in our database.",
+            ),
+        ]
+
         with self.app.app_context():
             user = User.query.filter_by(id=0).first()
 
-            request_body = {"display_name": "Full Stack", "type": "user_gen"}
-
-            TestCase = collections.namedtuple(
-                "TestCase", ["test_name", "expected_message"]
-            )
-
-            test_cases = [
-                TestCase(
-                    test_name="Create a new tag.",
-                    expected_message="Successfully create tag.",
-                ),
-                TestCase(
-                    test_name="Create an existing tag.",
-                    expected_message="Tag already exists in our database.",
-                ),
-            ]
-
             for test_case in test_cases:
                 with self.subTest(msg=test_case.test_name):
-                    # Send an HTTP Post Request to "/repositories" (authorization
-                    # handled in TestBase class)
+                    # Set authorization token to be user >1 year old
+                    self.webtest_app.authorization = ("Bearer", self.user_0_token)
+                    # Send an HTTP Post Request to "/repositories"
                     response = self.webtest_app.post_json(
                         "/api/tags", request_body
                     ).json
@@ -89,9 +89,62 @@ class Tags_Route_Test(testBase.TestBase):
                     self.assertEqual(tag["suggested_by"]["id"], user.as_dict()["id"])
                     self.assertEqual(tag["type"], "user_gen")
 
-    @pytest.mark.skip(reason="Not implemented.")
     def test_create_tag_bad_request(self):
-        pass
+        TestCase = collections.namedtuple(
+            "TestCase",
+            [
+                "test_name",
+                "request_body",
+                "expected_error_code",
+                "expected_error_message",
+            ],
+        )
+
+        test_cases = [
+            TestCase(
+                test_name="Account is too young",
+                request_body={},
+                expected_error_code="403",
+                expected_error_message="GitHub account age must be older than 1 year to suggest tag.",
+            ),
+            TestCase(
+                test_name="Missing display_name",
+                request_body={},
+                expected_error_code="400",
+                expected_error_message="display_name can\\'t be blank.",
+            ),
+            TestCase(
+                test_name="Missing type",
+                request_body={"display_name": "Full Stack"},
+                expected_error_code="400",
+                expected_error_message="type can\\'t be blank.",
+            ),
+            TestCase(
+                test_name="Empty (just spaces) display_name",
+                request_body={"display_name": " ", "type": "user_gen"},
+                expected_error_code="400",
+                expected_error_message="Tag name can\\'t be empty.",
+            ),
+        ]
+
+        with self.app.app_context():
+            for idx, test_case in enumerate(test_cases):
+                if idx < 1:
+                    # Set authorization token to be user <1 year old
+                    self.webtest_app.authorization = ("Bearer", self.user_1_token)
+                else:
+                    # Set authorization token to be user >1 year old
+                    self.webtest_app.authorization = ("Bearer", self.user_0_token)
+
+                with self.subTest(msg=test_case.test_name):
+                    # Assert validation errors are raised for the test cases defined above.
+                    with self.assertRaises(webtest.AppError) as exception:
+                        self.webtest_app.post_json("/api/tags", test_case.request_body)
+
+                    # Assert the HTTP Response Code and the error messages are what we expect.
+                    response_code, response_body = str(exception.exception).split("\n")
+                    self.assertTrue(test_case.expected_error_code in response_code)
+                    self.assertTrue(test_case.expected_error_message in response_body)
 
     @pytest.mark.skip(reason="Not implemented.")
     def test_update_tag(self):
