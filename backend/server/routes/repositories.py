@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request, jsonify
+from flask import Blueprint, g, jsonify, request
 from flask_jwt_extended import jwt_required
 import requests
 import traceback
@@ -67,10 +67,9 @@ def get_repository(repoId):
     repo = Repository.query.filter_by(id=repoId).first()
 
     if repo != None:
-        return (
-            jsonify({"message": "Repository found.", "repository": repo.as_dict()}),
-            200,
-        )
+        response = {"message": "Repository found.", "repository": repo.as_dict()}
+        return jsonify(response), 200
+
     else:
         return jsonify({"message": "Repository not found.", "repository": None}), 200
 
@@ -80,33 +79,39 @@ def get_repository(repoId):
 @jwt_required()
 @not_banned()
 def create_repository():
+    # Validate that the account age of the user creating the tag is >3 months.
     user = g.user.as_dict()
-
     if not isXMonthOld(user["github_created_at"], 3):
-        return (
-            jsonify(
-                {
-                    "message": "GitHub account age isn't old enough to suggest repository (must be older than 3 months)."
-                }
-            ),
-            403,
-        )
+        response = {
+            "message": "GitHub account age must be older than 3 months to suggest repository."
+        }
+        return jsonify(response), 403
 
-    # request.json.get("", default="")
-    author = request.json.get("author", "").strip()
-    repo_name = request.json.get("repo_name", "").strip()
-    if author == "" or repo_name == "":
-        return jsonify({"message": "One or more of your inputs are empty."}), 400
+    # Parse the JSON data in the request's body.
+    repository_data = request.get_json()
 
-    # {label: "",  value:""} - same as {display_name:"", name:""}:
-    primary_tag = request.json.get("primary_tag")
-    tags = request.json.get("tags", [])  # [{label: "",  value:""}]:
+    # Validate that the client provides all required fields.
+    required_fields = ["author", "repo_name", "primary_tag"]
+    for field in required_fields:
+        if field not in repository_data:
+            return jsonify({"message": f"{field} can't be blank."}), 400
+
+    author = repository_data["author"].strip()
+    if author == "":
+        return jsonify({"message": "An author must be provided."}), 400
+    repo_name = repository_data["repo_name"].strip()
+    if repo_name == "":
+        return jsonify({"message": "A repository name must be provided."}), 400
+
+    # Validating Tags (input data of form: {label: "",  value:""}, which
+    # is equivalent to {display_name:"", name:""})
+    primary_tag = repository_data["primary_tag"]
+    tags = request.json.get("tags", [])
 
     try:
         tags_existence = []
-        # See if primary tag exists
+        # See if primary & additional tag exists
         tags_existence.append(Tag.query.filter_by(name=primary_tag["value"]).first())
-        # See if additional tags exist
         for tg in tags:
             tags_existence.append(Tag.query.filter_by(name=tg["value"]).first())
 
@@ -126,15 +131,11 @@ def create_repository():
     # Check if repository already exists in our database
     existing_repo = Repository.query.filter_by(id=repo_data["id"]).first()
     if existing_repo != None:
-        return (
-            jsonify(
-                {
-                    "message": "Repository already exists in our database.",
-                    "repository": existing_repo.as_dict(),
-                }
-            ),
-            200,
-        )
+        response = {
+            "message": "Repository already exists in our database.",
+            "repository": existing_repo.as_dict(),
+        }
+        return jsonify(response), 200
 
     # Get languages
     repo_lang_dt_resp = requests.get(repo_data["languages_url"])
@@ -186,22 +187,14 @@ def create_repository():
         db.session.commit()
     except:
         print(traceback.format_exc())
-        return (
-            jsonify({"message": "Failed to create repository associations."}),
-            500,
-        )
+        response = {"message": "Failed to create repository associations."}
+        return jsonify(response), 500
 
-    return (
-        jsonify(
-            {
-                "message": "Successfully suggested repository.",
-                "repository": Repository.query.filter_by(id=repo_data["id"])
-                .first()
-                .as_dict(),
-            }
-        ),
-        200,
-    )
+    response = {
+        "message": "Successfully suggested repository.",
+        "repository": Repository.query.filter_by(id=repo_data["id"]).first().as_dict(),
+    }
+    return jsonify(response), 200
 
 
 # Route to refresh repository info from GitHub API

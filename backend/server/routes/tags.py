@@ -74,7 +74,6 @@ def create_tag():
 
         response = {"message": "Successfully create tag.", "tag": tag.as_dict()}
         return jsonify(response), 200
-
     except:
         # Some unknown response has occurred.
         print(traceback.format_exc())
