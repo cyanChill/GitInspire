@@ -44,6 +44,7 @@ def gen_dummyData():
         name=normalizeStr("Ruby on Rails"), display_name="Ruby on Rails"
     )
     d_language_2 = Language(name=normalizeStr("HTML"), display_name="HTML")
+    d_language_3 = Language(name=normalizeStr("Java"), display_name="Java")
 
     d_repo = Repository(
         id=0,
@@ -75,6 +76,7 @@ def gen_dummyData():
         d_tag,
         d_language_1,
         d_language_2,
+        d_language_3,
         d_repo,
         d_repo_lang_relation_1,
         d_repo_lang_relation_2,

@@ -3,6 +3,8 @@ import pytest
 import webtest
 
 from tests import testBase
+from server.db import db
+from server.models.Repository import Repository
 
 
 class Repository_Route_Test(testBase.TestBase):
@@ -186,6 +188,91 @@ class Repository_Route_Test(testBase.TestBase):
                     response_code, response_body = str(exception.exception).split("\n")
                     self.assertTrue(test_case.expected_error_code in response_code)
                     self.assertTrue(test_case.expected_error_message in response_body)
+
+    def test_filter_repositories(self):
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "request_url", "expected_res"]
+        )
+
+        with self.app.app_context():
+            only_repo = db.session.query(Repository).filter_by(id=0).first()
+
+            test_cases = [
+                TestCase(
+                    test_name="Filter repository by languages (that exists)",
+                    request_url="/api/repositories/filter?languages=ruby_on_rails,html",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [only_repo.as_dict()],
+                    },
+                ),
+                TestCase(
+                    test_name="Filter repository by languages (that doesn't exists)",
+                    request_url="/api/repositories/filter?languages=css",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 0,
+                        "repositories": [],
+                    },
+                ),
+                TestCase(
+                    test_name="Filter repository by _primary_tag",
+                    request_url="/api/repositories/filter?primary_tag=project_idea",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [only_repo.as_dict()],
+                    },
+                ),
+                TestCase(
+                    test_name="Filter repository by tags",
+                    request_url="/api/repositories/filter?tags=frontend",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [only_repo.as_dict()],
+                    },
+                ),
+                TestCase(
+                    test_name="Filter repository by stars (that exists)",
+                    request_url="/api/repositories/filter?minStars=0&maxStars=1500",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [only_repo.as_dict()],
+                    },
+                ),
+                TestCase(
+                    test_name="Filter repository by stars (that doesn't exists)",
+                    request_url="/api/repositories/filter?minStars=0&maxStars=100",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 0,
+                        "repositories": [],
+                    },
+                ),
+            ]
+
+            for test_case in test_cases:
+                with self.subTest(msg=test_case.test_name):
+                    response = self.webtest_app.get(test_case.request_url).json
+                    self.assertEqual(
+                        response["message"], test_case.expected_res["message"]
+                    )
+
+                    repos = response["repositories"]
+                    expected_repos = test_case.expected_res["repositories"]
+                    self.assertEqual(
+                        response["currPage"], test_case.expected_res["currPage"]
+                    )
+                    self.assert_response(repos, expected_repos)
 
     @pytest.mark.skip(reason="Not implemented.")
     def test_update_repository(self):

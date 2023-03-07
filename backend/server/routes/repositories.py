@@ -1,9 +1,15 @@
 from flask import Blueprint, g, jsonify, request
 from flask_jwt_extended import jwt_required
 import requests
+from math import ceil
 import traceback
 
-from server.utils import isXMonthOld, filterLangs, normalizeStr
+from server.utils import (
+    isXMonthOld,
+    filterLangs,
+    normalizeStr,
+    serialize_sqlalchemy_objs,
+)
 from server.routes.auth import not_banned
 from server.db import db
 from server.models.Language import Language
@@ -13,55 +19,79 @@ from server.models.Repository import Repository, RepoLanguage, RepoTag
 bp = Blueprint("repositories", __name__, url_prefix="/repositories")
 
 
-# Route to filter repositories
 @bp.route("/filter")
-def filteredRepositories():
-    # Look for stuff in query string
+def filtered_repositories():
+    # Parse the JSON data in the request's body.
+    filter_data = request.args.to_dict()
+    print("\nArgs:", filter_data)
+    # Extracting values from query string
     limit = request.args.get("limit", default=15, type=int)
     if limit != None and limit <= 0:
         limit = 15
     page = request.args.get("page", default=0, type=int)
     if page != None and page < 0:
         page = 0
-
     minStars = request.args.get("minStars", default=0, type=int)
     if minStars != None and minStars < 0:
         minStars = 0
     maxStars = request.args.get("maxStars", type=int)
     if maxStars != None and maxStars < 0:
         maxStars = None
+    # Suppress error with maxStars < minStars
+    if maxStars and maxStars < minStars:
+        maxStars = None
 
     primary_tag = request.args.get("primary_tag", type=str)
+    if primary_tag:
+        primary_tag = normalizeStr(primary_tag.strip())
     tags = request.args.get("tags", type=str)
-
+    if tags:
+        tags = [normalizeStr(tg.strip()) for tg in tags.split(",")]
     languages = request.args.get("languages", type=str)
+    if languages:
+        languages = [normalizeStr(lang.strip()) for lang in languages.split(",")]
 
-    print(
-        "Input Arguments\n",
-        page,
-        limit,
-        minStars,
-        maxStars,
-        primary_tag,
-        tags,
-        languages,
-    )
+    # Create query & apply filters
+    query = db.session.query(Repository)
+    query = query.filter(Repository.stars >= minStars)
+    if maxStars:
+        query = query.filter(Repository.stars <= maxStars)
+    if primary_tag:
+        query = query.filter(Repository._primary_tag == primary_tag)
+    if tags:
+        # Stack filters such that entries that pass the filters have all the
+        # specified tags via RepoTag relations
+        for tag in tags:
+            query = query.filter(Repository.tags.any(tag_name=tag))
+    if languages:
+        for lang in languages:
+            query = query.filter(Repository.languages.any(language_name=lang))
 
-    totalPages = 0
-    repositories = []
-    errors = []
+    # How to deal with getting results after "skipping" (offset)
+    # https://stackoverflow.com/q/52803570
 
-    return jsonify(
-        {
-            "page": page,
-            "totalPages": totalPages,
-            "repositories": repositories,
-            "errors": errors,
+    # To also return number of remaining pages - counting number of
+    # possible remaining entries (for pagnation purposes)
+    # https://stackoverflow.com/q/10822635
+    try:
+        numEntries = query.count()
+        results = query.offset(page * limit).limit(limit).all()
+
+        response = {
+            "message": "Found results.",
+            "currPage": page,
+            "numPages": ceil(numEntries / limit),
+            "repositories": serialize_sqlalchemy_objs(results),
         }
-    )
+        return jsonify(response), 200
+    except:
+        print(traceback.format_exc())
+        response = {
+            "message": "Something went wrong with searching our database with the provided filters."
+        }
+        return jsonify(response), 500
 
 
-# Route to get information on a specific repository
 @bp.route("/<int:repoId>")
 def get_repository(repoId):
     repo = Repository.query.filter_by(id=repoId).first()
@@ -74,7 +104,6 @@ def get_repository(repoId):
         return jsonify({"message": "Repository not found.", "repository": None}), 200
 
 
-# Route to suggest a repository
 @bp.route("/", methods=["POST"])
 @jwt_required()
 @not_banned()
@@ -219,13 +248,11 @@ def refresh_repository(repoId):
     return jsonify({"message": "Refreshed repository information.", "repository": ""})
 
 
-# Route to update a repository
 @bp.route("/<int:repoId>", methods=["PATCH"])
 def update_repository(repoId):
     return jsonify({"message": "Updated repository."})
 
 
-# Route to delete a repository
 @bp.route("/<int:repoId>", methods=["DELETE"])
 def delete_repository(repoId):
     return jsonify({"message": "Delete repository."})
