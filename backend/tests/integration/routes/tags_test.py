@@ -26,7 +26,7 @@ class Tags_Route_Test(testBase.TestBase):
                 test_name="Retrieve all tags",
                 request_url="/api/tags",
                 expected_response={
-                    "primary": [{"name": "project_idea"}],
+                    "primary": [{"name": "project_idea"},{"name":"resource"}],
                     "user_gen": [{"name": "frontend"}],
                 },
             )

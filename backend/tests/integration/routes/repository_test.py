@@ -195,7 +195,8 @@ class Repository_Route_Test(testBase.TestBase):
         )
 
         with self.app.app_context():
-            only_repo = db.session.query(Repository).filter_by(id=0).first()
+            repo_1 = db.session.query(Repository).filter_by(id=0).first()
+            repo_2 = db.session.query(Repository).filter_by(id=10270250).first()
 
             test_cases = [
                 TestCase(
@@ -205,7 +206,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [only_repo.as_dict()],
+                        "repositories": [repo_1.as_dict()],
                     },
                 ),
                 TestCase(
@@ -225,7 +226,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [only_repo.as_dict()],
+                        "repositories": [repo_1.as_dict()],
                     },
                 ),
                 TestCase(
@@ -235,7 +236,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [only_repo.as_dict()],
+                        "repositories": [repo_1.as_dict()],
                     },
                 ),
                 TestCase(
@@ -245,7 +246,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [only_repo.as_dict()],
+                        "repositories": [repo_1.as_dict()],
                     },
                 ),
                 TestCase(
@@ -256,6 +257,26 @@ class Repository_Route_Test(testBase.TestBase):
                         "currPage": 0,
                         "numPages": 0,
                         "repositories": [],
+                    },
+                ),
+                TestCase(
+                    test_name="Sort repository by stars (asc)",
+                    request_url="/api/repositories/filter?sort=stars&order=asc",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [repo_2.as_dict(), repo_1.as_dict()],
+                    },
+                ),
+                TestCase(
+                    test_name="Sort repository by stars (desc)",
+                    request_url="/api/repositories/filter?sort=stars&order=desc",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [repo_1.as_dict(), repo_2.as_dict()],
                     },
                 ),
             ]
