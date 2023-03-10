@@ -17,6 +17,12 @@ def isXMonthOld(datetimeObj, months):
     return dateObj_date < time_threshold
 
 
+def isXDayOld(datetimeObj, days):
+    time_threshold = date.today() - timedelta(days=days)
+    dateObj_date = date(datetimeObj.year, datetimeObj.month, datetimeObj.day)
+    return dateObj_date < time_threshold
+
+
 # Use to sort the languages of a repository from the GitHub API from
 # most used language to least used
 def filterLangs(langDict):

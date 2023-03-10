@@ -60,15 +60,19 @@ def gen_dummyData():
     )
     d_language_2 = Language(name=normalizeStr("HTML"), display_name="HTML")
     d_language_3 = Language(name=normalizeStr("Java"), display_name="Java")
+    d_language_4 = Language(name=normalizeStr("CSS"), display_name="CSS")
 
     d_repo_1 = Repository(
-        id=0,
-        author="testAuthor",
-        repo_name="test-repo",
-        description="This is a non-existent repository",
-        stars=1337,
+        id=394012075,
+        author="cyanChill",
+        repo_name="google-homepage",
+        description="non-existent description",
+        stars=0,
         _primary_tag=d_primary_tag_1.name,
         suggested_by=d_user_0.id,
+        last_updated=datetime.strptime(
+            "2023-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
+        )
     )
     d_repo_2 = Repository(
         id=10270250,
@@ -79,19 +83,37 @@ def gen_dummyData():
         _primary_tag=d_primary_tag_2.name,
         suggested_by=d_user_0.id,
     )
+    d_repo_3 = Repository(
+        id=0,
+        author="na",
+        repo_name="this-doesnt-exist",
+        description="non-existent description",
+        stars=0,
+        _primary_tag=d_primary_tag_2.name,
+        suggested_by=d_user_0.id,
+        last_updated=datetime.strptime(
+            "2023-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
+        )
+    )
 
     d_repo_lang_relation_1 = RepoLanguage(
         repo_id=d_repo_1.id,
-        language_name=d_language_1.name,
+        language_name=d_language_4.name,
         is_primary=True,
     )
     d_repo_lang_relation_2 = RepoLanguage(
         repo_id=d_repo_1.id,
-        language_name=d_language_2.name,
+        language_name=d_language_1.name,
+        is_primary=False,
+    )
+    d_repo_lang_relation_3 = RepoLanguage(
+        repo_id=d_repo_3.id,
+        language_name=d_language_1.name,
         is_primary=False,
     )
 
-    d_repo_tag_relation = RepoTag(repo_id=d_repo_1.id, tag_name=d_tag.name)
+    d_repo_tag_relation_1 = RepoTag(repo_id=d_repo_1.id, tag_name=d_tag.name)
+    d_repo_tag_relation_2 = RepoTag(repo_id=d_repo_3.id, tag_name=d_tag.name)
 
     return [
         d_user_0,
@@ -103,9 +125,13 @@ def gen_dummyData():
         d_language_1,
         d_language_2,
         d_language_3,
+        d_language_4,
         d_repo_1,
         d_repo_2,
+        d_repo_3,
         d_repo_lang_relation_1,
         d_repo_lang_relation_2,
-        d_repo_tag_relation,
+        d_repo_lang_relation_3,
+        d_repo_tag_relation_1,
+        d_repo_tag_relation_2,
     ]

@@ -1,10 +1,11 @@
 import collections
 import pytest
 import webtest
+from datetime import date, datetime
 
 from tests import testBase
 from server.db import db
-from server.models.Repository import Repository
+from server.models.Repository import Repository, RepoLanguage, RepoTag
 
 
 class Repository_Route_Test(testBase.TestBase):
@@ -25,10 +26,10 @@ class Repository_Route_Test(testBase.TestBase):
         test_cases = [
             TestCase(
                 test_name="Get specific repository (that exists)",
-                request_url="/api/repositories/0",
+                request_url="/api/repositories/394012075",
                 expected_res={
                     "message": "Repository found.",
-                    "repo_exerpt": {"id": 0},
+                    "repo_exerpt": {"id": 394012075},
                 },
             ),
             TestCase(
@@ -195,13 +196,14 @@ class Repository_Route_Test(testBase.TestBase):
         )
 
         with self.app.app_context():
-            repo_1 = db.session.query(Repository).filter_by(id=0).first()
-            repo_2 = db.session.query(Repository).filter_by(id=10270250).first()
+            repo_1 = Repository.query.filter_by(id=394012075).first()
+            repo_2 = Repository.query.filter_by(id=10270250).first()
+            repo_3 = Repository.query.filter_by(id=0).first()
 
             test_cases = [
                 TestCase(
                     test_name="Filter repository by languages (that exists)",
-                    request_url="/api/repositories/filter?languages=ruby_on_rails,html",
+                    request_url="/api/repositories/filter?languages=css,ruby_on_rails",
                     expected_res={
                         "message": "Found results.",
                         "currPage": 0,
@@ -211,7 +213,7 @@ class Repository_Route_Test(testBase.TestBase):
                 ),
                 TestCase(
                     test_name="Filter repository by languages (that doesn't exists)",
-                    request_url="/api/repositories/filter?languages=css",
+                    request_url="/api/repositories/filter?languages=java",
                     expected_res={
                         "message": "Found results.",
                         "currPage": 0,
@@ -236,7 +238,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [repo_1.as_dict()],
+                        "repositories": [repo_1.as_dict(), repo_3.as_dict()],
                     },
                 ),
                 TestCase(
@@ -246,12 +248,12 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [repo_1.as_dict()],
+                        "repositories": [repo_1.as_dict(), repo_3.as_dict()],
                     },
                 ),
                 TestCase(
                     test_name="Filter repository by stars (that doesn't exists)",
-                    request_url="/api/repositories/filter?minStars=0&maxStars=100",
+                    request_url="/api/repositories/filter?minStars=500&maxStars=1000",
                     expected_res={
                         "message": "Found results.",
                         "currPage": 0,
@@ -266,7 +268,11 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [repo_2.as_dict(), repo_1.as_dict()],
+                        "repositories": [
+                            repo_2.as_dict(),
+                            repo_3.as_dict(),
+                            repo_1.as_dict(),
+                        ],
                     },
                 ),
                 TestCase(
@@ -276,7 +282,11 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [repo_1.as_dict(), repo_2.as_dict()],
+                        "repositories": [
+                            repo_1.as_dict(),
+                            repo_3.as_dict(),
+                            repo_2.as_dict(),
+                        ],
                     },
                 ),
             ]
@@ -294,6 +304,132 @@ class Repository_Route_Test(testBase.TestBase):
                         response["currPage"], test_case.expected_res["currPage"]
                     )
                     self.assert_response(repos, expected_repos)
+
+    def test_refresh_repository(self):
+        TestCase = collections.namedtuple(
+            "TestCase", ["test_name", "repo_id", "expected_res"]
+        )
+
+        with self.app.app_context():
+            recent_repo = Repository(
+                id=407959883,
+                author="cyanChill",
+                repo_name="Battleship",
+                description="",
+                stars=0,
+                _primary_tag="project_idea",
+                suggested_by="0",
+            )
+            # Add recent repo
+            db.session.add(recent_repo)
+            db.session.commit()
+
+            repo_1 = Repository.query.filter_by(id=394012075).first()
+            repo_1_dict = repo_1.as_dict()
+            repo_1_dict["description"] = None
+            repo_1_dict["languages"] = [
+                {"name": "css", "display_name": "CSS"},
+                {"name": "html", "display_name": "HTML"},
+            ]
+            currDate = date.today()
+            repo_1_dict["last_updated"] = currDate
+
+            test_cases = [
+                TestCase(
+                    test_name="Refreshing repository recently refreshed",
+                    repo_id="407959883",
+                    expected_res={
+                        "message": "Repository has been recently updated.",
+                        "repository": recent_repo.as_dict(),
+                    },
+                ),
+                TestCase(
+                    test_name="Refreshing repository with refreshable content.",
+                    repo_id="394012075",
+                    expected_res={
+                        "message": "Refreshed repository information.",
+                        "repository": repo_1_dict,
+                    },
+                ),
+            ]
+
+            for test_case in test_cases:
+                with self.subTest(msg=test_case.test_name):
+                    response = self.webtest_app.get(
+                        f"/api/repositories/{test_case.repo_id}/refresh"
+                    ).json
+
+                    self.assertEqual(
+                        response["message"], test_case.expected_res["message"]
+                    )
+
+                    repo = response["repository"]
+                    expected_repo = test_case.expected_res["repository"]
+                    # Ignore properties that won't change
+                    del expected_repo["tags"]
+                    del expected_repo["suggested_by"]
+
+                    # Deal with last_updated property check
+                    repo_date_1 = datetime.strptime(
+                        repo["last_updated"], "%Y-%m-%dT%H:%M:%S"
+                    )
+                    self.assertEqual(repo_date_1.month, currDate.month)
+                    self.assertEqual(repo_date_1.day, currDate.day)
+                    self.assertEqual(repo_date_1.year, currDate.year)
+
+                    del expected_repo["last_updated"]
+
+                    for item in expected_repo.items():
+                        self.assertEqual(repo[item[0]], item[1])
+
+    def test_refresh_repository_bad_request(self):
+        TestCase = collections.namedtuple(
+            "TestCase",
+            [
+                "test_name",
+                "repo_id",
+                "expected_error_code",
+                "expected_error_message",
+            ],
+        )
+
+        test_cases = [
+            TestCase(
+                test_name="Repository doesn't exist",
+                repo_id="10",
+                expected_error_code="404",
+                expected_error_message="Repository with repository id 10 doesn\\'t exist.",
+            ),
+            TestCase(
+                test_name="Repository that doesn't exist in the API",
+                repo_id="0",
+                expected_error_code="410",
+                expected_error_message="Repository is no longer accessible via the GitHub API and has been deleted from our database.",
+            ),
+        ]
+
+        with self.app.app_context():
+            for test_case in test_cases:
+                with self.subTest(msg=test_case.test_name):
+                    # Assert validation errors are raised for the test cases defined above.
+                    with self.assertRaises(webtest.AppError) as exception:
+                        self.webtest_app.get(
+                            f"/api/repositories/{test_case.repo_id}/refresh"
+                        )
+
+                    # Assert the HTTP Response Code and the error messages are what we expect.
+                    response_code, response_body = str(exception.exception).split("\n")
+                    self.assertTrue(test_case.expected_error_code in response_code)
+                    self.assertTrue(test_case.expected_error_message in response_body)
+
+                    # If we deleted a repository in our database, ensure things have been deleted
+                    if test_case.expected_error_code == "410":
+                        dlt_repo = Repository.query.filter_by(id=0).first()
+                        dlt_lang_rel = RepoLanguage.query.filter_by(repo_id=0).all()
+                        dlt_tag_rel = RepoTag.query.filter_by(repo_id=0).all()
+                        self.assertTrue(dlt_repo == None)
+                        self.assertTrue(len(dlt_lang_rel) == 0)
+                        self.assertTrue(len(dlt_tag_rel) == 0)
 
     @pytest.mark.skip(reason="Not implemented.")
     def test_update_repository(self):

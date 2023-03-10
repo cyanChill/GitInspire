@@ -11,13 +11,13 @@ class RepositoryTest(testBase.TestBase):
         )
 
         with self.app.app_context():
-            repo_info = Repository.query.filter_by(id=0).first()
+            repo_info = Repository.query.filter_by(id=394012075).first()
 
             test_cases = [
                 TestCase(
                     test_name="Repository 'repo_link' Property",
                     repository=repo_info,
-                    expected_link="https://github.com/testAuthor/test-repo",
+                    expected_link="https://github.com/cyanChill/google-homepage",
                 )
             ]
 
@@ -32,8 +32,8 @@ class RepositoryTest(testBase.TestBase):
         )
 
         with self.app.app_context():
-            repo_info = Repository.query.filter_by(id=0).first()
-            repo_lang = RepoLanguage.query.filter_by(repo_id=0).all()
+            repo_info = Repository.query.filter_by(id=394012075).first()
+            repo_lang = RepoLanguage.query.filter_by(repo_id=394012075).all()
 
             test_cases = [
                 TestCase(
@@ -62,15 +62,15 @@ class RepositoryTest(testBase.TestBase):
         )
 
         with self.app.app_context():
-            repo_info = Repository.query.filter_by(id=0).first()
+            repo_info = Repository.query.filter_by(id=394012075).first()
 
             test_cases = [
                 TestCase(
                     test_name="Repository language Relation",
                     repository=repo_info,
                     expected_order=[
+                        {"name": "css", "display_name": "CSS"},
                         {"name": "ruby_on_rails", "display_name": "Ruby on Rails"},
-                        {"name": "html", "display_name": "HTML"},
                     ],
                 )
             ]

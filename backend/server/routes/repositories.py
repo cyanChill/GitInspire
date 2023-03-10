@@ -1,10 +1,12 @@
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, g, jsonify, request, current_app as app
 from flask_jwt_extended import jwt_required
+from sqlalchemy import delete, update
 import requests
 from math import ceil
 import traceback
 
 from server.utils import (
+    isXDayOld,
     isXMonthOld,
     filterLangs,
     normalizeStr,
@@ -60,7 +62,7 @@ def filtered_repositories():
     order = "desc" if order == "desc" else "asc"
 
     # Create query & apply filters
-    query = db.session.query(Repository)
+    query = Repository.query
     query = query.filter(Repository.stars >= minStars)
     if maxStars:
         query = query.filter(Repository.stars <= maxStars)
@@ -166,7 +168,14 @@ def create_repository():
         return jsonify({"message": "Something went wrong with validating tags."}), 500
 
     # Find repository information from GitHub
-    repo_dt_resp = requests.get(f"https://api.github.com/repos/{author}/{repo_name}")
+    repo_dt_resp = requests.get(
+        f"https://api.github.com/repos/{author}/{repo_name}",
+        auth=(app.config["GITHUB_CLIENT_ID"], app.config["GITHUB_CLIENT_SECRET"]),
+        headers={
+            "Accept": "application/vnd.github.text-match+json",
+            "User-Agent": "gitinspire-server",
+        },
+    )
     repo_data = repo_dt_resp.json()
     if not repo_dt_resp.ok:
         return jsonify({"message": "Repository was not found."}), 500
@@ -181,7 +190,14 @@ def create_repository():
         return jsonify(response), 200
 
     # Get languages
-    repo_lang_dt_resp = requests.get(repo_data["languages_url"])
+    repo_lang_dt_resp = requests.get(
+        repo_data["languages_url"],
+        auth=(app.config["GITHUB_CLIENT_ID"], app.config["GITHUB_CLIENT_SECRET"]),
+        headers={
+            "Accept": "application/vnd.github.text-match+json",
+            "User-Agent": "gitinspire-server",
+        },
+    )
     repo_lang_data = repo_lang_dt_resp.json()
     if not repo_lang_dt_resp.ok:
         return jsonify({"message": "Failed to find repository languages."}), 500
@@ -243,23 +259,130 @@ def create_repository():
 # Route to refresh repository info from GitHub API
 @bp.route("/<int:repoId>/refresh")
 def refresh_repository(repoId):
-    # TODO:
-    # 1. Get local copy of repository & check it's last updated
-    #     - If was recently updated, return local copy
-    #     - If it doesn't exist locally, throw an error
-    # 2. If it's allowed to be refreshed (last updated > 1 day), call
-    #    GitHub API for new data.
-    # 3. If doesn't exist, handle deletion protocols
-    #     - Delete RepoLanguage Relations
-    #     - Delete RepoTag Relations
-    #     - NOTE: Probably consider whether we want to delete upvotes/downvotes
-    #             and reports on this now non-existent repository as this
-    #             can be abused by bad actors who have a poor upvote/downvote
-    #             rating or multiple outstanding reports
-    # 4. If exists, update GitHub-specific attributes in Repository Object
-    #    and return it to the client
+    # Get local copy of repository & check it hasn't been updated in the last day
+    existing_repo = Repository.query.filter_by(id=repoId).first()
+    if existing_repo == None:
+        response = {"message": f"Repository with repository id {repoId} doesn't exist."}
+        return jsonify(response), 404
 
-    return jsonify({"message": "Refreshed repository information.", "repository": ""})
+    if not isXDayOld(existing_repo.last_updated, 1):
+        response = {
+            "message": "Repository has been recently updated.",
+            "repository": existing_repo.as_dict(),
+        }
+        return jsonify(response), 200
+
+    # Call GitHub API since repository data can be refreshed
+    repo_data_resp = requests.get(
+        f"https://api.github.com/repositories/{repoId}",
+        auth=(app.config["GITHUB_CLIENT_ID"], app.config["GITHUB_CLIENT_SECRET"]),
+        headers={
+            "Accept": "application/vnd.github.text-match+json",
+            "User-Agent": "gitinspire-server",
+        },
+    )
+
+    # Handle case where rate limit was hit, validation failed, endpoint has been spammed
+    if repo_data_resp.status_code in [403, 422]:
+        return jsonify({"message": "Something else went wrong."}), 500
+
+    # Handle case where repository is no longer accessible via the API
+    if repo_data_resp.status_code == 404:
+        # Delete all SQL objects containing a relation with specified "repoId"
+        db.session.execute(delete(RepoLanguage).where(RepoLanguage.repo_id == repoId))
+        db.session.execute(delete(RepoTag).where(RepoTag.repo_id == repoId))
+        db.session.execute(delete(Repository).where(Repository.id == repoId))
+        db.session.commit()
+
+        # TODO: Future Feature - Create a log noting this repository has
+        # been removed from our database through this method
+
+        response = {
+            "message": "Repository is no longer accessible via the GitHub API and has been deleted from our database."
+        }
+        return jsonify(response), 410
+
+    # Handle case where no modifications was made
+    if repo_data_resp.status_code == 304:
+        # "Touch" Repository entry to trigger onupdate event to update "last_update"
+        stmt = update(Repository).where(Repository.id == repoId)
+        db.engine.execute(stmt)
+        response = {
+            "message": "No changes was found.",
+            "repository": existing_repo.as_dict(),
+        }
+        return jsonify(response), 200
+
+    # Some other untracked error
+    if not repo_data_resp.ok:
+        return jsonify({"message": "An unknown error has occurred."}), 500
+
+    # Handling case where modifications were made
+    updt_repo_data = repo_data_resp.json()
+    update_dict = {
+        "author": updt_repo_data["owner"]["login"],
+        "repo_name": updt_repo_data["name"],
+        "description": updt_repo_data["description"],
+        "stars": updt_repo_data["stargazers_count"],
+    }
+
+    try:
+        # Commiting update
+        update_stmt = update(Repository).filter_by(id=repoId).values(**update_dict)
+        db.session.execute(update_stmt)
+        db.session.commit()
+    except:
+        print(traceback.format_exc())
+        response = {"message": "Something went wrong with refreshing repository data."}
+        return jsonify(response), 500
+
+    # Updating languages if that has changed
+    updt_langs_resp = requests.get(
+        updt_repo_data["languages_url"],
+        auth=(app.config["GITHUB_CLIENT_ID"], app.config["GITHUB_CLIENT_SECRET"]),
+        headers={
+            "Accept": "application/vnd.github.text-match+json",
+            "User-Agent": "gitinspire-server",
+        },
+    )
+    updt_langs = updt_langs_resp.json()
+    if not updt_langs_resp.ok:
+        return jsonify({"message": "Failed to find repository languages."}), 500
+
+    sorted_langs = filterLangs(updt_langs)
+    # Add languages to database if they don't exist
+    for lg in sorted_langs:
+        if Language.query.filter_by(name=normalizeStr(lg)).first() == None:
+            new_lang = Language(name=normalizeStr(lg), display_name=lg)
+            db.session.add(new_lang)
+    db.session.commit()
+
+    try:
+        # Delete previous language relations
+        del_stmt = delete(RepoLanguage).where(RepoLanguage.repo_id == repoId)
+        db.session.execute(del_stmt)
+        db.session.commit()
+
+        # Add the updated langauge relations with repository
+        if sorted_langs:
+            for idx, lg in enumerate(sorted_langs):
+                new_lang_rel = RepoLanguage(
+                    repo_id=repoId,
+                    language_name=normalizeStr(lg),
+                    is_primary=(idx == 0),
+                )
+                db.session.add(new_lang_rel)
+        db.session.commit()
+    except:
+        print(traceback.format_exc())
+        response = {"message": "Failed to update repository associations."}
+        return jsonify(response), 500
+
+    response = {
+        "message": "Refreshed repository information.",
+        "repository": existing_repo.as_dict(),
+    }
+    return jsonify(response), 200
 
 
 @bp.route("/<int:repoId>", methods=["PATCH"])
