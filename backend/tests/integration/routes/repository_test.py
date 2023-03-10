@@ -18,6 +18,15 @@ class Repository_Route_Test(testBase.TestBase):
         expected_ids = [repo["id"] for repo in expected_repos]
         self.assertCountEqual(actual_ids, expected_ids)
 
+    def assert_response_strict(self, response, expected_repos):
+        """
+        A helper method that asserts whether an HTTP response includes the
+        suspected Repository ids (order matters)
+        """
+        actual_ids = [repo["id"] for repo in response]
+        expected_ids = [repo["id"] for repo in expected_repos]
+        self.assertEqual(actual_ids, expected_ids)
+
     def test_get_repository(self):
         TestCase = collections.namedtuple(
             "TestCase", ["test_name", "request_url", "expected_res"]
@@ -238,7 +247,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [repo_1.as_dict(), repo_3.as_dict()],
+                        "repositories": [repo_3.as_dict(), repo_1.as_dict()],
                     },
                 ),
                 TestCase(
@@ -248,7 +257,7 @@ class Repository_Route_Test(testBase.TestBase):
                         "message": "Found results.",
                         "currPage": 0,
                         "numPages": 1,
-                        "repositories": [repo_1.as_dict(), repo_3.as_dict()],
+                        "repositories": [repo_3.as_dict(), repo_1.as_dict()],
                     },
                 ),
                 TestCase(
@@ -269,9 +278,9 @@ class Repository_Route_Test(testBase.TestBase):
                         "currPage": 0,
                         "numPages": 1,
                         "repositories": [
-                            repo_2.as_dict(),
                             repo_3.as_dict(),
                             repo_1.as_dict(),
+                            repo_2.as_dict(),
                         ],
                     },
                 ),
@@ -283,9 +292,37 @@ class Repository_Route_Test(testBase.TestBase):
                         "currPage": 0,
                         "numPages": 1,
                         "repositories": [
+                            repo_2.as_dict(),
+                            repo_3.as_dict(),
+                            repo_1.as_dict(),
+                        ],
+                    },
+                ),
+                TestCase(
+                    test_name="Sort repository by last updated (asc)",
+                    request_url="/api/repositories/filter?sort=date&order=asc",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [
                             repo_1.as_dict(),
                             repo_3.as_dict(),
                             repo_2.as_dict(),
+                        ],
+                    },
+                ),
+                TestCase(
+                    test_name="Sort repository by last updated (desc)",
+                    request_url="/api/repositories/filter?sort=date&order=desc",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 0,
+                        "numPages": 1,
+                        "repositories": [
+                            repo_2.as_dict(),
+                            repo_3.as_dict(),
+                            repo_1.as_dict(),
                         ],
                     },
                 ),
@@ -303,7 +340,7 @@ class Repository_Route_Test(testBase.TestBase):
                     self.assertEqual(
                         response["currPage"], test_case.expected_res["currPage"]
                     )
-                    self.assert_response(repos, expected_repos)
+                    self.assert_response_strict(repos, expected_repos)
 
     def test_refresh_repository(self):
         TestCase = collections.namedtuple(

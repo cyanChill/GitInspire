@@ -54,7 +54,7 @@ def filtered_repositories():
         languages = [normalizeStr(lang.strip()) for lang in languages.split(",")]
 
     # Sorting Filters
-    sortOpts = ["stars"]
+    sortOpts = ["stars", "date"]
     sort = request.args.get("sort", type=str)
     sort = sort if sort in sortOpts else None
 
@@ -82,6 +82,11 @@ def filtered_repositories():
             query = query.order_by(Repository.stars.desc())
         else:
             query = query.order_by(Repository.stars)
+    if sort == "date":
+        if order == "desc":
+            query = query.order_by(Repository.last_updated.desc())
+        else:
+            query = query.order_by(Repository.last_updated)
 
     # How to deal with getting results after "skipping" (offset)
     # https://stackoverflow.com/q/52803570

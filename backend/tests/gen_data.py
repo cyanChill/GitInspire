@@ -71,7 +71,7 @@ def gen_dummyData():
         _primary_tag=d_primary_tag_1.name,
         suggested_by=d_user_0.id,
         last_updated=datetime.strptime(
-            "2023-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
+            "2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
         )
     )
     d_repo_2 = Repository(
