@@ -12,7 +12,7 @@ from server.utils import (
     normalizeStr,
     serialize_sqlalchemy_objs,
 )
-from server.routes.auth import not_banned
+from server.routes.auth import not_banned, admin_required
 from server.db import db
 from server.models.Language import Language
 from server.models.Tag import Tag
@@ -391,10 +391,12 @@ def refresh_repository(repoId):
 
 
 @bp.route("/<int:repoId>", methods=["PATCH"])
+@admin_required()
 def update_repository(repoId):
     return jsonify({"message": "Updated repository."})
 
 
 @bp.route("/<int:repoId>", methods=["DELETE"])
+@admin_required()
 def delete_repository(repoId):
     return jsonify({"message": "Delete repository."})

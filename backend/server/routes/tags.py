@@ -5,7 +5,7 @@ import traceback
 from server.db import db
 from server.models.Tag import Tag, TagTypeEnum
 from server.utils import serialize_sqlalchemy_objs, isXMonthOld, normalizeStr
-from server.routes.auth import not_banned
+from server.routes.auth import not_banned, admin_required
 
 bp = Blueprint("tags", __name__, url_prefix="/tags")
 
@@ -81,10 +81,12 @@ def create_tag():
 
 
 @bp.route("/<string:tagName>", methods=["PATCH"])
+@admin_required()
 def update_tag(tagName):
     return jsonify({"message": "Updated tag."})
 
 
 @bp.route("/<string:tagName>", methods=["DELETE"])
+@admin_required()
 def delete_tag(tagName):
     return jsonify({"message": "Deleted tag."})
