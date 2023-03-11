@@ -35,6 +35,12 @@ export default function RepoInfoCard({
     router.push(`/report?type=repository&id=${repository.id}`);
   };
 
+  const suggestLink = () => {
+    // Redirect to the report route with some information in the URL params
+    // to suggest a maintain link for an abandoned repository without one
+    router.push(`/report?type=repository&id=${repository.id}&reason=maintain_link`);
+  };
+
   const refreshInfo = async () => {
     // Repository data has been refreshed recently
     if (!isXDaysOld(repository.last_updated, 1)) return;
@@ -109,7 +115,13 @@ export default function RepoInfoCard({
           </span>
         ))}
 
-        <span className="rounded-xl bg-slate-300 px-2 py-0.5 dark:bg-slate-500">
+        <span
+          className={`rounded-xl px-2 py-0.5 ${
+            repository.primary_tag.name === "abandoned"
+              ? "bg-red-300 dark:bg-red-600"
+              : "bg-slate-300 dark:bg-slate-500"
+          }`}
+        >
           {repository.primary_tag.display_name}
         </span>
 
@@ -160,7 +172,7 @@ export default function RepoInfoCard({
 
       {/* Action */}
       <hr className="mx-2" />
-      <div className="flex justify-end px-2 py-1 text-sm">
+      <div className="flex flex-wrap justify-end gap-3 px-2 py-1 text-sm">
         {isAuthenticated && (
           <button
             className="text-slate-500 hover:underline dark:text-gray-50"
@@ -169,9 +181,18 @@ export default function RepoInfoCard({
             Report a Problem
           </button>
         )}
+        {repository.primary_tag.name === "abandoned" &&
+          !repository.maintain_link && (
+            <button
+              className="text-red-500 hover:underline dark:text-red-400"
+              onClick={suggestLink}
+            >
+              Suggest Link
+            </button>
+          )}
         {/* Allow refresh button for non-authenticated users */}
         <Button
-          className="ml-3 w-max"
+          className="w-max"
           clr={{
             bkg: "bg-indigo-400 enabled:hover:bg-indigo-500 disabled:opacity-25",
             txt: "text-white",
