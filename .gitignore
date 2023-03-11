@@ -1,5 +1,7 @@
 .vscode
 
+/design
+
 # Python File Ignores
 
 # Don't push python virtual environment folder

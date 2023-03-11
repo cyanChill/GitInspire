@@ -38,20 +38,20 @@ export default function Navigation() {
           alt={`${user?.username} profile picture`}
           width={24}
           height={24}
-          className="max-w-fit bg-slate-800 dark:bg-white rounded-full"
+          className="max-w-fit rounded-full bg-slate-800 dark:bg-white"
         />
       ),
     };
   }).filter((item): item is RouteObjType => !!item);
 
   return (
-    <nav className="z-50 sm:overflow-y-auto fixed sm:sticky sm:top-0 bottom-0 sm:bottom-auto w-full sm:w-24 sm:h-screen sm:flex sm:flex-col sm:items-center sm:gap-3 bg-white dark:bg-slate-800 shadow-inner sm:shadow-xl dark:shadow-xl shadow-neutral-200 dark:shadow-slate-600">
+    <nav className="fixed bottom-0 z-50 w-full bg-white shadow-inner shadow-neutral-200 dark:bg-slate-800 dark:shadow-xl dark:shadow-slate-600 sm:sticky sm:top-0 sm:bottom-auto sm:flex sm:h-screen sm:w-24 sm:flex-col sm:items-center sm:gap-3 sm:overflow-y-auto sm:shadow-xl">
       <GitInspire
         aria-label="GitInspire logo"
-        className="hidden sm:block max-w-[64px] max-h-[64px] my-5"
+        className="my-5 hidden max-h-[64px] max-w-[64px] sm:block"
       />
 
-      <ul className="w-full h-full flex sm:flex-col justify-evenly sm:justify-start items-center sm:items-start gap-3 p-2">
+      <ul className="flex h-full w-full items-center justify-evenly gap-3 p-2 sm:flex-col sm:items-start sm:justify-start">
         {navRoutes.map((route) => (
           <NavItem
             key={route.name}
@@ -92,14 +92,14 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
   return (
     <li
       key={name}
-      className="group relative w-16 sm:w-full transition text-center text-2xl"
+      className="group relative w-16 text-center text-2xl transition sm:w-full"
     >
       <Link
         href={href}
-        className={`flex flex-col justify-center items-center sm:gap-2 sm:p-1.5 sm:py-2 sm:rounded-xl ${iconDeskClass}`}
+        className={`flex flex-col items-center justify-center sm:gap-2 sm:rounded-xl sm:p-1.5 sm:py-2 ${iconDeskClass}`}
       >
         <span
-          className={`sm:hidden navItemTransitions p-1 rounded-full outline-[6px] ${iconMobClass}`}
+          className={`navItemTransitions rounded-full p-1 outline-[6px] sm:hidden ${iconMobClass}`}
         >
           {icon}
         </span>
@@ -107,12 +107,12 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
           className={`hidden sm:block ${
             isActive
               ? "text-white"
-              : "text-slate-500 dark:text-zinc-400 group-hover:text-white"
+              : "text-slate-500 group-hover:text-white dark:text-zinc-400"
           }`}
         >
           {icon}
         </span>
-        <span className="max-[400px]:hidden text-sm sm:text-base sm:font-medium">
+        <span className="text-sm max-[400px]:hidden sm:text-base sm:font-medium">
           {name}
         </span>
       </Link>
