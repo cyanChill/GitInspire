@@ -12,18 +12,24 @@ def create_app(configName=None):
     # NOTE: Make sure the origins matches with the frontend URL
     CORS(app, origins=["http://localhost:3000", "https://gitinspire.vercel.app"])
 
-    # Fix issue with unexpected server connection closure
-    #  Ref: https://stackoverflow.com/a/61739721
-    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_pre_ping": True}
-    # Have access token expire after 3 hours
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
-
-    # load the default config values
-    app.config.from_pyfile("config.py", silent=True)
-
     # Load configs to override production values if provided
-    if configName is not None:
-        app.config.from_object(configuration.configuration[configName](app))
+    configName = (
+        configName
+        if configName
+        else os.environ.get("ENVIRONMENT", configuration.ConfigurationName.DEVELOPMENT)
+    )
+
+    app.config.from_object(configuration.configuration[configName])
+
+    app.config.update(
+        SECRET_KEY=os.environ.get("SECRET_KEY", ""),
+        JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY", ""),
+        # Fix issue with unexpected server connection closure
+        #  Ref: https://stackoverflow.com/a/61739721
+        SQLALCHEMY_ENGINE_OPTIONS={"pool_pre_ping": True},
+        # Have access token expire after 3 hours
+        JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=3),
+    )
 
     # ensure the instance folder exists
     try:
