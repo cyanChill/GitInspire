@@ -1,4 +1,4 @@
-name: Testing Backend
+name: Test Backend Flask Server
 on:
   pull_request:
     branches:
