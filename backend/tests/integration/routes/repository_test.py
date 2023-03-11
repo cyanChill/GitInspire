@@ -63,7 +63,7 @@ class Repository_Route_Test(testBase.TestBase):
                     expected_repo = test_case.expected_res["repo_exerpt"]
 
                     if repo != None:  # Repo found
-                        # Assert the response only includes the expected Language names
+                        # Assert the response only includes the expected Repository ids
                         self.assert_response([repo], [expected_repo])
                     else:  # Repo not found
                         self.assertTrue(expected_repo == None)

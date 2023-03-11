@@ -2,6 +2,9 @@ from flask import Blueprint, g, request, jsonify, url_for
 from flask_jwt_extended import jwt_required
 import traceback
 
+from server.db import db
+from server.models.User import User
+
 bp = Blueprint("user", __name__, url_prefix="/user")
 
 # Route to get all users
@@ -13,7 +16,12 @@ def get_users():
 # Route to get general information on the user
 @bp.route("/<int:userId>")
 def get_user(userId):
-    return jsonify({"message": "Basic user info"})
+    user = User.query.filter_by(id=userId).first()
+
+    if user != None:
+        return jsonify({"message": "User found.", "user": user.as_dict()}), 200
+    else:
+        return jsonify({"message": "User not found.", "user": None}), 200
 
 
 # Route to refresh user info from GitHub API
