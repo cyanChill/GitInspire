@@ -31,7 +31,9 @@ class DevelopmentConfiguration(Configuration):
 
     GITHUB_CLIENT_ID = os.environ.get("DEV_GITHUB_CLIENT_ID", "dev")
     GITHUB_CLIENT_SECRET = os.environ.get("DEV_GITHUB_CLIENT_SECRET", "dev")
-    GITHUB_REDIRECT_URI = "http://localhost:3000/auth/login"
+    GITHUB_REDIRECT_URI = os.environ.get(
+        "DEV_GITHUB_REDIRECT_URI", "http://localhost:3000"
+    )
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DEV_DATABASE_URL", "sqlite:///" + os.path.join(BASEDIR, "gitinspire-dev.db")
@@ -48,7 +50,9 @@ class ProductionConfiguration(Configuration):
     # Fetch values from "instance/config.py" for production values
     GITHUB_CLIENT_ID = os.environ.get("PROD_GITHUB_CLIENT_ID", "prod")
     GITHUB_CLIENT_SECRET = os.environ.get("PROD_GITHUB_CLIENT_SECRET", "prod")
-    GITHUB_REDIRECT_URI = "https://gitinspire.vercel.app/auth/login"
+    GITHUB_REDIRECT_URI = os.environ.get(
+        "PROD_GITHUB_REDIRECT_URI", "http://localhost:3000"
+    )
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "PROD_DATABASE_URL", "sqlite:///" + os.path.join(BASEDIR, "gitinspire.db")
@@ -67,7 +71,9 @@ class TestingConfiguration(Configuration):
 
     GITHUB_CLIENT_ID = os.environ.get("DEV_GITHUB_CLIENT_ID", "test")
     GITHUB_CLIENT_SECRET = os.environ.get("DEV_GITHUB_CLIENT_SECRET", "test")
-    GITHUB_REDIRECT_URI = "http://localhost:3000/auth/login"
+    GITHUB_REDIRECT_URI = os.environ.get(
+        "DEV_GITHUB_REDIRECT_URI", "http://localhost:3000"
+    )
 
     SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL", "sqlite:///")
 

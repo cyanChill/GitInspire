@@ -1,7 +1,7 @@
 import collections
 import pytest
 import webtest
-from datetime import date, datetime
+from datetime import datetime
 
 from tests import testBase
 from server.db import db
@@ -368,7 +368,7 @@ class Repository_Route_Test(testBase.TestBase):
                 {"name": "css", "display_name": "CSS"},
                 {"name": "html", "display_name": "HTML"},
             ]
-            currDate = date.today()
+            currDate = datetime.utcnow()
             repo_1_dict["last_updated"] = currDate
 
             test_cases = [
