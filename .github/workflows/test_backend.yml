@@ -11,6 +11,7 @@ on:
       - client/** # Should only run on backend changes
       - .gitignore
       - .github/**
+  workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
