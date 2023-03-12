@@ -12,7 +12,7 @@ on:
       - .gitignore
       - .github/**
 jobs:
-  test-backend:
+  test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -29,7 +29,7 @@ jobs:
           cache: 'pip'
       - name: Install dependencies
         run: |
-          pip install /server/requirements.txt
+          pip install -r "./server/requirements.txt"
       - name: Test with pytest
         run: |
           pytest
