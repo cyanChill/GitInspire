@@ -22,8 +22,8 @@ def create_app(configName=None):
     app.config.from_object(configuration.configuration[configName])
 
     app.config.update(
-        SECRET_KEY=os.environ.get("SECRET_KEY", ""),
-        JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY", ""),
+        SECRET_KEY=os.environ.get("SECRET_KEY", "dev"),
+        JWT_SECRET_KEY=os.environ.get("JWT_SECRET_KEY", "dev"),
         # Fix issue with unexpected server connection closure
         #  Ref: https://stackoverflow.com/a/61739721
         SQLALCHEMY_ENGINE_OPTIONS={"pool_pre_ping": True},

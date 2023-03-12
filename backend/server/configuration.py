@@ -29,8 +29,8 @@ class DevelopmentConfiguration(Configuration):
     JWT_COOKIE_SECURE = False
     JWT_TOKEN_LOCATION = "cookies"
 
-    GITHUB_CLIENT_ID = os.environ.get("DEV_GITHUB_CLIENT_ID", "")
-    GITHUB_CLIENT_SECRET = os.environ.get("DEV_GITHUB_CLIENT_SECRET", "")
+    GITHUB_CLIENT_ID = os.environ.get("DEV_GITHUB_CLIENT_ID", "dev")
+    GITHUB_CLIENT_SECRET = os.environ.get("DEV_GITHUB_CLIENT_SECRET", "dev")
     GITHUB_REDIRECT_URI = "http://localhost:3000/auth/login"
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -46,8 +46,8 @@ class ProductionConfiguration(Configuration):
     JWT_TOKEN_LOCATION = "cookies"
 
     # Fetch values from "instance/config.py" for production values
-    GITHUB_CLIENT_ID = os.environ.get("PROD_GITHUB_CLIENT_ID", "")
-    GITHUB_CLIENT_SECRET = os.environ.get("PROD_GITHUB_CLIENT_SECRET", "")
+    GITHUB_CLIENT_ID = os.environ.get("PROD_GITHUB_CLIENT_ID", "prod")
+    GITHUB_CLIENT_SECRET = os.environ.get("PROD_GITHUB_CLIENT_SECRET", "prod")
     GITHUB_REDIRECT_URI = "https://gitinspire.vercel.app/auth/login"
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -65,8 +65,8 @@ class TestingConfiguration(Configuration):
     JWT_COOKIE_CSRF_PROTECT = False
     JWT_TOKEN_LOCATION = "headers"
 
-    GITHUB_CLIENT_ID = os.environ.get("DEV_GITHUB_CLIENT_ID", "")
-    GITHUB_CLIENT_SECRET = os.environ.get("DEV_GITHUB_CLIENT_SECRET", "")
+    GITHUB_CLIENT_ID = os.environ.get("DEV_GITHUB_CLIENT_ID", "test")
+    GITHUB_CLIENT_SECRET = os.environ.get("DEV_GITHUB_CLIENT_SECRET", "test")
     GITHUB_REDIRECT_URI = "http://localhost:3000/auth/login"
 
     SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL", "sqlite:///")
