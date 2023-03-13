@@ -150,15 +150,13 @@ export default function DiscoverPage() {
         if (isSameFilter && sortMethod === newSort) {
           // Same filter, new page
           setResults((prev) => ({ ...prev, [currPageNum]: repositories }));
-          setCurrPg(currPageNum);
-          setMaxPgs(numPages);
         } else {
           // New filter
           setResults({ [currPageNum]: repositories });
-          setCurrPg(currPageNum);
-          setMaxPgs(numPages);
         }
-
+        // If undefined, set values to 0
+        setCurrPg(currPageNum ?? 0);
+        setMaxPgs(numPages ?? 0);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -212,7 +210,7 @@ export default function DiscoverPage() {
 
           {/* Found Repositories */}
           <div className="flex-auto overflow-y-auto">
-            {results[currPg] ? (
+            {results[currPg] && (results[currPg].length > 0) ? (
               results[currPg].map((repo) => (
                 <p
                   key={repo.id}
@@ -225,7 +223,7 @@ export default function DiscoverPage() {
             ) : isLoading ? (
               <Spinner />
             ) : (
-              <p className="text-red-500">
+              <p className="text-red:500 dark:text-red-400 text-center mt-5">
                 No repositories found with given filter.
               </p>
             )}
@@ -235,7 +233,7 @@ export default function DiscoverPage() {
           <div className="align-center mt-auto flex flex-[0_1_50px] justify-center gap-1 border border-green-500">
             <Button
               onClick={() => updateURLPage(1)}
-              disabled={currPg === 1 || isLoading}
+              disabled={currPg === 0 || currPg === 1 || isLoading}
             >
               First
             </Button>
@@ -243,7 +241,7 @@ export default function DiscoverPage() {
               onClick={() => {
                 if (currPg > 1) updateURLPage(currPg - 1);
               }}
-              disabled={currPg === 1 || isLoading}
+              disabled={currPg === 0 || currPg === 1 || isLoading}
             >
               Prev
             </Button>
