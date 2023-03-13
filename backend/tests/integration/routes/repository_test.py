@@ -215,7 +215,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?languages=css,ruby_on_rails",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [repo_1.as_dict()],
                     },
@@ -235,7 +235,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?primary_tag=project_idea",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [repo_1.as_dict()],
                     },
@@ -245,7 +245,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?tags=frontend",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [repo_3.as_dict(), repo_1.as_dict()],
                     },
@@ -255,7 +255,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?minStars=0&maxStars=1500",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [repo_3.as_dict(), repo_1.as_dict()],
                     },
@@ -275,7 +275,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?sort=stars&order=asc",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [
                             repo_3.as_dict(),
@@ -289,7 +289,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?sort=stars&order=desc",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [
                             repo_2.as_dict(),
@@ -303,7 +303,7 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?sort=date&order=asc",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [
                             repo_1.as_dict(),
@@ -317,13 +317,23 @@ class Repository_Route_Test(testBase.TestBase):
                     request_url="/api/repositories/filter?sort=date&order=desc",
                     expected_res={
                         "message": "Found results.",
-                        "currPage": 0,
+                        "currPage": 1,
                         "numPages": 1,
                         "repositories": [
                             repo_2.as_dict(),
                             repo_3.as_dict(),
                             repo_1.as_dict(),
                         ],
+                    },
+                ),
+                TestCase(
+                    test_name="Testing limit filter",
+                    request_url="/api/repositories/filter?limit=1",
+                    expected_res={
+                        "message": "Found results.",
+                        "currPage": 1,
+                        "numPages": 3,
+                        "repositories": [repo_3.as_dict()],
                     },
                 ),
             ]

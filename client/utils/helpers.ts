@@ -44,3 +44,13 @@ export const shrinkNum = (num: number) => {
     maximumFractionDigits: 2,
   }).format(num);
 };
+
+export const replaceURLParam = (
+  routePath: string,
+  paramName: string,
+  paramValue: string
+) => {
+  let href = new URL("https://google.com" + routePath);
+  href.searchParams.set(paramName, paramValue);
+  return href.toString().split("google.com")[1];
+};

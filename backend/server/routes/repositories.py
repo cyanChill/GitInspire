@@ -30,9 +30,9 @@ def filtered_repositories():
     limit = request.args.get("limit", default=15, type=int)
     if limit != None and limit <= 0:
         limit = 15
-    page = request.args.get("page", default=0, type=int)
-    if page != None and page < 0:
-        page = 0
+    page = request.args.get("page", default=1, type=int)
+    if page != None and page < 1:
+        page = 1
     minStars = request.args.get("minStars", default=0, type=int)
     if minStars != None and minStars < 0:
         minStars = 0
@@ -53,7 +53,7 @@ def filtered_repositories():
     if languages:
         languages = [normalizeStr(lang.strip()) for lang in languages.split(",")]
 
-    # Sorting Filters
+    # Sorting Filters [default newest suggested repositories first]
     sortOpts = ["stars", "date"]
     sort = request.args.get("sort", type=str)
     sort = sort if sort in sortOpts else None
@@ -96,11 +96,11 @@ def filtered_repositories():
     # https://stackoverflow.com/q/10822635
     try:
         numEntries = query.count()
-        results = query.offset(page * limit).limit(limit).all()
+        results = query.offset((page - 1) * limit).limit(limit).all()
 
         response = {
             "message": "Found results.",
-            "currPage": page,
+            "currPage": page if numEntries != 0 else 0,
             "numPages": ceil(numEntries / limit),
             "repositories": serialize_sqlalchemy_objs(results),
         }

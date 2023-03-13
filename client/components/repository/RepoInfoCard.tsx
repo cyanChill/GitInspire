@@ -15,7 +15,11 @@ import Button from "~components/form/Button";
     2. If it's visible, pass the updated (or same) repository data.
 */
 type RepoInfoCardProps = {
-  handleRefresh: (exists: boolean, refreshData?: RepositoryObjType) => void;
+  handleRefresh: (
+    exists: boolean,
+    id: number,
+    refreshData?: RepositoryObjType
+  ) => void;
   handleClose: () => void;
   repository: RepositoryObjType;
 };
@@ -38,7 +42,9 @@ export default function RepoInfoCard({
   const suggestLink = () => {
     // Redirect to the report route with some information in the URL params
     // to suggest a maintain link for an abandoned repository without one
-    router.push(`/report?type=repository&id=${repository.id}&reason=maintain_link`);
+    router.push(
+      `/report?type=repository&id=${repository.id}&reason=maintain_link`
+    );
   };
 
   const refreshInfo = async () => {
@@ -55,19 +61,19 @@ export default function RepoInfoCard({
         toast.error(
           "Repository is no longer found on GitHub and has been deleted from our database."
         );
-        handleRefresh(false);
+        handleRefresh(false, repository.id);
       } else {
         toast.error("Something went wrong on our servers.");
       }
     } else {
       /* Found repository */
       const data = await res.json();
-      handleRefresh(true, data.repository);
+      handleRefresh(true, repository.id, data.repository);
     }
   };
 
   return (
-    <div className="flex h-full w-full animate-load-in flex-col bg-white shadow-md dark:bg-slate-800 dark:shadow-slate-700">
+    <div className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white shadow-md dark:bg-slate-800 dark:shadow-slate-700">
       {/* Card Header */}
       <div className="h-25 relative mb-10 flex min-w-0 items-end bg-gradient-to-t from-amber-400 to-amber-300 p-2 py-3 drop-shadow-md dark:from-cyan-700 dark:to-cyan-600 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]">
         {/* Close Button */}

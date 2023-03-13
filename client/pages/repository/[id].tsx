@@ -20,6 +20,7 @@ export default function RepositoryPage() {
 
   const onRepoRefresh = (
     exists: boolean,
+    id: number,
     refreshData: RepositoryObjType | undefined
   ) => {
     if (!exists) {

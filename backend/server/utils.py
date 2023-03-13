@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 # Used to serialize the lists that may occur via relations in a SQLAlchemy
 # object.
@@ -18,8 +18,14 @@ def isXMonthOld(datetimeObj, months):
 
 
 def isXDayOld(datetimeObj, days):
-    time_threshold = date.today() - timedelta(days=days)
-    dateObj_date = date(datetimeObj.year, datetimeObj.month, datetimeObj.day)
+    time_threshold = datetime.today() - timedelta(days=days)
+    dateObj_date = datetime(
+        datetimeObj.year,
+        datetimeObj.month,
+        datetimeObj.day,
+        datetimeObj.hour,
+        datetimeObj.minute,
+    )
     return dateObj_date < time_threshold
 
 
