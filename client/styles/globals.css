@@ -11,6 +11,26 @@
     margin: 0;
     -moz-appearance: textfield !important;
   }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 1rem;
+    background: hsl(228 2% 45%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    background: hsl(0 0% 80%);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(0 0% 94%);
+  }
 }
 
 @layer utilities {
