@@ -21,7 +21,7 @@ type MultiSelectProps = {
 };
 
 type SelectProps = {
-  options: SelectOption[];
+  options: SelectOption[]; // Assume is sorted
 } & (SingleSelectProps | MultiSelectProps);
 
 export default function Select({
@@ -62,6 +62,7 @@ export default function Select({
   );
 
   const handleKeyAction = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
     // Open list when in focused
     if (["Enter", "Space"].includes(e.code)) {
       setIsOpen((prev) => !prev);
@@ -76,6 +77,20 @@ export default function Select({
       if (newVal >= 0 && newVal < options.length) setHighlightedIdx(newVal);
       optRef.current?.scrollBy({ top: scalar * 40 });
     }
+    // Go to first entry with character in list of avaliable options
+    if (/[a-zA-Z]/.test(e.key)) {
+      if (!isOpen) return; // Ignore if menu isn't open
+
+      const optionIdx = options.findIndex((opt) =>
+        opt.label.toLowerCase().startsWith(e.key.toLowerCase())
+      );
+      console.log(optionIdx);
+      if (optionIdx !== -1) {
+        setHighlightedIdx(optionIdx);
+        optRef.current?.scrollTo({ top: optionIdx * 40 });
+      }
+    }
+
     // Leave selection menu
     if (e.code === "Escape") setIsOpen(false);
   };
@@ -89,7 +104,7 @@ export default function Select({
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
       onKeyDown={handleKeyAction}
-      className={`relative flex justify-between items-center gap-x-1 min-h-[2.5rem] p-1.5 ${baseClasses} hover:cursor-pointer`}
+      className={`relative flex min-h-[2.5rem] items-center justify-between gap-x-1 p-1.5 ${baseClasses} hover:cursor-pointer`}
     >
       {/* Displaying selected items */}
       <span className="flex flex-wrap gap-2 overflow-hidden">
@@ -107,7 +122,7 @@ export default function Select({
                 e.stopPropagation();
                 selOption(v);
               }}
-              className="truncate group inline-flex items-center gap-2 p-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500"
+              className="group inline-flex items-center gap-2 truncate rounded-md bg-slate-200 p-2 py-0.5 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500"
             >
               <span className="truncate">{v.label}</span>
               <FiX className="shrink-0 group-hover:text-red-500 group-focus:text-red-500" />
@@ -116,7 +131,7 @@ export default function Select({
         )}
       </span>
       {/* Controls (clear selection, open drop down) */}
-      <div className="shrink-0 flex gap-1">
+      <div className="flex shrink-0 gap-1">
         <button
           type="button"
           onKeyDown={(e) => {
@@ -140,7 +155,7 @@ export default function Select({
         ref={optRef}
         className={`${
           isOpen ? "visible" : "hidden"
-        } z-[1] overflow-y-auto absolute left-0 top-[calc(100%+1rem)] max-h-48 ${baseClasses}`}
+        } absolute left-0 top-[calc(100%+1rem)] z-[1] max-h-48 overflow-y-auto ${baseClasses}`}
       >
         {options.map((o, idx) => (
           <OptItem
@@ -180,7 +195,7 @@ const OptItem = ({ label, isSel, isHov, onClick, onMouseIn }: OptItemProps) => {
     <li
       onClick={onClick}
       onMouseEnter={onMouseIn}
-      className={`group flex justify-between items-center w-full p-3 py-2 hover:bg-slate-300 dark:hover:bg-slate-500 ${condClass}`}
+      className={`group flex w-full items-center justify-between p-3 py-2 hover:bg-slate-300 dark:hover:bg-slate-500 ${condClass}`}
     >
       {label}
       {isSel && (isHov ? <FiX className="text-red-500" /> : <FiCheck />)}
