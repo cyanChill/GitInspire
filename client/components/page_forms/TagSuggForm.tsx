@@ -1,8 +1,7 @@
 import { ChangeEvent } from "react";
 
 import useUserContext from "~hooks/useUserContext";
-import Input from "~components/form/Input";
-import InputGroup from "~components/form/InputGroup";
+import Input, { InputGroup } from "~components/form/Input";
 
 type tgType = { label: string; value: "primary" | "user_gen" };
 
@@ -60,7 +59,7 @@ export default function TagSuggForm({
                     checked={tg.value === new_tag_type}
                     onChange={() => updateFields({ new_tag_type: tg.value })}
                   />
-                  <label className="hover:cursor-pointer ml-2">
+                  <label className="ml-2 hover:cursor-pointer">
                     {tg.label}
                   </label>
                   <br />

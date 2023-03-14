@@ -9,3 +9,54 @@ export default function Input({ className = "", ...rest }: InputProps) {
 
   return <input className={`${baseClasses} ${className}`} {...rest} />;
 }
+
+interface InputGroupProps {
+  label: string;
+  required?: boolean;
+  className?: string;
+  children: JSX.Element;
+  [x: string]: any;
+}
+
+export function InputGroup({
+  label,
+  required = false,
+  className = "",
+  children,
+  ...rest
+}: InputGroupProps) {
+  return (
+    <label {...rest}>
+      <span
+        className={`mb-1 block text-xs font-semibold tracking-wide ${className}`}
+      >
+        {label}{" "}
+        {required && (
+          <span className="text-red-500 dark:text-red-400">*Required</span>
+        )}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+// Version that doesn't use a <label> element
+export function InputGroupAlt({
+  label,
+  required = false,
+  className = "",
+  children,
+  ...rest
+}: InputGroupProps) {
+  return (
+    <div className={`mb-2 ${className}`} {...rest}>
+      <p className="mb-1 text-xs font-semibold tracking-wide">
+        {label}{" "}
+        {required && (
+          <span className="text-red-500 dark:text-red-400">*Required</span>
+        )}
+      </p>
+      {children}
+    </div>
+  );
+}

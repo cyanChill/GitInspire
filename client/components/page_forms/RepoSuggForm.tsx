@@ -1,7 +1,6 @@
 import useAppContext from "~hooks/useAppContext";
 import Select, { SelectOption } from "~components/form/Select";
-import Input from "~components/form/Input";
-import InputGroup from "~components/form/InputGroup";
+import Input, { InputGroup } from "~components/form/Input";
 
 type RepoSuggFormData = {
   author: string;
