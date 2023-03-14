@@ -1,5 +1,11 @@
-import { createContext, useState, useEffect } from "react";
-import { LangObjType, TagObjType, ReactChildren } from "~utils/types";
+import { createContext, useState, useEffect, useMemo } from "react";
+import {
+  NameValsType,
+  LangObjType,
+  TagObjType,
+  ReactChildren,
+} from "~utils/types";
+import { SelectOption } from "~components/form/Select";
 
 interface TagsType {
   primary: TagObjType[];
@@ -10,7 +16,14 @@ interface AppContextInterface {
   languages: LangObjType[];
   tags: TagsType;
   addTag: (newTag: TagObjType) => void;
+  selOptionFormat: {
+    languages: SelectOption[];
+    primary_tags: SelectOption[];
+    user_tags: SelectOption[];
+  };
 }
+
+type SelOptCompatDataType = { [x: string]: any } & NameValsType;
 
 export const AppContext = createContext<AppContextInterface | undefined>(
   undefined
@@ -65,12 +78,28 @@ export default function AppContextProvider({ children }: ReactChildren) {
     }
   };
 
+  // Convert values to a format used by our custom Select component
+  const selOptionFormat = useMemo(() => {
+    function convertToSelOptFormat(dataArr: SelOptCompatDataType[]) {
+      return dataArr.map((val) => ({
+        label: val.display_name,
+        value: val.name,
+      }));
+    }
+
+    return {
+      languages: convertToSelOptFormat(languages),
+      primary_tags: convertToSelOptFormat(tags.primary),
+      user_tags: convertToSelOptFormat(tags.user_gen),
+    };
+  }, [languages, tags]);
+
   useEffect(() => {
     loadData();
   }, []);
 
   return (
-    <AppContext.Provider value={{ languages, tags, addTag }}>
+    <AppContext.Provider value={{ languages, tags, addTag, selOptionFormat }}>
       {children}
     </AppContext.Provider>
   );

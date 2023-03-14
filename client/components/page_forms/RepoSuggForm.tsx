@@ -1,5 +1,3 @@
-import { useMemo, ChangeEvent } from "react";
-
 import useAppContext from "~hooks/useAppContext";
 import Select, { SelectOption } from "~components/form/Select";
 import Input from "~components/form/Input";
@@ -23,24 +21,7 @@ export default function RepoSuggForm({
   add_tags,
   updateFields,
 }: RepoSuggFormProps) {
-  const { tags } = useAppContext();
-
-  const PRIMARY_TAGS = useMemo(
-    () =>
-      tags.primary.map((tg) => ({
-        label: tg.display_name,
-        value: tg.name,
-      })),
-    [tags]
-  );
-  const USER_GEN_TAGS = useMemo(
-    () =>
-      tags.user_gen.map((tg) => ({
-        label: tg.display_name,
-        value: tg.name,
-      })),
-    [tags]
-  );
+  const { selOptionFormat } = useAppContext();
 
   return (
     <div className="animate-load-in">
@@ -49,7 +30,7 @@ export default function RepoSuggForm({
           type="text"
           required
           value={author}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             updateFields({ author: e.target.value })
           }
           className="w-full"
@@ -61,7 +42,7 @@ export default function RepoSuggForm({
           type="text"
           required
           value={repo_name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             updateFields({ repo_name: e.target.value })
           }
           className="w-full"
@@ -74,7 +55,7 @@ export default function RepoSuggForm({
       </p>
       <Select
         multiple={false}
-        options={PRIMARY_TAGS}
+        options={selOptionFormat.primary_tags}
         value={primary_tag}
         onChange={(value: SelectOption | undefined) => {
           updateFields({ primary_tag: value });
@@ -87,7 +68,7 @@ export default function RepoSuggForm({
       </p>
       <Select
         multiple={true}
-        options={USER_GEN_TAGS}
+        options={selOptionFormat.user_tags}
         max={5}
         value={add_tags}
         onChange={(value: SelectOption[]) => {

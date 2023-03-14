@@ -13,17 +13,14 @@ export type UserObjType = {
   last_updated: Date;
 };
 
-export type LangObjType = {
-  name: string;
-  display_name: string;
-};
+export type NameValsType = { name: string; display_name: string };
+
+export type LangObjType = NameValsType;
 
 export type TagObjType = {
-  name: string;
-  display_name: string;
   type: string;
   suggested_by: UserObjType | null;
-};
+} & NameValsType;
 
 export type RepositoryObjType = {
   id: number;

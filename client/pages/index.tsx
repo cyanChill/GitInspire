@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <SEO pageName="Home" />
 
-      <div className="animate-load-in relative rounded-3xl">
+      <div className="relative animate-load-in rounded-3xl">
         <PageHeader
           name="Find a Random Repository"
           description="Take a chance and find something new"
@@ -49,7 +49,7 @@ type StarType = {
 const MAX_LANG = 3;
 
 const RandomRepoForm = () => {
-  const { languages } = useAppContext();
+  const { selOptionFormat } = useAppContext();
 
   const [langVals, setLangVals] = useState<SelectOption[]>([]);
   const [suggLang, setSuggLang] = useState("");
@@ -57,13 +57,6 @@ const RandomRepoForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<Generic_Obj[] | null>(null);
   const [display, setDisplay] = useState<Generic_Obj | null>(null);
-
-  const SELECT_OPTS = useMemo(() => {
-    return languages.map((lang) => ({
-      label: lang.display_name,
-      value: lang.name,
-    }));
-  }, [languages]);
 
   const addToLang = () => {
     if (suggLang) {
@@ -148,16 +141,16 @@ const RandomRepoForm = () => {
   };
 
   return (
-    <section className="p-4 pt-12 pb-2 mt-[-1.5rem] rounded-2xl rounded-t-none bg-gray-50 dark:bg-gray-800 shadow-inner shadow-slate-500 dark:shadow-zinc-500">
-      <h2 className="text-xl font-semibold mb-2">
+    <section className="mt-[-1.5rem] rounded-2xl rounded-t-none bg-gray-50 p-4 pt-12 pb-2 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500">
+      <h2 className="mb-2 text-xl font-semibold">
         Languages{" "}
-        <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 tracking-wide">
+        <span className="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-400">
           (Max 3)
         </span>
       </h2>
       <Select
         multiple={true}
-        options={SELECT_OPTS}
+        options={selOptionFormat.languages}
         value={langVals}
         max={MAX_LANG}
         onChange={setLangVals}
@@ -181,17 +174,17 @@ const RandomRepoForm = () => {
               bkg: "bg-gradient-to-r from-rose-400 hover:from-rose-500 to-pink-400 hover:to-pink-500",
               txt: "text-white",
             }}
-            className="rounded-l-none !m-0"
+            className="!m-0 rounded-l-none"
           >
             Add
           </Button>
         </div>
       </InputGroup>
 
-      <h2 className="overflow-y-clip text-xl font-semibold mt-4 mb-2">
+      <h2 className="mt-4 mb-2 overflow-y-clip text-xl font-semibold">
         Star Range
       </h2>
-      <div className="flex flex-col min-[400px]:flex-row gap-2 gap-x-6 text-base">
+      <div className="flex flex-col gap-2 gap-x-6 text-base min-[400px]:flex-row">
         <InputGroup label="MIN">
           <Input
             type="number"

@@ -115,9 +115,7 @@ export default function Select({
             <button
               type="button"
               key={v.value}
-              onKeyDown={(e) => {
-                e.stopPropagation();
-              }}
+              onKeyDown={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
                 selOption(v);
@@ -134,9 +132,7 @@ export default function Select({
       <div className="flex shrink-0 gap-1">
         <button
           type="button"
-          onKeyDown={(e) => {
-            e.stopPropagation();
-          }}
+          onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();
             clearOptions();
@@ -155,7 +151,7 @@ export default function Select({
         ref={optRef}
         className={`${
           isOpen ? "visible" : "hidden"
-        } absolute left-0 top-[calc(100%+1rem)] z-[1] max-h-48 overflow-y-auto ${baseClasses}`}
+        } absolute left-0 top-full z-[1] max-h-48 overflow-y-auto ${baseClasses}`}
       >
         {options.map((o, idx) => (
           <OptItem
