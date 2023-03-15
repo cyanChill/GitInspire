@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { FaCompass } from "react-icons/fa";
@@ -11,17 +11,8 @@ import PageHeader from "~components/layout/PageHeader";
 import Button from "~components/form/Button";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
 import Spinner from "~components/Spinner";
-import Input from "~components/form/Input";
-import InputGroup from "~components/form/InputGroup";
+import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
-
-const DEFAULT_FILTER = {
-  minStars: undefined,
-  maxStars: undefined,
-  languages: [],
-  primary_tag: undefined,
-  tags: [],
-};
 
 // Key is the page number of results for current search filter
 interface RepoResults {
@@ -43,17 +34,7 @@ const SORT_OPTS = [
   { value: "sort=stars&order=asc", text: "Stars (asc)" },
 ];
 
-type tempFilterType = {
-  minStars: number | undefined;
-  maxStars: number | undefined;
-  languages: SelectOption[];
-  primary_tag: SelectOption | undefined;
-  tags: SelectOption[];
-};
-
 export default function DiscoverPage() {
-  const { languages, tags } = useAppContext();
-
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -64,83 +45,7 @@ export default function DiscoverPage() {
   const [currFilters, setCurrFilters] = useState<SearchFilters>({});
   const [selectedRepo, setSelectedRepo] = useState<RepositoryObjType>();
 
-  const LANG_SEL_OPTS = useMemo(() => {
-    return languages.map((lang) => ({
-      label: lang.display_name,
-      value: lang.name,
-    }));
-  }, [languages]);
-
-  const PRM_TAG_SEL_OPTS = useMemo(() => {
-    return tags.primary.map((tg) => ({
-      label: tg.display_name,
-      value: tg.name,
-    }));
-  }, [tags]);
-
-  const USR_TAG_SEL_OPTS = useMemo(() => {
-    return tags.user_gen.map((tg) => ({
-      label: tg.display_name,
-      value: tg.name,
-    }));
-  }, [tags]);
-
-  const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const [tempFilter, setTempFilter] = useState<tempFilterType>(DEFAULT_FILTER);
-
-  const updateTempVal = useCallback(
-    (type: string, val: number | SelectOption | undefined | SelectOption[]) => {
-      setTempFilter((prev) => ({ ...prev, [type]: val }));
-    },
-    []
-  );
-
-  const toggleFilterMenu = () => {
-    if (!showFilterMenu) {
-      setTempFilter({
-        minStars: currFilters.minStars,
-        maxStars: currFilters.maxStars,
-        languages: LANG_SEL_OPTS.filter((opt) =>
-          currFilters.languages?.includes(opt.value)
-        ),
-        primary_tag: PRM_TAG_SEL_OPTS.find(
-          (opt) => opt.value === currFilters.primary_tag
-        ),
-        tags: USR_TAG_SEL_OPTS.filter((opt) =>
-          currFilters.tags?.includes(opt.value)
-        ),
-      });
-      setShowFilterMenu(true);
-    } else {
-      setShowFilterMenu(false);
-    }
-  };
-
-  const updateFilters = () => {
-    // Update URL query parameters which triggers useEffect to update
-    // state [when we click the "update filter" button after making
-    // changes]
-
-    let newFiltersArr: string[] = [];
-    if (tempFilter.minStars)
-      newFiltersArr.push(`minStars=${tempFilter.minStars}`);
-    if (tempFilter.maxStars)
-      newFiltersArr.push(`maxStars=${tempFilter.maxStars}`);
-    if (tempFilter.languages.length > 0)
-      newFiltersArr.push(
-        `languages=${tempFilter.languages.map((lang) => lang.value).join(",")}`
-      );
-    if (tempFilter.primary_tag)
-      newFiltersArr.push(`primary_tag=${tempFilter.primary_tag.value}`);
-    if (tempFilter.tags.length > 0)
-      newFiltersArr.push(
-        `tags=${tempFilter.tags.map((tag) => tag.value).join(",")}`
-      );
-
-    router.push(`/discover?page=1&${sortMethod}&${newFiltersArr.join("&")}`);
-    setShowFilterMenu(false);
-    setSelectedRepo(undefined);
-  };
+  const clearSelectedRepo = () => setSelectedRepo(undefined);
 
   const onRepoRefresh = (
     exists: boolean,
@@ -156,8 +61,6 @@ export default function DiscoverPage() {
     else setSelectedRepo(refreshData);
     setResults((prev) => ({ ...prev, [currPg]: updatedRepos }));
   };
-
-  const onRepoClose = () => setSelectedRepo(undefined);
 
   const pullFiltersFromURL = () => {
     const { minStars, maxStars, primary_tag, tags, languages, page, limit } =
@@ -180,12 +83,12 @@ export default function DiscoverPage() {
   };
 
   const updateURLPage = (newPage: number) => {
-    setSelectedRepo(undefined);
+    clearSelectedRepo();
     router.push(replaceURLParam(router.asPath, "page", `${newPage}`));
   };
 
   const updateURLSortMethod = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRepo(undefined);
+    clearSelectedRepo();
 
     let url = router.asPath;
     let terms = e.target.value.split("&");
@@ -287,86 +190,12 @@ export default function DiscoverPage() {
         <div className="col-start-1 row-start-1  flex flex-col">
           {/* Filter and Sort button */}
           <div className="relative flex flex-initial border border-red-500">
-            <Button onClick={toggleFilterMenu}>Filters</Button>
-
-            <div
-              className={`${
-                showFilterMenu ? "block" : "hidden"
-              } absolute top-12 left-0 z-10 max-h-[20rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-500 bg-white p-2 dark:bg-slate-800`}
-            >
-              <p className="mb-4 text-center text-xl font-medium underline">
-                Filters
-              </p>
-
-              <div className="mb-2 flex flex-wrap gap-2 text-base">
-                <InputGroup label="Min Stars">
-                  <Input
-                    type="number"
-                    min={0}
-                    value={tempFilter.minStars}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      updateTempVal("minStars", +e.target.value)
-                    }
-                    className="w-full max-w-[7.5rem] text-right text-sm"
-                  />
-                </InputGroup>
-                <InputGroup label="Max Stars">
-                  <Input
-                    type="number"
-                    min={0}
-                    value={tempFilter.maxStars}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      updateTempVal("maxStars", +e.target.value)
-                    }
-                    className="w-full max-w-[7.5rem] text-right text-sm"
-                  />
-                </InputGroup>
-              </div>
-
-              <div className="mb-2">
-                <p className="mb-1 text-xs font-semibold tracking-wide">
-                  Languages
-                </p>
-                <Select
-                  multiple={true}
-                  options={LANG_SEL_OPTS}
-                  value={tempFilter.languages}
-                  max={5}
-                  onChange={(value) => updateTempVal("languages", value)}
-                />
-              </div>
-
-              <div className="mb-2">
-                <p className="mb-1 text-xs font-semibold tracking-wide">
-                  Primary Tag
-                </p>
-                <Select
-                  multiple={false}
-                  options={PRM_TAG_SEL_OPTS}
-                  value={tempFilter.primary_tag}
-                  onChange={(value) => updateTempVal("primary_tag", value)}
-                />
-              </div>
-
-              <div className="mb-2">
-                <p className="mb-1 text-xs font-semibold tracking-wide">Tags</p>
-                <Select
-                  multiple={true}
-                  options={USR_TAG_SEL_OPTS}
-                  value={tempFilter.tags}
-                  max={5}
-                  onChange={(value) => updateTempVal("tags", value)}
-                />
-              </div>
-
-              <div className="flex flex-wrap justify-end gap-x-2">
-                <Button onClick={() => setTempFilter(DEFAULT_FILTER)}>
-                  Clear Filters
-                </Button>
-                <Button onClick={updateFilters}>Update Filters</Button>
-              </div>
-            </div>
-
+            <FilterMenu
+              currentFilter={currFilters}
+              currentSortMethod={sortMethod}
+              resetState={clearSelectedRepo}
+            />
+            {/* Sort Button */}
             <select
               className="ml-auto dark:text-black"
               onChange={updateURLSortMethod}
@@ -406,15 +235,13 @@ export default function DiscoverPage() {
           <div className="align-center mt-auto flex flex-[0_1_50px] justify-center gap-1 border border-green-500">
             <Button
               onClick={() => updateURLPage(1)}
-              disabled={currPg === 0 || currPg === 1 || isLoading}
+              disabled={[0, 1].includes(currPg) || isLoading}
             >
               First
             </Button>
             <Button
-              onClick={() => {
-                if (currPg > 1) updateURLPage(currPg - 1);
-              }}
-              disabled={currPg === 0 || currPg === 1 || isLoading}
+              onClick={() => (currPg > 1 ? updateURLPage(currPg - 1) : null)}
+              disabled={[0, 1].includes(currPg) || isLoading}
             >
               Prev
             </Button>
@@ -422,9 +249,9 @@ export default function DiscoverPage() {
               {currPg}/{maxPgs}
             </p>
             <Button
-              onClick={() => {
-                if (currPg < maxPgs) updateURLPage(currPg + 1);
-              }}
+              onClick={() =>
+                currPg < maxPgs ? updateURLPage(currPg + 1) : null
+              }
               disabled={currPg === maxPgs || isLoading}
             >
               Next
@@ -447,12 +274,178 @@ export default function DiscoverPage() {
           {selectedRepo && (
             <RepoInfoCard
               handleRefresh={onRepoRefresh}
-              handleClose={onRepoClose}
+              handleClose={clearSelectedRepo}
               repository={selectedRepo}
             />
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+/* Filter Menu Component (Button + Menu) */
+const DEFAULT_FILTER = {
+  minStars: undefined,
+  maxStars: undefined,
+  languages: [],
+  primary_tag: undefined,
+  tags: [],
+};
+
+type newFilterType = {
+  minStars: number | undefined;
+  maxStars: number | undefined;
+  languages: SelectOption[];
+  primary_tag: SelectOption | undefined;
+  tags: SelectOption[];
+};
+
+type FilterMenuPropType = {
+  currentFilter: SearchFilters;
+  currentSortMethod: string;
+  resetState: () => void;
+};
+
+function FilterMenu({
+  currentFilter,
+  currentSortMethod,
+  resetState,
+}: FilterMenuPropType) {
+  const router = useRouter();
+  const { selOptionFormat } = useAppContext();
+  const [isVisible, setIsVisible] = useState(false);
+  const [newFilter, setNewFilter] = useState<newFilterType>(DEFAULT_FILTER);
+
+  const toggleVisibility = () => {
+    if (!isVisible) {
+      setNewFilter({
+        minStars: currentFilter.minStars,
+        maxStars: currentFilter.maxStars,
+        languages: selOptionFormat.languages.filter((opt) =>
+          currentFilter.languages?.includes(`${opt.value}`)
+        ),
+        primary_tag: selOptionFormat.primary_tags.find(
+          (opt) => opt.value === currentFilter.primary_tag
+        ),
+        tags: selOptionFormat.user_tags.filter((opt) =>
+          currentFilter.tags?.includes(`${opt.value}`)
+        ),
+      });
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  const updateFilters = () => {
+    // Update URL query parameters which triggers useEffect to update repository results
+    let newFiltersArr: string[] = [];
+    for (const key in newFilter) {
+      if ((key === "minStars" || key === "maxStars") && newFilter[key]) {
+        newFiltersArr.push(`${key}=${newFilter[key]}`);
+      } else if (key === "primary_tag" && newFilter.primary_tag) {
+        newFiltersArr.push(`primary_tag=${newFilter.primary_tag.value}`);
+      } else if (
+        (key === "tags" || key === "languages") &&
+        newFilter[key].length > 0
+      ) {
+        newFiltersArr.push(
+          `${key}=${newFilter[key].map((val) => val.value).join(",")}`
+        );
+      }
+    }
+
+    const joiner = newFiltersArr.length > 0 ? "&" : "";
+    router.push(
+      `/discover?page=1&${currentSortMethod}${joiner}${newFiltersArr.join("&")}`
+    );
+
+    setIsVisible(false);
+    resetState();
+  };
+
+  const updateNewFilter = useCallback(
+    (type: string, val: number | SelectOption | undefined | SelectOption[]) => {
+      setNewFilter((prev) => ({ ...prev, [type]: val }));
+    },
+    []
+  );
+
+  return (
+    <>
+      <Button onClick={toggleVisibility}>Filters</Button>
+
+      <div
+        className={`${
+          isVisible ? "block" : "hidden"
+        } absolute top-12 left-0 z-10 max-h-[20rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-500 bg-white p-2 dark:bg-slate-800`}
+      >
+        <p className="mb-4 text-center text-xl font-medium underline">
+          Filters
+        </p>
+
+        <div className="mb-2 flex flex-wrap gap-2 text-base">
+          <InputGroup label="Min Stars">
+            <Input
+              type="number"
+              min={0}
+              value={newFilter.minStars}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateNewFilter("minStars", +e.target.value)
+              }
+              className="w-full max-w-[7.5rem] text-right text-sm"
+            />
+          </InputGroup>
+          <InputGroup label="Max Stars">
+            <Input
+              type="number"
+              min={0}
+              value={newFilter.maxStars}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                updateNewFilter("maxStars", +e.target.value)
+              }
+              className="w-full max-w-[7.5rem] text-right text-sm"
+            />
+          </InputGroup>
+        </div>
+
+        <InputGroupAlt label="Languages">
+          <Select
+            multiple={true}
+            options={selOptionFormat.languages}
+            value={newFilter.languages}
+            max={5}
+            onChange={(value) => updateNewFilter("languages", value)}
+          />
+        </InputGroupAlt>
+
+        <InputGroupAlt label="Primary Tag">
+          <Select
+            multiple={false}
+            options={selOptionFormat.primary_tags}
+            value={newFilter.primary_tag}
+            onChange={(value) => updateNewFilter("primary_tag", value)}
+          />
+        </InputGroupAlt>
+
+        <InputGroupAlt label="Tags">
+          <Select
+            multiple={true}
+            options={selOptionFormat.user_tags}
+            value={newFilter.tags}
+            max={5}
+            onChange={(value) => updateNewFilter("tags", value)}
+          />
+        </InputGroupAlt>
+
+        <div className="flex flex-wrap justify-end gap-x-2">
+          <Button onClick={() => setNewFilter(DEFAULT_FILTER)}>
+            Clear Filters
+          </Button>
+          <Button onClick={updateFilters}>Update Filters</Button>
+        </div>
+      </div>
+    </>
   );
 }
