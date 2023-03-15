@@ -13,6 +13,7 @@ import RepoInfoCard from "~components/repository/RepoInfoCard";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
+import Pagnation from "~components/form/Pagnation";
 
 // Key is the page number of results for current search filter
 interface RepoResults {
@@ -232,37 +233,12 @@ export default function DiscoverPage() {
           </div>
 
           {/* Pagnation */}
-          <div className="align-center mt-auto flex flex-[0_1_50px] justify-center gap-1 border border-green-500">
-            <Button
-              onClick={() => updateURLPage(1)}
-              disabled={[0, 1].includes(currPg) || isLoading}
-            >
-              First
-            </Button>
-            <Button
-              onClick={() => (currPg > 1 ? updateURLPage(currPg - 1) : null)}
-              disabled={[0, 1].includes(currPg) || isLoading}
-            >
-              Prev
-            </Button>
-            <p className="my-auto">
-              {currPg}/{maxPgs}
-            </p>
-            <Button
-              onClick={() =>
-                currPg < maxPgs ? updateURLPage(currPg + 1) : null
-              }
-              disabled={currPg === maxPgs || isLoading}
-            >
-              Next
-            </Button>
-            <Button
-              onClick={() => updateURLPage(maxPgs)}
-              disabled={currPg === maxPgs || isLoading}
-            >
-              Last
-            </Button>
-          </div>
+          <Pagnation
+            currPg={currPg}
+            maxPg={maxPgs}
+            siblingCount={1}
+            onPgChange={updateURLPage}
+          />
         </div>
 
         {/* Selected Repository Info */}
