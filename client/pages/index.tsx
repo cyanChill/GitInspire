@@ -99,7 +99,7 @@ const RandomRepoForm = () => {
     setResults(null);
     setDisplay(null);
     const res = await fetch(
-      `/api/random?minStars=${stars.min}&maxStars=${stars.max}&languages=${langQueryString}`
+      `/api/random?minStars=${stars.min}&maxStars=${stars.max}&languages=${encodeURIComponent(langQueryString)}`
     );
 
     try {

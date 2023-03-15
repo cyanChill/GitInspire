@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app as app
+from urllib.parse import quote
 import requests
 import random
 
@@ -28,7 +29,7 @@ def get_random_repository():
     langQuery = (
         ""
         if len(filtered_lang) == 0
-        else "+{}".format("+".join([f'language:"{lang}"' for lang in filtered_lang]))
+        else "+{}".format("+".join([f'language:"{quote(lang)}"' for lang in filtered_lang]))
     )
     # Get query string for "stars" filter
     #  - Create a random "min" value to reduce the chance of getting the
