@@ -262,16 +262,16 @@ export default function DiscoverPage() {
 
 /* Filter Menu Component (Button + Menu) */
 const DEFAULT_FILTER = {
-  minStars: undefined,
-  maxStars: undefined,
+  minStars: "",
+  maxStars: "",
   languages: [],
   primary_tag: undefined,
   tags: [],
 };
 
 type newFilterType = {
-  minStars: number | undefined;
-  maxStars: number | undefined;
+  minStars: number | string;
+  maxStars: number | string;
   languages: SelectOption[];
   primary_tag: SelectOption | undefined;
   tags: SelectOption[];
@@ -296,8 +296,8 @@ function FilterMenu({
   const toggleVisibility = () => {
     if (!isVisible) {
       setNewFilter({
-        minStars: currentFilter.minStars,
-        maxStars: currentFilter.maxStars,
+        minStars: currentFilter.minStars ?? "",
+        maxStars: currentFilter.maxStars ?? "",
         languages: selOptionFormat.languages.filter((opt) =>
           currentFilter.languages?.includes(`${opt.value}`)
         ),
