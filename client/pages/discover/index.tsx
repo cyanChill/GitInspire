@@ -2,7 +2,10 @@ import _ from "lodash";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { FaCompass } from "react-icons/fa";
+import { BsFillCalendar2WeekFill } from "react-icons/bs";
+import { FaCompass, FaStar } from "react-icons/fa";
+import { HiOutlineChevronDown } from "react-icons/hi";
+import { HiArrowLongDown, HiArrowLongUp } from "react-icons/hi2";
 
 import { RepositoryObjType } from "~utils/types";
 import { fromURLQueryVal, replaceURLParam } from "~utils/helpers";
@@ -27,13 +30,6 @@ type SearchFilters = {
   primary_tag?: string;
   tags?: string[];
 };
-
-const SORT_OPTS = [
-  { value: "sort=date&order=desc", text: "Date (desc)" },
-  { value: "sort=date&order=asc", text: "Date (asc)" },
-  { value: "sort=stars&order=desc", text: "Stars (desc)" },
-  { value: "sort=stars&order=asc", text: "Stars (asc)" },
-];
 
 export default function DiscoverPage() {
   const router = useRouter();
@@ -88,11 +84,11 @@ export default function DiscoverPage() {
     router.push(replaceURLParam(router.asPath, "page", `${newPage}`));
   };
 
-  const updateURLSortMethod = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const updateURLSortMethod = (method: string) => {
     clearSelectedRepo();
 
     let url = router.asPath;
-    let terms = e.target.value.split("&");
+    let terms = method.split("&");
     url = replaceURLParam(url, "page", "1");
     terms.forEach((term) => {
       const [methodName, orderValue] = term.split("=");
@@ -195,20 +191,14 @@ export default function DiscoverPage() {
               currentFilter={currFilters}
               currentSortMethod={sortMethod}
               resetState={clearSelectedRepo}
+              disabled={isLoading}
             />
             {/* Sort Button */}
-            <select
-              className="ml-auto dark:text-black"
+            <SortMenu
               onChange={updateURLSortMethod}
-              value={sortMethod}
+              currentSortMethod={sortMethod}
               disabled={isLoading}
-            >
-              {SORT_OPTS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.text}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           {/* Found Repositories */}
@@ -217,7 +207,7 @@ export default function DiscoverPage() {
               results[currPg].map((repo) => (
                 <p
                   key={repo.id}
-                  className="my-2 border p-1 hover:cursor-pointer hover:underline"
+                  className="my-2 truncate rounded-md border-[1px] p-1.5 hover:cursor-pointer hover:underline"
                   onClick={() => setSelectedRepo(repo)}
                 >
                   {repo.author}/{repo.repo_name}
@@ -281,12 +271,14 @@ type FilterMenuPropType = {
   currentFilter: SearchFilters;
   currentSortMethod: string;
   resetState: () => void;
+  disabled: boolean;
 };
 
 function FilterMenu({
   currentFilter,
   currentSortMethod,
   resetState,
+  disabled,
 }: FilterMenuPropType) {
   const router = useRouter();
   const { selOptionFormat } = useAppContext();
@@ -423,5 +415,116 @@ function FilterMenu({
         </div>
       </div>
     </>
+  );
+}
+
+/* Sort Menu */
+type SortMenuPropTypes = {
+  onChange: (method: string) => void;
+  currentSortMethod: string;
+  disabled: boolean;
+};
+
+const SORT_OPTS = [
+  {
+    value: "sort=date&order=desc",
+    display: (
+      <p className="flex flex-nowrap items-center">
+        <BsFillCalendar2WeekFill />
+        <HiArrowLongDown />
+        Date (desc)
+      </p>
+    ),
+  },
+  {
+    value: "sort=date&order=asc",
+    display: (
+      <p className="flex items-center">
+        <BsFillCalendar2WeekFill />
+        <HiArrowLongUp />
+        Date (asc)
+      </p>
+    ),
+  },
+  {
+    value: "sort=stars&order=desc",
+    display: (
+      <p className="flex items-center">
+        <FaStar />
+        <HiArrowLongDown />
+        Stars (desc)
+      </p>
+    ),
+  },
+  {
+    value: "sort=stars&order=asc",
+    display: (
+      <p className="flex items-center">
+        <FaStar />
+        <HiArrowLongUp />
+        Stars (asc)
+      </p>
+    ),
+  },
+];
+
+function SortMenu({
+  onChange,
+  currentSortMethod,
+  disabled,
+}: SortMenuPropTypes) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currResult, setCurrResult] = useState<JSX.Element>();
+
+  const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  const updateSortMethod = (method: string) => {
+    setIsOpen(false);
+    onChange(method);
+  };
+
+  useEffect(() => {
+    const new_method = SORT_OPTS.find((o) => o.value === currentSortMethod);
+    setCurrResult(new_method ? new_method.display : SORT_OPTS[0].display);
+  }, [currentSortMethod]);
+
+  return (
+    <div
+      className={`relative ml-auto flex items-center ${
+        disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
+      }`}
+    >
+      <div
+        className={`flex shrink-0 items-center ${
+          !disabled ? "hover:cursor-pointer" : ""
+        }`}
+        onClick={toggleMenu}
+      >
+        {currResult}
+        <HiOutlineChevronDown className="mx-1" />
+      </div>
+
+      <div
+        className={`${
+          isOpen ? "visible" : "hidden"
+        } absolute top-full left-0 z-[1] w-full rounded-md bg-white dark:bg-slate-800`}
+      >
+        {SORT_OPTS.map((opt) => {
+          const selected = opt.value === currentSortMethod;
+
+          return (
+            <div
+              key={opt.value}
+              onClick={() => updateSortMethod(opt.value)}
+              className={`p-1 hover:cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-500 ${
+                selected ? "bg-slate-200 dark:bg-slate-600" : ""
+              }`}
+            >
+              {opt.display}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
