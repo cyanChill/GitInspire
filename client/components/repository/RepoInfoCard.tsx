@@ -70,6 +70,7 @@ export default function RepoInfoCard({
       const data = await res.json();
       handleRefresh(true, repository.id, data.repository);
     }
+    setIsRefreshing(false);
   };
 
   return (
