@@ -72,10 +72,9 @@ export default function Select({
     if (["ArrowUp", "ArrowDown"].includes(e.code)) {
       if (!isOpen) setIsOpen(true);
       // Keeping index in check (don't go beyond)
-      const scalar = e.code === "ArrowDown" ? 1 : -1;
-      const newVal = highlightedIdx + scalar;
+      const newVal = highlightedIdx + (e.code === "ArrowDown" ? 1 : -1);
       if (newVal >= 0 && newVal < options.length) setHighlightedIdx(newVal);
-      optRef.current?.scrollBy({ top: scalar * 40 });
+      optRef.current?.scrollTo({ top: newVal * 40 });
     }
     // Go to first entry with character in list of avaliable options
     if (/[a-zA-Z]/.test(e.key)) {
@@ -96,7 +95,7 @@ export default function Select({
   };
 
   const baseClasses =
-    "w-full rounded-md bg-zinc-50 dark:bg-slate-700 shadow-[inset_0_0_4px_0_rgba(0,0,0,0.5)] shadow-slate-400 dark:shadow-slate-600";
+    "w-full rounded-md bg-zinc-50 dark:bg-slate-700 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 dark:shadow-slate-600";
 
   return (
     <div
@@ -147,27 +146,30 @@ export default function Select({
         <FiChevronDown />
       </div>
       {/* Selection menu (list of options) */}
-      <ul
-        ref={optRef}
+      <div
         className={`${
           isOpen ? "visible" : "hidden"
-        } absolute left-0 top-full z-[1] max-h-36 overflow-y-auto ${baseClasses}`}
+        } absolute left-0 top-[calc(100%+2px)] z-[1] w-full`}
       >
-        {options.map((o, idx) => (
-          <OptItem
-            key={o.value}
-            label={o.label}
-            isSel={optionSelected(o)}
-            isHov={highlightedIdx === idx}
-            onClick={(e) => {
-              e.stopPropagation();
-              selOption(o);
-              setIsOpen(false);
-            }}
-            onMouseIn={() => setHighlightedIdx(idx)}
-          />
-        ))}
-      </ul>
+        <ul className={`max-h-40 overflow-y-auto ${baseClasses}`} ref={optRef}>
+          {options.map((o, idx) => (
+            <OptItem
+              key={o.value}
+              label={o.label}
+              isSel={optionSelected(o)}
+              isHov={highlightedIdx === idx}
+              onClick={(e) => {
+                e.stopPropagation();
+                selOption(o);
+                setIsOpen(false);
+              }}
+              onMouseIn={() => setHighlightedIdx(idx)}
+            />
+          ))}
+        </ul>
+        {/* Spacer at end of list */}
+        <div className="h-2" />
+      </div>
     </div>
   );
 }
@@ -182,16 +184,16 @@ interface OptItemProps {
 
 const OptItem = ({ label, isSel, isHov, onClick, onMouseIn }: OptItemProps) => {
   const condClass = isHov
-    ? "bg-slate-300 dark:bg-slate-500"
+    ? "bg-slate-200 dark:bg-slate-500"
     : isSel
-    ? "bg-slate-200 dark:bg-slate-600"
+    ? "bg-slate-100 dark:bg-slate-600"
     : "";
 
   return (
     <li
       onClick={onClick}
       onMouseEnter={onMouseIn}
-      className={`group flex w-full items-center justify-between p-3 py-2 hover:bg-slate-300 dark:hover:bg-slate-500 ${condClass}`}
+      className={`group flex w-full items-center justify-between p-3 py-2 ${condClass}`}
     >
       {label}
       {isSel && (isHov ? <FiX className="text-red-500" /> : <FiCheck />)}

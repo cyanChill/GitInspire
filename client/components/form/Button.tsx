@@ -43,3 +43,33 @@ export default function Button({
     );
   }
 }
+
+const DEFAULT_COLORS2 = {
+  bkg: "bg-violet-500 enabled:hover:bg-violet-600 disabled:opacity-25",
+  txt: "text-white",
+};
+
+export function Button2({
+  link,
+  href,
+  clr = DEFAULT_COLORS2,
+  className = "",
+  children,
+  ...rest
+}: ButtonProps) {
+  const btnStyles = `flex justify-center items-center gap-2 p-3 py-0.5 font-medium tracking-tight rounded-full shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
+
+  if (link) {
+    return (
+      <a href={href} className={btnStyles}>
+        {children}
+      </a>
+    );
+  } else {
+    return (
+      <button className={btnStyles} {...rest}>
+        {children}
+      </button>
+    );
+  }
+}

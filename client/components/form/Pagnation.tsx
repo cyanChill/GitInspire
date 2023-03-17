@@ -67,7 +67,7 @@ export default function Pagnation({
   }
 
   return (
-    <div className="flex w-full items-center justify-center border-t-2 border-gray-300 dark:border-gray-800">
+    <div className="flex w-full items-center justify-center border-t-2 border-gray-300 dark:border-gray-600">
       <MdKeyboardArrowLeft
         onClick={() => (currPg > 1 ? onPgChange(currPg - 1) : null)}
         className={`flex shrink-0 items-center ${

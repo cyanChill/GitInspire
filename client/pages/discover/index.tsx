@@ -1,17 +1,18 @@
 import _ from "lodash";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { BsFillCalendar2WeekFill } from "react-icons/bs";
 import { FaCompass, FaStar } from "react-icons/fa";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { HiArrowLongDown, HiArrowLongUp } from "react-icons/hi2";
+import { MdFilterList, MdFilterListOff } from "react-icons/md";
 
 import { RepositoryObjType } from "~utils/types";
 import { fromURLQueryVal, replaceURLParam } from "~utils/helpers";
 import useAppContext from "~hooks/useAppContext";
 import PageHeader from "~components/layout/PageHeader";
-import Button from "~components/form/Button";
+import { Button2 } from "~components/form/Button";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
@@ -186,7 +187,7 @@ export default function DiscoverPage() {
         {/* Data Column */}
         <div className="col-start-1 row-start-1  flex flex-col">
           {/* Filter and Sort button */}
-          <div className="relative flex flex-initial border border-red-500">
+          <div className="relative flex flex-initial gap-2 border-b-2 border-gray-300 p-1 py-2 dark:border-gray-600">
             <FilterMenu
               currentFilter={currFilters}
               currentSortMethod={sortMethod}
@@ -204,15 +205,21 @@ export default function DiscoverPage() {
           {/* Found Repositories */}
           <div className="flex-auto overflow-y-auto px-2">
             {results[currPg] && results[currPg].length > 0 && !isLoading ? (
-              results[currPg].map((repo) => (
-                <p
-                  key={repo.id}
-                  className="my-2 truncate rounded-md border-[1px] p-1.5 hover:cursor-pointer hover:underline"
-                  onClick={() => setSelectedRepo(repo)}
-                >
-                  {repo.author}/{repo.repo_name}
-                </p>
-              ))
+              results[currPg].map((repo) => {
+                const selected = selectedRepo?.id === repo.id;
+
+                return (
+                  <p
+                    key={repo.id}
+                    className={`my-2 truncate rounded-md border-[1px] border-slate-300 p-1.5 hover:cursor-pointer hover:underline dark:border-slate-600 ${
+                      selected ? "bg-slate-200 dark:bg-slate-700" : ""
+                    } hover:bg-slate-300 dark:hover:bg-slate-600`}
+                    onClick={() => setSelectedRepo(repo)}
+                  >
+                    {repo.author}/{repo.repo_name}
+                  </p>
+                );
+              })
             ) : isLoading ? (
               <Spinner />
             ) : (
@@ -233,7 +240,7 @@ export default function DiscoverPage() {
 
         {/* Selected Repository Info */}
         <div
-          className={`col-start-1 row-span-full h-full sm:col-start-2 sm:row-start-1 ${
+          className={`z-20 col-start-1 row-span-full h-full sm:col-start-2 sm:row-start-1 ${
             !selectedRepo ? "pointer-events-none" : ""
           }`}
         >
@@ -284,6 +291,13 @@ function FilterMenu({
   const { selOptionFormat } = useAppContext();
   const [isVisible, setIsVisible] = useState(false);
   const [newFilter, setNewFilter] = useState<newFilterType>(DEFAULT_FILTER);
+
+  const numFilters = useMemo(() => {
+    return (Object.keys(currentFilter) as (keyof SearchFilters)[]).reduce(
+      (curr, key) => curr + (!!currentFilter[key] ? 1 : 0),
+      0
+    );
+  }, [currentFilter]);
 
   const toggleVisibility = () => {
     if (!isVisible) {
@@ -340,14 +354,36 @@ function FilterMenu({
     []
   );
 
+  useEffect(() => {
+    if (disabled) setIsVisible(false);
+  }, [disabled]);
+
   return (
     <>
-      <Button onClick={toggleVisibility}>Filters</Button>
+      {/* Filter Button */}
+      <button
+        onClick={toggleVisibility}
+        disabled={disabled}
+        className={`flex items-center gap-1 ${
+          disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
+        }`}
+      >
+        {!isVisible ? (
+          <MdFilterList className="shrink-0 text-slate-500" />
+        ) : (
+          <MdFilterListOff className="shrink-0 text-slate-500" />
+        )}{" "}
+        <span className="rounded-md bg-slate-300 px-1.5 text-sm font-medium dark:bg-slate-700">
+          {numFilters}
+        </span>
+        Filters
+      </button>
 
+      {/* Filter Menu */}
       <div
         className={`${
           isVisible ? "block" : "hidden"
-        } absolute top-12 left-0 z-10 max-h-[20rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-500 bg-white p-2 dark:bg-slate-800`}
+        } absolute top-12 left-0 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800`}
       >
         <p className="mb-4 text-center text-xl font-medium underline">
           Filters
@@ -362,7 +398,7 @@ function FilterMenu({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateNewFilter("minStars", +e.target.value)
               }
-              className="w-full max-w-[7.5rem] text-right text-sm"
+              className="w-full max-w-[6.5rem] text-right text-sm"
             />
           </InputGroup>
           <InputGroup label="Max Stars">
@@ -373,7 +409,7 @@ function FilterMenu({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateNewFilter("maxStars", +e.target.value)
               }
-              className="w-full max-w-[7.5rem] text-right text-sm"
+              className="w-full max-w-[6.5rem] text-right text-sm"
             />
           </InputGroup>
         </div>
@@ -407,11 +443,14 @@ function FilterMenu({
           />
         </InputGroupAlt>
 
-        <div className="flex flex-wrap justify-end gap-x-2">
-          <Button onClick={() => setNewFilter(DEFAULT_FILTER)}>
-            Clear Filters
-          </Button>
-          <Button onClick={updateFilters}>Update Filters</Button>
+        <div className="flex flex-wrap justify-end gap-x-4 py-2">
+          <button
+            onClick={() => setNewFilter(DEFAULT_FILTER)}
+            className="hover:underline"
+          >
+            Clear All
+          </button>
+          <Button2 onClick={updateFilters}>Update</Button2>
         </div>
       </div>
     </>
@@ -474,9 +513,6 @@ function SortMenu({
   disabled,
 }: SortMenuPropTypes) {
   const [isOpen, setIsOpen] = useState(false);
-  const [currResult, setCurrResult] = useState<JSX.Element>();
-
-  const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const updateSortMethod = (method: string) => {
     setIsOpen(false);
@@ -484,13 +520,12 @@ function SortMenu({
   };
 
   useEffect(() => {
-    const new_method = SORT_OPTS.find((o) => o.value === currentSortMethod);
-    setCurrResult(new_method ? new_method.display : SORT_OPTS[0].display);
-  }, [currentSortMethod]);
+    if (disabled) setIsOpen(false);
+  }, [disabled]);
 
   return (
     <div
-      className={`relative ml-auto flex items-center ${
+      className={`relative z-10 ml-auto flex items-center ${
         disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
       }`}
     >
@@ -498,16 +533,16 @@ function SortMenu({
         className={`flex shrink-0 items-center ${
           !disabled ? "hover:cursor-pointer" : ""
         }`}
-        onClick={toggleMenu}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
-        {currResult}
-        <HiOutlineChevronDown className="mx-1" />
+        Sort
+        <HiOutlineChevronDown className="mx-1 text-slate-500" />
       </div>
 
       <div
         className={`${
           isOpen ? "visible" : "hidden"
-        } absolute top-full left-0 z-[1] w-full rounded-md bg-white dark:bg-slate-800`}
+        } absolute top-[calc(100%+0.25rem)] top-12 right-0 w-max animate-load-in overflow-hidden rounded-md border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800`}
       >
         {SORT_OPTS.map((opt) => {
           const selected = opt.value === currentSortMethod;
@@ -516,8 +551,8 @@ function SortMenu({
             <div
               key={opt.value}
               onClick={() => updateSortMethod(opt.value)}
-              className={`p-1 hover:cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-500 ${
-                selected ? "bg-slate-200 dark:bg-slate-600" : ""
+              className={`p-1 px-3 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 ${
+                selected ? "bg-slate-100 dark:bg-slate-600" : ""
               }`}
             >
               {opt.display}
