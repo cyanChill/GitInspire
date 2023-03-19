@@ -13,10 +13,10 @@
 # be stored in CSV files in the "instance" folder 
 # ----------------------------------------------------------------------
 
-import os
 import csv
 from flask import Flask
 
+import server.configuration as configuration
 from server.models.Language import Language
 from server.models.Repository import Repository, RepoLanguage, RepoTag
 from server.models.Tag import Tag
@@ -26,14 +26,8 @@ from server.models.Log import Log
 
 app = Flask(__name__, instance_relative_config=True)
 
-# ensure the instance folder exists
-try:
-    os.makedirs(app.instance_path)
-except OSError:
-    pass
-
-# Load configs from "config.py" file in "instance" folder
-app.config.from_pyfile("config.py")
+# Load configs
+app.config.from_object(configuration.configuration["development"])
 
 # Initialize database & tables
 from server.db import init_db
