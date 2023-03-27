@@ -10,11 +10,6 @@ from server.models.User import User
 
 bp = Blueprint("user", __name__, url_prefix="/users")
 
-# Route to get all users
-@bp.route("/")
-def get_users():
-    return jsonify({"users": []})
-
 
 # Route to get general information on the user
 @bp.route("/<int:userId>")
@@ -29,7 +24,7 @@ def get_user(userId):
         }
         return jsonify(response), 200
     else:
-        response = {"message": "User found.", "user": None, "contributions": None}
+        response = {"message": "User not found.", "user": None, "contributions": None}
         return jsonify(response), 200
 
 
@@ -108,12 +103,6 @@ def refresh_user(userId):
         "user": existing_user.as_dict(),
     }
     return jsonify(response), 200
-
-
-# Route to get the tags & repositories user has contributed to GitInspire
-@bp.route("/<int:userId>/contributions")
-def get_user_contributions(userId):
-    return jsonify({"tags": [], "repositories": []})
 
 
 # Route to delete account
