@@ -83,7 +83,6 @@ export default function RepositoryPage() {
         <p className="my-6 text-center">
           Sorry, but we couldn&apos;t find this repository in our database.
         </p>
-
         <PageRedirectForm />
       </div>
     );

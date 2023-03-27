@@ -31,7 +31,7 @@ export const fromURLQueryVal = {
 };
 
 export const cleanDate = (date: Date) => {
-  return format(new Date(date), "MM/dd/yyyy k:m:s");
+  return format(new Date(date), "MM/dd/yyyy kk:mm:ss");
 };
 
 export const isXDaysOld = (date: Date, days: number) => {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { RxCross2, RxStarFilled, RxExternalLink } from "react-icons/rx";
@@ -164,12 +165,12 @@ export default function RepoInfoCard({
       <div className="mt-auto p-2 text-right text-sm italic">
         <p>
           <span className="font-bold">Suggested By:</span>{" "}
-          <a
+          <Link
             href={`/profile/${repository.suggested_by.id}`}
             className="hover:underline"
           >
             {repository.suggested_by.username}
-          </a>
+          </Link>
         </p>
 
         <p className="text-right text-sm italic text-slate-500">
