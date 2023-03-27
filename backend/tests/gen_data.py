@@ -16,6 +16,7 @@ def gen_dummyData():
             "2021-04-28T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
         ),
         account_status=AccountStatusEnum["user"],
+        last_updated=datetime.strptime("2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"),
     )
     d_user_1 = User(
         id=1,
@@ -27,13 +28,14 @@ def gen_dummyData():
         account_status=AccountStatusEnum["user"],
     )
     d_user_2 = User(
-        id=2,
-        username="Admin",
+        id=83375816,
+        username="cyanChill",
         avatar_url="https://avatars.githubusercontent.com/u/83375816?v=4",
         github_created_at=datetime.strptime(
             "2020-04-28T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
         ),
         account_status=AccountStatusEnum["admin"],
+        last_updated=datetime.strptime("2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"),
     )
 
     d_primary_tag_1 = Tag(
@@ -70,9 +72,7 @@ def gen_dummyData():
         stars=0,
         _primary_tag=d_primary_tag_1.name,
         suggested_by=d_user_0.id,
-        last_updated=datetime.strptime(
-            "2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
-        )
+        last_updated=datetime.strptime("2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"),
     )
     d_repo_2 = Repository(
         id=10270250,
@@ -91,9 +91,7 @@ def gen_dummyData():
         stars=0,
         _primary_tag=d_primary_tag_2.name,
         suggested_by=d_user_0.id,
-        last_updated=datetime.strptime(
-            "2023-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
-        )
+        last_updated=datetime.strptime("2023-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"),
     )
 
     d_repo_lang_relation_1 = RepoLanguage(

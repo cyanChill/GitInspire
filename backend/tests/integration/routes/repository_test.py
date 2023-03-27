@@ -442,13 +442,13 @@ class Repository_Route_Test(testBase.TestBase):
 
         test_cases = [
             TestCase(
-                test_name="Repository doesn't exist",
+                test_name="Repository doesn't exist in our database",
                 repo_id="10",
                 expected_error_code="404",
                 expected_error_message="Repository with repository id 10 doesn\\'t exist.",
             ),
             TestCase(
-                test_name="Repository that doesn't exist in the API",
+                test_name="Repository that doesn't exist in the GitHub API",
                 repo_id="0",
                 expected_error_code="410",
                 expected_error_message="Repository is no longer accessible via the GitHub API and has been deleted from our database.",
