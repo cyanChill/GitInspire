@@ -32,10 +32,6 @@ export default function Home() {
         />
         <RandomRepoForm />
       </div>
-
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold">GitInspire Stats</h2>
-      </section>
     </>
   );
 }
