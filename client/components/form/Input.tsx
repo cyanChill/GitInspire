@@ -40,7 +40,7 @@ export function InputGroup({
   );
 }
 
-// Version that doesn't use a <label> element
+// Version that doesn't use a <label> element (to work with our custom Select component)
 export function InputGroupAlt({
   label,
   required = false,
