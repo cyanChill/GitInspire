@@ -12,6 +12,7 @@ class Report(db.Model):
     type = Column(String, nullable=False)
     content_id = Column(String)
     reason = Column(String, nullable=False)  # Or description
+    maintain_link = Column(String)
     info = Column(String, nullable=False)
 
     reported_by = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -25,6 +26,7 @@ class Report(db.Model):
             "type": self.type,
             "content_id": self.content_id,
             "reason": self.reason,
+            "maintain_link": self.maintain_link,
             "info": self.info,
             "reported_by": self.user.as_dict(),
             "created_at": self.created_at.isoformat(),

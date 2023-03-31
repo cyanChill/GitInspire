@@ -108,9 +108,10 @@ with app.app_context():
             type=report[1],
             content_id=report[2],
             reason=report[3],
-            info=report[4],
-            reported_by=report[5],
-            created_at=report[6],
+            maintain_link=report[4],
+            info=report[5],
+            reported_by=report[6],
+            created_at=report[7],
         )
         db.session.add(new_report)
 

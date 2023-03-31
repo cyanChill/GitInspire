@@ -139,13 +139,23 @@ with app.app_context():
     all_reports = Report.query.all()
     write_csv(
         "instance/report_data.csv",
-        ["id", "type", "content_id", "reason", "info", "reported_by", "created_at"],
+        [
+            "id",
+            "type",
+            "content_id",
+            "reason",
+            "maintain_link",
+            "info",
+            "reported_by",
+            "created_at",
+        ],
         [
             [
                 x.id,
                 x.type,
                 x.content_id,
                 x.reason,
+                x.maintain_link,
                 x.info,
                 x.reported_by,
                 x.created_at,
