@@ -13,6 +13,7 @@ type ReportDataType = {
   type?: SelectOption;
   id?: string;
   reason?: SelectOption;
+  maintain_link?: string;
   additionalInfo?: string;
 };
 
@@ -20,6 +21,7 @@ const DEFAULT_REPORT = {
   type: undefined,
   id: "",
   reason: undefined,
+  maintain_link: "",
   additionalInfo: "",
 };
 
@@ -56,17 +58,35 @@ export default function ReportPage() {
     return ["repository", "tag", "user"].includes(`${reportData.type.value}`);
   }, [reportData.type]);
 
-  const onReportSubmit = async () => {
+  const isMaintainReport = useMemo(() => {
+    if (!reportData.type || !reportData.reason) return false;
+    return (
+      reportData.type.value === "repository" &&
+      reportData.reason.value === "maintain_link"
+    );
+  }, [reportData.type, reportData.reason]);
+
+  const onReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (!reportData.type) {
       toast.error("A report type must be selected.");
       return;
     }
-    if (isReportWithId && !reportData.id) {
+    if (isReportWithId && !reportData.id?.trim()) {
       toast.error("A content id/name must be provided.");
       return;
     }
     if (!reportData.reason) {
       toast.error("A report reason must be selected.");
+      return;
+    }
+    if (isMaintainReport && !reportData.maintain_link?.trim()) {
+      toast.error("A maintain link must be provided.");
+      return;
+    }
+    if (!reportData.additionalInfo?.trim()) {
+      toast.error("Additional information must be provided in the report.");
       return;
     }
 
@@ -126,65 +146,85 @@ export default function ReportPage() {
 
   return (
     <div className="flex animate-load-in justify-center">
-      <div className="flex w-full max-w-4xl flex-col gap-y-2 bg-white p-2 shadow-md dark:bg-slate-800 dark:shadow-slate-700">
+      <div className="w-full max-w-4xl bg-white p-2 shadow-md dark:bg-slate-800 dark:shadow-slate-700">
         <h1 className="text-center text-2xl font-semibold underline">
           Report or Suggest Something
         </h1>
-        <InputGroupAlt label="Report Type" required>
-          <Select
-            options={REPORT_TYPE_OPTIONS}
-            onChange={(value) =>
-              setReportData((prev) => ({ ...prev, type: value }))
-            }
-            value={reportData.type}
-          />
-        </InputGroupAlt>
+        <form onSubmit={onReportSubmit} className="flex flex-col gap-y-2 ">
+          <InputGroupAlt label="Report Type" required>
+            <Select
+              options={REPORT_TYPE_OPTIONS}
+              onChange={(value) =>
+                setReportData((prev) => ({ ...prev, type: value }))
+              }
+              value={reportData.type}
+            />
+          </InputGroupAlt>
 
-        {reportData.type && isReportWithId && (
-          <InputGroup label="Content Id/Name" required>
+          {reportData.type && isReportWithId && (
+            <InputGroup label="Content Id/Name" required>
+              <Input
+                type="text"
+                value={reportData.id}
+                className="mb-2 w-full"
+                required
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setReportData((prev) => ({ ...prev, id: e.target.value }))
+                }
+              />
+            </InputGroup>
+          )}
+
+          <InputGroupAlt label="Reason" required>
+            <Select
+              options={REPORT_REASON_OPTIONS}
+              onChange={(value) =>
+                setReportData((prev) => ({ ...prev, reason: value }))
+              }
+              value={reportData.reason}
+            />
+          </InputGroupAlt>
+          {reportData.reason && isMaintainReport && (
+            <InputGroup label="Maintain Link" required>
+              <Input
+                type="url"
+                value={reportData.maintain_link}
+                className="mb-2 w-full"
+                required
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setReportData((prev) => ({
+                    ...prev,
+                    maintain_link: e.target.value,
+                  }))
+                }
+              />
+            </InputGroup>
+          )}
+
+          <InputGroup label="Additional Information" required>
             <Input
               type="text"
-              value={reportData.id}
+              value={reportData.additionalInfo}
               className="mb-2 w-full"
+              textarea={true}
+              rows={4}
+              required
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setReportData((prev) => ({ ...prev, id: e.target.value }))
+                setReportData((prev) => ({
+                  ...prev,
+                  additionalInfo: e.target.value,
+                }))
               }
             />
           </InputGroup>
-        )}
-
-        <InputGroupAlt label="Reason" required>
-          <Select
-            options={REPORT_REASON_OPTIONS}
-            onChange={(value) =>
-              setReportData((prev) => ({ ...prev, reason: value }))
-            }
-            value={reportData.reason}
-          />
-        </InputGroupAlt>
-
-        <InputGroup label="Additional Information">
-          <Input
-            type="text"
-            value={reportData.additionalInfo}
-            className="mb-2 w-full"
-            textarea={true}
-            rows={4}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setReportData((prev) => ({
-                ...prev,
-                additionalInfo: e.target.value,
-              }))
-            }
-          />
-        </InputGroup>
-        <Button2
-          onClick={onReportSubmit}
-          className="w-fit self-end py-1"
-          disabled={isLoading}
-        >
-          Submit Report
-        </Button2>
+          <Button2
+            type="submit"
+            className="w-fit self-end py-1"
+            disabled={isLoading}
+          >
+            Submit Report
+          </Button2>
+        </form>
       </div>
     </div>
   );
