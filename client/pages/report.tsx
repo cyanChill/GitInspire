@@ -110,10 +110,6 @@ export default function ReportPage() {
       return;
     }
 
-    /*
-      TODO: Handle successful report
-    */
-    console.log(reportData);
     toast.success("Successfully submitted report.");
     router.push("/");
   };
