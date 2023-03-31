@@ -13,7 +13,7 @@ type ReportDataType = {
   type?: SelectOption;
   id?: string;
   reason?: SelectOption;
-  maintain_link?: string;
+  maintainLink?: string;
   additionalInfo?: string;
 };
 
@@ -21,7 +21,7 @@ const DEFAULT_REPORT = {
   type: undefined,
   id: "",
   reason: undefined,
-  maintain_link: "",
+  maintainLink: "",
   additionalInfo: "",
 };
 
@@ -81,7 +81,7 @@ export default function ReportPage() {
       toast.error("A report reason must be selected.");
       return;
     }
-    if (isMaintainReport && !reportData.maintain_link?.trim()) {
+    if (isMaintainReport && !reportData.maintainLink?.trim()) {
       toast.error("A maintain link must be provided.");
       return;
     }
@@ -188,13 +188,13 @@ export default function ReportPage() {
             <InputGroup label="Maintain Link" required>
               <Input
                 type="url"
-                value={reportData.maintain_link}
+                value={reportData.maintainLink}
                 className="mb-2 w-full"
                 required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setReportData((prev) => ({
                     ...prev,
-                    maintain_link: e.target.value,
+                    maintainLink: e.target.value,
                   }))
                 }
               />

@@ -4,7 +4,6 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from server.db import db
-from server.models.Report import ContentTypeEnum
 
 
 class LogActionEnum(enum.Enum):
@@ -22,7 +21,7 @@ class Log(db.Model):
 
     id = Column(Integer, primary_key=True)
     action = Column(Enum(LogActionEnum), nullable=False)
-    type = Column(Enum(ContentTypeEnum), nullable=False)
+    type = Column(String, nullable=False)
     content_id = Column(String)
 
     enacted_by = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -34,11 +33,11 @@ class Log(db.Model):
         return {
             "id": self.id,
             "action": self.action.name,
-            "type": self.type.name,
+            "type": self.type,
             "content_id": self.content_id,
             "enacted_by": self.user.as_dict(),
             "created_at": self.created_at.isoformat(),
         }
 
     def __repr__(self):
-        return f"<Log type='{self.type.name}' content_id='{self.content_id}' enacted_by='{self.user.username}'>"
+        return f"<Log type='{self.type}' content_id='{self.content_id}' enacted_by='{self.user.username}'>"

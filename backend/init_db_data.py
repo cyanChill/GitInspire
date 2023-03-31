@@ -12,7 +12,7 @@ from server.models.Language import Language
 from server.models.Repository import Repository, RepoLanguage, RepoTag
 from server.models.Tag import Tag, TagTypeEnum
 from server.models.User import User, AccountStatusEnum
-from server.models.Report import Report, ContentTypeEnum
+from server.models.Report import Report
 from server.models.Log import Log, LogActionEnum
 from server.utils import normalizeStr
 
@@ -58,7 +58,8 @@ reports = [
     {
         "type": "repository",
         "content_id": 407959883,
-        "reason": "Dummy report",
+        "reason": "other",
+        "info": "This is a dummy report.",
         "reported_by": 83375816,
     }
 ]
@@ -149,9 +150,10 @@ with app.app_context():
     # EXPERIMENTAL Tables:
     for rpt in reports:
         new_report = Report(
-            type=ContentTypeEnum[rpt["type"]],
+            type=rpt["type"],
             content_id=rpt["content_id"],
             reason=rpt["reason"],
+            info=rpt["info"],
             reported_by=rpt["reported_by"],
         )
         db.session.add(new_report)
@@ -164,7 +166,7 @@ with app.app_context():
     for lg in logs:
         new_log = Log(
             action=LogActionEnum[lg["action"]],
-            type=ContentTypeEnum[lg["type"]],
+            type=lg["type"],
             content_id=lg["content_id"],
             enacted_by=lg["enacted_by"],
         )

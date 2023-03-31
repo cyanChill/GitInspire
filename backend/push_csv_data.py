@@ -15,7 +15,7 @@ from server.models.Language import Language
 from server.models.Repository import Repository, RepoLanguage, RepoTag
 from server.models.Tag import Tag, TagTypeEnum
 from server.models.User import User, AccountStatusEnum
-from server.models.Report import Report, ContentTypeEnum
+from server.models.Report import Report
 from server.models.Log import Log, LogActionEnum
 
 app = Flask(__name__, instance_relative_config=True)
@@ -105,11 +105,12 @@ with app.app_context():
     for report in report_data:
         new_report = Report(
             id=report[0],
-            type=ContentTypeEnum[report[1]],
+            type=report[1],
             content_id=report[2],
             reason=report[3],
-            reported_by=report[4],
-            created_at=report[5],
+            info=report[4],
+            reported_by=report[5],
+            created_at=report[6],
         )
         db.session.add(new_report)
 
@@ -118,7 +119,7 @@ with app.app_context():
         new_log = Log(
             id=log[0],
             action=LogActionEnum[log[1]],
-            type=ContentTypeEnum[log[2]],
+            type=log[2],
             content_id=log[3],
             enacted_by=log[4],
             created_at=log[5],

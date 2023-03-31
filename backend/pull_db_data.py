@@ -10,7 +10,7 @@
 #     instance at a time in Render which closes after 90 days]
 #
 # In the current configuration, the data pulled from the database will
-# be stored in CSV files in the "instance" folder 
+# be stored in CSV files in the "instance" folder
 # ----------------------------------------------------------------------
 
 import csv
@@ -139,13 +139,14 @@ with app.app_context():
     all_reports = Report.query.all()
     write_csv(
         "instance/report_data.csv",
-        ["id", "type", "content_id", "reason", "reported_by", "created_at"],
+        ["id", "type", "content_id", "reason", "info", "reported_by", "created_at"],
         [
             [
                 x.id,
-                x.type.name,
+                x.type,
                 x.content_id,
                 x.reason,
+                x.info,
                 x.reported_by,
                 x.created_at,
             ]
@@ -162,7 +163,7 @@ with app.app_context():
             [
                 x.id,
                 x.action.name,
-                x.type.name,
+                x.type,
                 x.content_id,
                 x.enacted_by,
                 x.created_at,
