@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
 import useUserContext from "~hooks/useUserContext";
 import { fromURLQueryVal } from "~utils/helpers";
+import { getCookie } from "~utils/cookies";
 import Select, { SelectOption } from "~components/form/Select";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import { Button2 } from "~components/form/Button";
@@ -50,11 +51,51 @@ export default function ReportPage() {
     return arr.find((opt) => opt.value === type);
   };
 
-  const onReportSubmit = async () => {
-    if (!reportData.type) toast.error("A report type must be selected.");
-    if (!reportData.reason) toast.error("A report reason must be selected.");
+  const isReportWithId = useMemo(() => {
+    if (!reportData.type) return false;
+    return ["repository", "tag", "user"].includes(`${reportData.type.value}`);
+  }, [reportData.type]);
 
+  const onReportSubmit = async () => {
+    if (!reportData.type) {
+      toast.error("A report type must be selected.");
+      return;
+    }
+    if (isReportWithId && !reportData.id) {
+      toast.error("A content id/name must be provided.");
+      return;
+    }
+    if (!reportData.reason) {
+      toast.error("A report reason must be selected.");
+      return;
+    }
+
+    setIsLoading(true);
+    const res = await fetch("/api/report", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
+      },
+      body: JSON.stringify({
+        ...reportData,
+        type: reportData.type.value,
+        reason: reportData.reason.value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setIsLoading(false);
+      toast.error(data.msg || data.message);
+      return;
+    }
+
+    /*
+      TODO: Handle successful report
+    */
     console.log(reportData);
+    toast.success("Successfully submitted report.");
+    router.push("/");
   };
 
   useEffect(() => {
@@ -84,51 +125,67 @@ export default function ReportPage() {
   }, [redirectIfNotAuth]);
 
   return (
-    <div className="animate-load-in">
-      <h1 className="text-2xl font-bold">Report Page</h1>
-      <InputGroupAlt label="Report Type" required>
-        <Select
-          options={REPORT_TYPE_OPTIONS}
-          onChange={(value) =>
-            setReportData((prev) => ({ ...prev, type: value }))
-          }
-          value={reportData.type}
-        />
-      </InputGroupAlt>
+    <div className="flex animate-load-in justify-center">
+      <div className="flex w-full max-w-4xl flex-col gap-y-2 bg-white p-2 shadow-md dark:bg-slate-800 dark:shadow-slate-700">
+        <h1 className="text-center text-2xl font-semibold underline">
+          Report or Suggest Something
+        </h1>
+        <InputGroupAlt label="Report Type" required>
+          <Select
+            options={REPORT_TYPE_OPTIONS}
+            onChange={(value) =>
+              setReportData((prev) => ({ ...prev, type: value }))
+            }
+            value={reportData.type}
+          />
+        </InputGroupAlt>
 
-      <InputGroup label="Content Id/Name">
-        <Input
-          type="text"
-          value={reportData.id}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setReportData((prev) => ({ ...prev, id: e.target.value }))
-          }
-        />
-      </InputGroup>
+        {reportData.type && isReportWithId && (
+          <InputGroup label="Content Id/Name" required>
+            <Input
+              type="text"
+              value={reportData.id}
+              className="mb-2 w-full"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setReportData((prev) => ({ ...prev, id: e.target.value }))
+              }
+            />
+          </InputGroup>
+        )}
 
-      <InputGroupAlt label="Reason" required>
-        <Select
-          options={REPORT_REASON_OPTIONS}
-          onChange={(value) =>
-            setReportData((prev) => ({ ...prev, reason: value }))
-          }
-          value={reportData.reason}
-        />
-      </InputGroupAlt>
+        <InputGroupAlt label="Reason" required>
+          <Select
+            options={REPORT_REASON_OPTIONS}
+            onChange={(value) =>
+              setReportData((prev) => ({ ...prev, reason: value }))
+            }
+            value={reportData.reason}
+          />
+        </InputGroupAlt>
 
-      <InputGroup label="Additional Information">
-        <Input
-          type="text"
-          value={reportData.additionalInfo}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setReportData((prev) => ({
-              ...prev,
-              additionalInfo: e.target.value,
-            }))
-          }
-        />
-      </InputGroup>
-      <Button2 onClick={onReportSubmit}>Submit Report</Button2>
+        <InputGroup label="Additional Information">
+          <Input
+            type="text"
+            value={reportData.additionalInfo}
+            className="mb-2 w-full"
+            textarea={true}
+            rows={4}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setReportData((prev) => ({
+                ...prev,
+                additionalInfo: e.target.value,
+              }))
+            }
+          />
+        </InputGroup>
+        <Button2
+          onClick={onReportSubmit}
+          className="w-fit self-end py-1"
+          disabled={isLoading}
+        >
+          Submit Report
+        </Button2>
+      </div>
     </div>
   );
 }
