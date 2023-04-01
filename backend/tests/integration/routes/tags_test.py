@@ -53,7 +53,7 @@ class Tags_Route_Test(testBase.TestBase):
                         response["user_gen"], test_case.expected_response["user_gen"]
                     )
 
-    def test_createTag(self):
+    def test_create_tag(self):
         request_body = {"display_name": "Full Stack", "type": "user_gen"}
 
         TestCase = collections.namedtuple("TestCase", ["test_name", "expected_message"])
@@ -76,7 +76,7 @@ class Tags_Route_Test(testBase.TestBase):
                 with self.subTest(msg=test_case.test_name):
                     # Set authorization token to be user >1 year old
                     self.webtest_app.authorization = ("Bearer", self.user_0_token)
-                    # Send an HTTP Post Request to "/repositories"
+                    # Send an HTTP Post Request to "/tags"
                     response = self.webtest_app.post_json(
                         "/api/tags", request_body
                     ).json

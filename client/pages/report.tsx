@@ -11,18 +11,18 @@ import { Button2 } from "~components/form/Button";
 
 type ReportDataType = {
   type?: SelectOption;
-  id?: string;
+  content_id?: string;
   reason?: SelectOption;
-  maintainLink?: string;
-  additionalInfo?: string;
+  maintain_link?: string;
+  info?: string; // Additional Info
 };
 
 const DEFAULT_REPORT = {
   type: undefined,
-  id: "",
+  content_id: "",
   reason: undefined,
-  maintainLink: "",
-  additionalInfo: "",
+  maintain_link: "",
+  info: "",
 };
 
 const REPORT_TYPE_OPTIONS: SelectOption[] = [
@@ -73,7 +73,7 @@ export default function ReportPage() {
       toast.error("A report type must be selected.");
       return;
     }
-    if (isReportWithId && !reportData.id?.trim()) {
+    if (isReportWithId && !reportData.content_id?.trim()) {
       toast.error("A content id/name must be provided.");
       return;
     }
@@ -81,11 +81,11 @@ export default function ReportPage() {
       toast.error("A report reason must be selected.");
       return;
     }
-    if (isMaintainReport && !reportData.maintainLink?.trim()) {
+    if (isMaintainReport && !reportData.maintain_link?.trim()) {
       toast.error("A maintain link must be provided.");
       return;
     }
-    if (!reportData.additionalInfo?.trim()) {
+    if (!reportData.info?.trim()) {
       toast.error("Additional information must be provided in the report.");
       return;
     }
@@ -124,7 +124,7 @@ export default function ReportPage() {
       );
     }
     if (router.query.id) {
-      providedInfo.id = fromURLQueryVal.onlyStr(router.query.id);
+      providedInfo.content_id = fromURLQueryVal.onlyStr(router.query.id);
     }
     if (router.query.reason) {
       providedInfo.reason = findSelectOption(
@@ -161,11 +161,11 @@ export default function ReportPage() {
             <InputGroup label="Content Id/Name" required>
               <Input
                 type="text"
-                value={reportData.id}
+                value={reportData.content_id}
                 className="mb-2 w-full"
                 required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setReportData((prev) => ({ ...prev, id: e.target.value }))
+                  setReportData((prev) => ({ ...prev, content_id: e.target.value }))
                 }
               />
             </InputGroup>
@@ -184,13 +184,13 @@ export default function ReportPage() {
             <InputGroup label="Maintain Link" required>
               <Input
                 type="url"
-                value={reportData.maintainLink}
+                value={reportData.maintain_link}
                 className="mb-2 w-full"
                 required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setReportData((prev) => ({
                     ...prev,
-                    maintainLink: e.target.value,
+                    maintain_link: e.target.value,
                   }))
                 }
               />
@@ -200,7 +200,7 @@ export default function ReportPage() {
           <InputGroup label="Additional Information" required>
             <Input
               type="text"
-              value={reportData.additionalInfo}
+              value={reportData.info}
               className="mb-2 w-full"
               textarea={true}
               rows={4}
@@ -208,7 +208,7 @@ export default function ReportPage() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setReportData((prev) => ({
                   ...prev,
-                  additionalInfo: e.target.value,
+                  info: e.target.value,
                 }))
               }
             />

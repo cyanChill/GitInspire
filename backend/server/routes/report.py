@@ -14,6 +14,8 @@ bp = Blueprint("report", __name__, url_prefix="/report")
 @jwt_required()
 @admin_required()
 def get_all_reports():
+    # TODO: Get all reports and organize them
+
     return jsonify({"message": "Route not implemented."}), 500
 
 
@@ -26,7 +28,7 @@ def create_report():
     report_data = request.get_json()
 
     # Validate that the client provided all required fields.
-    required_fields = ["type", "reason", "additionalInfo"]
+    required_fields = ["type", "reason", "info"]
     for field in required_fields:
         if field not in report_data:
             return jsonify({"message": f"{field} can't be blank."}), 400
@@ -35,17 +37,19 @@ def create_report():
 
     # Other input validation checks.
     report_type = report_data["type"]
-    report_id = report_data["id"]
     report_reason = report_data["reason"]
-    report_link = report_data["maintainLink"]
-    report_info = report_data["additionalInfo"]
+    report_info = report_data["info"]
+    # Get values for not required fields
+    report_id = request.json.get("content_id", "").strip()
+    report_link = request.json.get("maintain_link", "").strip()
 
     if report_type in ["repository", "tag", "user"]:
-        if not report_id or report_id.strip() == "":
+        if report_id == "":
+            print("Empty report Id")
             return jsonify({"message": "A content id/name must be provided."}), 400
 
     if report_type == "repository" and report_reason == "maintain_link":
-        if not report_link or report_link.strip() == "":
+        if report_link == "":
             return jsonify({"message": "A maintain link must be provided."}), 400
 
     # Initialize and populate a Report object.
@@ -71,3 +75,12 @@ def create_report():
         # Some unknown response has occurred.
         print(traceback.format_exc())
         return jsonify({"message": "Failed to create report."}), 500
+
+
+@bp.route("/<string:reportId>", methods=["DELETE"])
+@jwt_required()
+@admin_required()
+def handle_report(reportId):
+    # Make sure the report exists before we do anything
+
+    return jsonify({"message": "Route not implemented."}), 500
