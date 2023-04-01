@@ -37,6 +37,17 @@ export type RepositoryObjType = {
   last_updated: Date;
 };
 
+export type ReportObjType = {
+  id: number;
+  content_id: string;
+  type: string;
+  reason: string;
+  maintain_link: string;
+  info: string;
+  reported_by: UserObjType;
+  created_at: Date;
+};
+
 export interface Generic_Obj {
   [key: string]: any;
 }

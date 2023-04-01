@@ -14,9 +14,22 @@ bp = Blueprint("report", __name__, url_prefix="/report")
 @jwt_required()
 @admin_required()
 def get_all_reports():
-    # TODO: Get all reports and organize them
+    user = g.user.as_dict()
 
-    return jsonify({"message": "Route not implemented."}), 500
+    reports = []
+    if user["account_status"] == "owner":
+        # Owner should have access to all reports
+        reports = Report.query.all()
+    elif user["account_status"] == "admin":
+        # Admins should have access to some reports
+        allowed_reports = ["repository", "user", "tag"]
+        reports = Report.query.filter(Report.type.in_(allowed_reports)).all()
+
+    response = {
+        "message": "Successfully obtained all reports.",
+        "reports": serialize_sqlalchemy_objs(reports),
+    }
+    return jsonify(response), 200
 
 
 @bp.route("/", methods=["POST"])
@@ -81,6 +94,11 @@ def create_report():
 @jwt_required()
 @admin_required()
 def handle_report(reportId):
-    # Make sure the report exists before we do anything
+    # NOTE: Make sure the report exists before we do anything
+    #
+    # Idea:
+    #   - We have 2 actions: "resolve" & "dismissed"
+    #   - Regardless of action, we create a Log in our database stating what happened
+    #       - In addition, we delete the report
 
     return jsonify({"message": "Route not implemented."}), 500

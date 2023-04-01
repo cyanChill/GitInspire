@@ -57,6 +57,11 @@ const useUserContext = () => {
     }
   }, [isAuthenticated]); /* eslint-disable-line */
 
+  // Redirect user to home page if they're not an admin
+  const redirectIfNotAdmin = useCallback(() => {
+    if (!isLoading && !isAdmin) router.replace("/");
+  }, [isLoading, isAdmin]); /* eslint-disable-line */
+
   return {
     ...context,
     isBanned,
@@ -65,6 +70,7 @@ const useUserContext = () => {
     isAccAge,
     redirectIfNotAuth,
     redirectIfAuth,
+    redirectIfNotAdmin,
   };
 };
 
