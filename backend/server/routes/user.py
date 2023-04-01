@@ -56,7 +56,10 @@ def refresh_user(userId):
 
     # Handle case where rate limit was hit, validation failed, endpoint has been spammed
     if user_data_resp.status_code in [403, 422]:
-        return jsonify({"message": "Something else went wrong."}), 500
+        response = {
+            "message": "Rate limit was hit, validation failed, or endpoint has been spammed."
+        }
+        return jsonify(response), 500
 
     # Handle case where user is no longer accessible via the API
     if user_data_resp.status_code == 404:

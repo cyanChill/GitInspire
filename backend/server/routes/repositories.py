@@ -289,7 +289,10 @@ def refresh_repository(repoId):
 
     # Handle case where rate limit was hit, validation failed, endpoint has been spammed
     if repo_data_resp.status_code in [403, 422]:
-        return jsonify({"message": "Something else went wrong."}), 500
+        response = {
+            "message": "Rate limit was hit, validation failed, or endpoint has been spammed."
+        }
+        return jsonify(response), 500
 
     # Handle case where repository is no longer accessible via the API
     if repo_data_resp.status_code == 404:
