@@ -11,7 +11,7 @@ def get_languages():
     languages = Language.query.all()
 
     response = {
-        "message": "Successfully obtained all messages.",
+        "message": "Successfully obtained all languages.",
         "languages": serialize_sqlalchemy_objs(languages),
     }
     return jsonify(response), 200

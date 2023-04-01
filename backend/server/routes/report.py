@@ -49,17 +49,22 @@ def create_report():
             return jsonify({"message": f"{field} can't be blank."}), 400
 
     # Other input validation checks.
-    report_type = report_data["type"]
-    report_reason = report_data["reason"]
-    report_info = report_data["info"]
+    report_type = report_data["type"].strip()
+    report_reason = report_data["reason"].strip()
+    report_info = report_data["info"].strip()
+    if len(report_info) > 280:
+        response_msg = "Additional information can't be more than 280 characters."
+        return jsonify({"message": response_msg}), 400
     # Get values for not required fields
     report_id = request.json.get("content_id", "").strip()
     report_link = request.json.get("maintain_link", "").strip()
 
     if report_type in ["repository", "tag", "user"]:
         if report_id == "":
-            print("Empty report Id")
             return jsonify({"message": "A content id/name must be provided."}), 400
+        if len(report_id) > 25:
+            response = {"message": "Content id/name can't be more than 25 characters."}
+            return jsonify(response), 400
 
     if report_type == "repository" and report_reason == "maintain_link":
         if report_link == "":

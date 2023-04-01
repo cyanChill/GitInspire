@@ -180,6 +180,28 @@ class Tags_Route_Test(testBase.TestBase):
                 expected_error_code="400",
                 expected_error_message="A maintain link must be provided.",
             ),
+            TestCase(
+                test_name="Content Id > 25 characters",
+                request_body={
+                    "type": "repository",
+                    "reason": "other",
+                    "info": "test report",
+                    "content_id": "Lorem ipsum dolor sit amet",
+                },
+                expected_error_code="400",
+                expected_error_message="Content id/name can\\'t be more than 25 characters.",
+            ),
+            TestCase(
+                test_name="Additional info > 280 characters",
+                request_body={
+                    "type": "repository",
+                    "reason": "other",
+                    "info": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in volupta",
+                    "content_id": "Lorem ipsum dolor sit amet",
+                },
+                expected_error_code="400",
+                expected_error_message="Additional information can\\'t be more than 280 characters.",
+            ),
         ]
 
         with self.app.app_context():

@@ -95,7 +95,7 @@ export default function ContributeSubmitForm({
 
   if (error) {
     return (
-      <div className="animate-load-in mt-10 text-center">
+      <div className="mt-10 animate-load-in text-center">
         <p className="text-red-500 dark:text-red-400">
           Sorry, but something went wrong with your submission.
         </p>
@@ -104,7 +104,7 @@ export default function ContributeSubmitForm({
   }
 
   return (
-    <div className="animate-load-in flex flex-col items-center mt-10 text-center">
+    <div className="mt-10 flex animate-load-in flex-col items-center text-center">
       <p className="text-xl font-bold">You&apos;re approaching the end.</p>
       <p className="mt-1">
         There&apos;s one click left before you helped contributed to GitInspire!

@@ -48,6 +48,8 @@ def create_tag():
     display_name = tag_data["display_name"].strip()
     if display_name == "":
         return jsonify({"message": "Tag name can't be empty."}), 400
+    if len(display_name) > 25:
+        return jsonify({"message": "Tag name can't be more than 25 characters."}), 400
 
     # Initialize and populate a Tag object.
     tag = Tag()

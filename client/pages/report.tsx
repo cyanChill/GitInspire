@@ -77,6 +77,14 @@ export default function ReportPage() {
       toast.error("A content id/name must be provided.");
       return;
     }
+    if (
+      isReportWithId &&
+      reportData.content_id &&
+      reportData.content_id.trim().length > 25
+    ) {
+      toast.error("Content id/name can't be more than 25 characters.");
+      return;
+    }
     if (!reportData.reason) {
       toast.error("A report reason must be selected.");
       return;
@@ -87,6 +95,10 @@ export default function ReportPage() {
     }
     if (!reportData.info?.trim()) {
       toast.error("Additional information must be provided in the report.");
+      return;
+    }
+    if (reportData.info.trim().length > 280) {
+      toast.error("Additional information can't be more than 280 characters.");
       return;
     }
 
@@ -163,9 +175,13 @@ export default function ReportPage() {
                 type="text"
                 value={reportData.content_id}
                 className="mb-2 w-full"
+                maxLength={25}
                 required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setReportData((prev) => ({ ...prev, content_id: e.target.value }))
+                  setReportData((prev) => ({
+                    ...prev,
+                    content_id: e.target.value,
+                  }))
                 }
               />
             </InputGroup>
@@ -204,6 +220,7 @@ export default function ReportPage() {
               className="mb-2 w-full"
               textarea={true}
               rows={4}
+              maxLength={280}
               required
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setReportData((prev) => ({

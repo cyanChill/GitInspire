@@ -92,9 +92,10 @@ class Repository_Route_Test(testBase.TestBase):
 
         with self.app.app_context():
             for test_case in test_cases:
+                # Set authorization token to be user >3 months old
+                self.webtest_app.authorization = ("Bearer", self.user_0_token)
+
                 with self.subTest(msg=test_case.test_name):
-                    # Set authorization token to be user >3 months old
-                    self.webtest_app.authorization = ("Bearer", self.user_0_token)
                     # Send an HTTP Post Request to "/repositories"
                     response = self.webtest_app.post_json(
                         "/api/repositories", request_body

@@ -26,7 +26,7 @@ class Tags_Route_Test(testBase.TestBase):
                 test_name="Retrieve all tags",
                 request_url="/api/tags",
                 expected_response={
-                    "primary": [{"name": "project_idea"},{"name":"resource"}],
+                    "primary": [{"name": "project_idea"}, {"name": "resource"}],
                     "user_gen": [{"name": "frontend"}],
                 },
             )
@@ -73,9 +73,10 @@ class Tags_Route_Test(testBase.TestBase):
             user = User.query.filter_by(id=0).first()
 
             for test_case in test_cases:
+                # Set authorization token to be user >1 year old
+                self.webtest_app.authorization = ("Bearer", self.user_0_token)
+
                 with self.subTest(msg=test_case.test_name):
-                    # Set authorization token to be user >1 year old
-                    self.webtest_app.authorization = ("Bearer", self.user_0_token)
                     # Send an HTTP Post Request to "/tags"
                     response = self.webtest_app.post_json(
                         "/api/tags", request_body
@@ -124,6 +125,15 @@ class Tags_Route_Test(testBase.TestBase):
                 request_body={"display_name": " ", "type": "user_gen"},
                 expected_error_code="400",
                 expected_error_message="Tag name can\\'t be empty.",
+            ),
+            TestCase(
+                test_name="Display name > 25 characters",
+                request_body={
+                    "display_name": "Lorem ipsum dolor sit amet",
+                    "type": "user_gen",
+                },
+                expected_error_code="400",
+                expected_error_message="Tag name can\\'t be more than 25 characters.",
             ),
         ]
 

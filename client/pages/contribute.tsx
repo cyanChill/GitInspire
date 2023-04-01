@@ -80,13 +80,16 @@ export default function ContributePage() {
       return;
     }
 
-    // Make sure tag name isn't empty
-    if (
-      data.formType === "tag" &&
-      (!data.new_tag_name || data.new_tag_name.trim() === "")
-    ) {
-      toast.error("The tag name should not be empty.");
-      return;
+    // Make sure tag name isn't empty or is >25 characters
+    if (data.formType === "tag") {
+      if (!data.new_tag_name || data.new_tag_name.trim() === "") {
+        toast.error("The tag name should not be empty.");
+        return;
+      }
+      if (data.new_tag_name.trim().length > 25) {
+        toast.error("Tag name can't be more than 25 characters.");
+        return;
+      }
     }
 
     const inPrimary = tags.primary.find(

@@ -36,6 +36,7 @@ export default function TagSuggForm({
           type="text"
           required
           value={new_tag_name}
+          maxLength={25}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateFields({ new_tag_name: e.target.value })
           }
