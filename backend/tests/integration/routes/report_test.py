@@ -2,6 +2,8 @@ import collections
 import webtest
 
 from tests import testBase
+from server.db import db
+from server.models.Report import Report
 
 
 class Tags_Route_Test(testBase.TestBase):
@@ -30,7 +32,7 @@ class Tags_Route_Test(testBase.TestBase):
 
         with self.app.app_context():
             for test_case in test_cases:
-                # Set authorization token to be not a admin user
+                # Set authorization token to be an admin user
                 self.webtest_app.authorization = ("Bearer", self.user_admin_token)
 
                 with self.subTest(msg=test_case.test_name):
@@ -220,3 +222,51 @@ class Tags_Route_Test(testBase.TestBase):
                     response_code, response_body = str(exception.exception).split("\n")
                     self.assertTrue(test_case.expected_error_code in response_code)
                     self.assertTrue(test_case.expected_error_message in response_body)
+
+    def test_handle_report(self):
+        with self.app.app_context():
+            # Set authorization token to be an admin user
+            self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+
+            dummy_report = Report(
+                type="repository",
+                content_id="394012075",
+                reason="update",
+                info='Remove the "Frontend" tag on the repository.',
+                reported_by="0",
+            )
+            db.session.add(dummy_report)
+            db.session.commit()
+
+            # "dummy_report" should have an id of 1
+            response = self.webtest_app.delete("/api/report/1?action=dismiss").json
+            self.assertTrue(response["message"], "Report has been dismiss.")
+            self.assertTrue(response["report"]["id"], 1)
+
+            # Handling a non-existent report should return an ok response
+            response = self.webtest_app.delete("/api/report/1?action=dismiss").json
+            self.assertTrue(response["message"], "Report hno longer exists.")
+
+    def test_handle_report_bad_request(self):
+        with self.app.app_context():
+            # Set authorization token to be an admin user
+            self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+
+            dummy_report = Report(
+                type="repository",
+                content_id="394012075",
+                reason="update",
+                info='Remove the "Frontend" tag on the repository.',
+                reported_by="0",
+            )
+            db.session.add(dummy_report)
+            db.session.commit()
+
+            # Assert validation errors are raised for the test cases defined above.
+            with self.assertRaises(webtest.AppError) as exception:
+                self.webtest_app.delete("/api/report/1")
+
+            # Assert the HTTP Response Code and the error messages are what we expect.
+            response_code, response_body = str(exception.exception).split("\n")
+            self.assertTrue("400" in response_code)
+            self.assertTrue("Invalid action on report." in response_body)
