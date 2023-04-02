@@ -13,7 +13,7 @@ from server.models.Repository import Repository, RepoLanguage, RepoTag
 from server.models.Tag import Tag, TagTypeEnum
 from server.models.User import User, AccountStatusEnum
 from server.models.Report import Report
-from server.models.Log import Log, LogActionEnum
+from server.models.Log import Log
 from server.utils import normalizeStr
 
 app = Flask(__name__, instance_relative_config=True)
@@ -68,6 +68,7 @@ logs = [
         "action": "updated",
         "type": "repository",
         "content_id": 407959883,
+        "info": "test log report",
         "enacted_by": 83375816,
     }
 ]
@@ -165,9 +166,10 @@ with app.app_context():
 
     for lg in logs:
         new_log = Log(
-            action=LogActionEnum[lg["action"]],
+            action=lg["action"],
             type=lg["type"],
             content_id=lg["content_id"],
+            info=lg["info"],
             enacted_by=lg["enacted_by"],
         )
         db.session.add(new_log)

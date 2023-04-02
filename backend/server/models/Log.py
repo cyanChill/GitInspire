@@ -1,17 +1,8 @@
-import enum
-from sqlalchemy import Column, DateTime, Enum, Integer, String, ForeignKey
+from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from server.db import db
-
-
-class LogActionEnum(enum.Enum):
-    banned = 1
-    updated = 2
-    deleted = 3
-    # Used on bug reports:
-    resolved = 4
 
 
 # A class to log the actions made by Admins & the Owner in regards to the
@@ -20,9 +11,10 @@ class Log(db.Model):
     __tablename__ = "logs"
 
     id = Column(Integer, primary_key=True)
-    action = Column(Enum(LogActionEnum), nullable=False)
+    action = Column(String, nullable=False)
     type = Column(String, nullable=False)
     content_id = Column(String)
+    info = Column(String)
 
     enacted_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User")
@@ -32,9 +24,10 @@ class Log(db.Model):
     def as_dict(self):
         return {
             "id": self.id,
-            "action": self.action.name,
+            "action": self.action,
             "type": self.type,
             "content_id": self.content_id,
+            "info": self.info,
             "enacted_by": self.user.as_dict(),
             "created_at": self.created_at.isoformat(),
         }

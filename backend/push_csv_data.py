@@ -16,7 +16,7 @@ from server.models.Repository import Repository, RepoLanguage, RepoTag
 from server.models.Tag import Tag, TagTypeEnum
 from server.models.User import User, AccountStatusEnum
 from server.models.Report import Report
-from server.models.Log import Log, LogActionEnum
+from server.models.Log import Log
 
 app = Flask(__name__, instance_relative_config=True)
 
@@ -119,11 +119,12 @@ with app.app_context():
     for log in log_data:
         new_log = Log(
             id=log[0],
-            action=LogActionEnum[log[1]],
+            action=log[1],
             type=log[2],
             content_id=log[3],
-            enacted_by=log[4],
-            created_at=log[5],
+            info=log[4],
+            enacted_by=log[5],
+            created_at=log[6],
         )
         db.session.add(new_log)
 

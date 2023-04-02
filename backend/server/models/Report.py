@@ -33,4 +33,4 @@ class Report(db.Model):
         }
 
     def __repr__(self):
-        return f"<Report type='{self.type.name}' content_id='{self.content_id}' reporter='{self.user.username}'>"
+        return f"<Report type='{self.type}' content_id='{self.content_id}' reporter='{self.user.username}'>"

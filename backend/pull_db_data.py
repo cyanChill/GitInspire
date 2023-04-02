@@ -168,13 +168,14 @@ with app.app_context():
     all_logs = Log.query.all()
     write_csv(
         "instance/log_data.csv",
-        ["id", "action", "type", "content_id", "enacted_by", "created_at"],
+        ["id", "action", "type", "content_id", "info", "enacted_by", "created_at"],
         [
             [
                 x.id,
-                x.action.name,
+                x.action,
                 x.type,
                 x.content_id,
+                x.info,
                 x.enacted_by,
                 x.created_at,
             ]
