@@ -41,8 +41,31 @@ export default function AdminReportsPage() {
     if (diffSelection) window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleReportAction = async (action: string) => {
-    console.log(`[Report Action] ${action}`);
+  const handleReportAction = async (rptId: number, action: string) => {
+    const res = await fetch(`/api/report/${rptId}?action=${action}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
+      },
+    });
+
+    if (!res.ok) {
+      toast.error("Something unexpected has occurred.");
+      return;
+    }
+
+    const data = await res.json();
+    setReportsDict((prev) => {
+      // Since we may recieve "None" if the report has been already handled
+      let newReportDict: ReportsDictType = {};
+      Object.keys(prev).forEach((key) => {
+        newReportDict[key] = prev[key].filter((rpt) => rpt.id != rptId);
+      });
+
+      return newReportDict;
+    });
+    toast.success(data.message);
   };
 
   useEffect(() => {
@@ -71,7 +94,7 @@ export default function AdminReportsPage() {
 
         const dictKeys = Object.keys(dict).sort();
         setReportsDict(dict);
-        setSelectedType(dictKeys[0]);
+        setSelectedType(dictKeys.length > 0 ? dictKeys[0] : "");
         setIsLoading(false);
       })
       .catch((err) => {
@@ -88,6 +111,20 @@ export default function AdminReportsPage() {
     return (
       <div className="flex animate-load-in justify-center">
         <Spinner />
+      </div>
+    );
+  }
+
+  if (Object.keys(reportsDict).length === 0) {
+    return (
+      <div className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]">
+        <h1 className="mb-4 text-center text-4xl font-semibold underline">
+          Reports Page
+        </h1>
+
+        <p className="py-2 text-center font-mono text-slate-500 dark:text-slate-300">
+          All reports have been handled!
+        </p>
       </div>
     );
   }
@@ -132,6 +169,14 @@ export default function AdminReportsPage() {
             />
           </div>
         </aside>
+
+        {/* No Reports */}
+        {Array.isArray(reportsDict[selectedType]) &&
+          reportsDict[selectedType].length === 0 && (
+            <p className="py-2 text-center font-mono text-slate-500 dark:text-slate-300">
+              All &quot;{selectedType}&quot;-type reports have been handled!
+            </p>
+          )}
 
         {/* List of reports */}
         {Array.isArray(reportsDict[selectedType]) &&
@@ -208,7 +253,7 @@ export default function AdminReportsPage() {
               <div className="mt-1 flex items-center gap-4">
                 <button
                   className="flex items-center text-sm font-bold leading-6 text-green-500 hover:text-green-700 active:text-green-900"
-                  onClick={() => handleReportAction("resolve")}
+                  onClick={() => handleReportAction(rpt.id, "resolve")}
                 >
                   <TbClipboardCheck />
                   <span className="ml-3">Resolve</span>
@@ -216,7 +261,7 @@ export default function AdminReportsPage() {
                 <span>/</span>
                 <button
                   className="flex items-center text-sm font-bold leading-6 text-rose-500 hover:text-rose-700 active:text-rose-900"
-                  onClick={() => handleReportAction("dismiss")}
+                  onClick={() => handleReportAction(rpt.id, "dismiss")}
                 >
                   Dismiss
                 </button>

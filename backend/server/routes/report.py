@@ -1,10 +1,11 @@
 from flask import Blueprint, g, jsonify, request
 from flask_jwt_extended import jwt_required
+from sqlalchemy import delete
 import traceback
 
 from server.db import db
 from server.models.Report import Report
-from server.utils import serialize_sqlalchemy_objs, isXMonthOld, normalizeStr
+from server.utils import serialize_sqlalchemy_objs
 from server.routes.auth import not_banned, admin_required
 
 bp = Blueprint("report", __name__, url_prefix="/report")
@@ -95,15 +96,28 @@ def create_report():
         return jsonify({"message": "Failed to create report."}), 500
 
 
-@bp.route("/<string:reportId>", methods=["DELETE"])
+@bp.route("/<int:reportId>", methods=["DELETE"])
 @jwt_required()
 @admin_required()
 def handle_report(reportId):
-    # NOTE: Make sure the report exists before we do anything
-    #
-    # Idea:
-    #   - We have 2 actions: "resolve" & "dismissed"
-    #   - Regardless of action, we create a Log in our database stating what happened
-    #       - In addition, we delete the report
+    action = request.args.get("action", default="", type=str).strip()
 
-    return jsonify({"message": "Route not implemented."}), 500
+    if not action in ["resolve", "dismiss"]:
+        return jsonify({"message": "Invalid action on report."}), 400
+
+    # Find report in database to see if it exists
+    report = Report.query.filter_by(id=reportId).first()
+
+    if report != None:
+        response = {
+            "message": f"Report has been {action}.",
+            "report": report.as_dict(),
+        }
+        # Delete report
+        db.session.execute(delete(Report).where(Report.id == reportId))
+        db.session.commit()
+
+        return jsonify(response), 200
+
+    else:
+        return jsonify({"message": "Report no longer exists.", "report": None}), 200
