@@ -34,6 +34,10 @@ export const cleanDate = (date: Date) => {
   return format(new Date(date), "MM/dd/yyyy kk:mm:ss");
 };
 
+export const cleanDate2 = (date: Date) => {
+  return format(new Date(date), "MMMM dd, yyyy kk:mm:ss");
+};
+
 export const isXDaysOld = (date: Date, days: number) => {
   return isBefore(new Date(date), sub(new Date(), { days: days }));
 };

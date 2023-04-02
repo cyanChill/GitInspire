@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
+import { REPORT_TYPE_OPTIONS, REPORT_REASON_OPTIONS } from "~data";
 import useUserContext from "~hooks/useUserContext";
 import { fromURLQueryVal } from "~utils/helpers";
 import { getCookie } from "~utils/cookies";
@@ -24,23 +25,6 @@ const DEFAULT_REPORT = {
   maintain_link: "",
   info: "",
 };
-
-const REPORT_TYPE_OPTIONS: SelectOption[] = [
-  { label: "Repository", value: "repository" },
-  { label: "Tag", value: "tag" },
-  { label: "User", value: "user" },
-  { label: "Bug", value: "bug" },
-  { label: "Suggestion", value: "suggestion" },
-  { label: "Other", value: "other" },
-];
-
-const REPORT_REASON_OPTIONS: SelectOption[] = [
-  { label: "Abuse/Inappropriate", value: "abuse" },
-  { label: "Maintain Link", value: "maintain_link" },
-  { label: "Incorrect Information", value: "incorrect_info" },
-  { label: "Update Information", value: "update_info" },
-  { label: "Other", value: "other" },
-];
 
 export default function ReportPage() {
   const router = useRouter();
