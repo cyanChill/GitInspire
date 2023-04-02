@@ -1,4 +1,4 @@
-from flask import Blueprint, g, jsonify, request, current_app as app
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from math import ceil
 import traceback
@@ -7,7 +7,6 @@ from server.utils import (
     serialize_sqlalchemy_objs,
 )
 from server.routes.auth import admin_required
-from server.db import db
 from server.models.Log import Log
 
 bp = Blueprint("logs", __name__, url_prefix="/logs")

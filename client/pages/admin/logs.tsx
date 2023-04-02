@@ -89,14 +89,12 @@ export default function AdminLogsPage() {
       )}
 
       {/* Pagnation */}
-      <div className="mt-auto">
-        <Pagnation
-          currPg={currPg}
-          maxPg={maxPgs}
-          siblingCount={2}
-          onPgChange={updateURLPage}
-        />
-      </div>
+      <Pagnation
+        currPg={currPg}
+        maxPg={maxPgs}
+        siblingCount={2}
+        onPgChange={updateURLPage}
+      />
     </div>
   );
 }
