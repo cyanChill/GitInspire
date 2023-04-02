@@ -27,7 +27,6 @@ class Log(db.Model):
             "action": self.action,
             "type": self.type,
             "content_id": self.content_id,
-            "info": self.info,
             "enacted_by": self.user.as_dict(),
             "created_at": self.created_at.isoformat(),
         }

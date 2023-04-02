@@ -68,7 +68,6 @@ logs = [
         "action": "updated",
         "type": "repository",
         "content_id": 407959883,
-        "info": "test log report",
         "enacted_by": 83375816,
     }
 ]
@@ -169,7 +168,6 @@ with app.app_context():
             action=lg["action"],
             type=lg["type"],
             content_id=lg["content_id"],
-            info=lg["info"],
             enacted_by=lg["enacted_by"],
         )
         db.session.add(new_log)

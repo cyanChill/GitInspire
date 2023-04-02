@@ -122,9 +122,8 @@ with app.app_context():
             action=log[1],
             type=log[2],
             content_id=log[3],
-            info=log[4],
-            enacted_by=log[5],
-            created_at=log[6],
+            enacted_by=log[4],
+            created_at=log[5],
         )
         db.session.add(new_log)
 
