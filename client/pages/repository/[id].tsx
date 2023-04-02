@@ -44,7 +44,6 @@ export default function RepositoryPage() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           if (!data) {
             setRepo(undefined);
             toast.error("Repository data not found.");

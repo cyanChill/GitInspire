@@ -45,7 +45,6 @@ export default function UserProfilePage() {
     } else {
       /* Found user */
       const data = await res.json();
-      console.log(data);
       setUser(data.user);
     }
     setIsRefreshing(false);
@@ -62,7 +61,6 @@ export default function UserProfilePage() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           if (!data) {
             setUser(undefined);
             setContributions(undefined);

@@ -83,7 +83,6 @@ export default function Select({
       const optionIdx = options.findIndex((opt) =>
         opt.label.toLowerCase().startsWith(e.key.toLowerCase())
       );
-      console.log(optionIdx);
       if (optionIdx !== -1) {
         setHighlightedIdx(optionIdx);
         optRef.current?.scrollTo({ top: optionIdx * 40 });

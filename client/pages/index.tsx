@@ -80,7 +80,10 @@ const RandomRepoForm = () => {
       .map((lg) => `${lg.value}`)
       .filter((lg) => !!lg.trim());
     const langQueryString = langs.join(",");
-    if (stars.min < 0 || (stars.max !== "" && stars.min >= stars.max)) {
+    if (
+      parseInt(`${stars.min}`) < 0 ||
+      (stars.max !== "" && stars.min >= stars.max)
+    ) {
       errors.push("Invalid values for star range.");
     }
     if (langs.length > MAX_LANG) {
@@ -95,12 +98,13 @@ const RandomRepoForm = () => {
     setResults(null);
     setDisplay(null);
     const res = await fetch(
-      `/api/random?minStars=${stars.min}&maxStars=${stars.max}&languages=${encodeURIComponent(langQueryString)}`
+      `/api/random?minStars=${stars.min}&maxStars=${
+        stars.max
+      }&languages=${encodeURIComponent(langQueryString)}`
     );
 
     try {
       const data = await res.json();
-      console.log(data);
       if (!res.ok) {
         toast.error(data.message);
       } else if (data.results.length === 0) {
