@@ -17,7 +17,7 @@ type ReportsDictType = {
 const TYPES_WITH_CONTENT_ID = ["repository", "tag", "user"];
 
 export default function AdminReportsPage() {
-  const { redirectIfNotAdmin } = useUserContext();
+  const { isAdmin, redirectIfNotAdmin } = useUserContext();
 
   const [selectedType, setSelectedType] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -69,8 +69,9 @@ export default function AdminReportsPage() {
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    if (!isAdmin) return;
 
+    setIsLoading(true);
     fetch("/api/report", {
       method: "GET",
       headers: { "X-CSRF-TOKEN": getCookie("csrf_access_token") || "" },
@@ -101,7 +102,7 @@ export default function AdminReportsPage() {
         console.log(err);
         setIsLoading(false);
       });
-  }, []);
+  }, [isAdmin]);
 
   useEffect(() => {
     redirectIfNotAdmin();
@@ -110,6 +111,14 @@ export default function AdminReportsPage() {
   if (isLoading) {
     return (
       <div className="flex animate-load-in justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="flexanimate-load-in justify-center">
         <Spinner />
       </div>
     );

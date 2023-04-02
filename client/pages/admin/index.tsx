@@ -9,6 +9,7 @@ import {
   SelectionMenuFormOptions,
   SelectMenuOption,
 } from "~components/form/SelectionMenuForm";
+import Spinner from "~components/Spinner";
 
 const REDIRECT_OPTIONS: SelectMenuOption[] = [
   {
@@ -51,7 +52,7 @@ const REDIRECT_OPTIONS: SelectMenuOption[] = [
 
 export default function AdminPage() {
   const router = useRouter();
-  const { redirectIfNotAdmin } = useUserContext();
+  const { isAdmin, redirectIfNotAdmin } = useUserContext();
 
   const handleSelection = (route: string) => {
     router.push(route);
@@ -60,6 +61,14 @@ export default function AdminPage() {
   useEffect(() => {
     redirectIfNotAdmin();
   }, [redirectIfNotAdmin]);
+
+  if (!isAdmin) {
+    return (
+      <div className="flexanimate-load-in justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full animate-load-in flex-col items-center justify-center">

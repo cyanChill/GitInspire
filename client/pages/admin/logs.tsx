@@ -14,7 +14,7 @@ type LogResults = {
 
 export default function AdminLogsPage() {
   const router = useRouter();
-  const { redirectIfNotAdmin } = useUserContext();
+  const { isAdmin, redirectIfNotAdmin } = useUserContext();
 
   const [isLoading, setIsLoading] = useState(true);
   const [results, setResults] = useState<LogResults>({});
@@ -34,6 +34,8 @@ export default function AdminLogsPage() {
   };
 
   useEffect(() => {
+    if (!isAdmin) return;
+
     // Fetch results from database based on selected filters
     const { page, limit } = pullFiltersFromURL();
 
@@ -49,7 +51,6 @@ export default function AdminLogsPage() {
         }
       })
       .then(({ currPage: currPageNum, numPages, logs }) => {
-        console.log(currPageNum, numPages, logs);
         setResults((prev) => ({ ...prev, [currPageNum]: logs }));
         // If undefined, set values to 0
         setCurrPg(currPageNum ?? 0);
@@ -70,11 +71,19 @@ export default function AdminLogsPage() {
       // query parameters in URL)
       abortCtrl.abort();
     };
-  }, [router.query]);
+  }, [router.query, isAdmin]);
 
   useEffect(() => {
     redirectIfNotAdmin();
   }, [redirectIfNotAdmin]);
+
+  if (!isAdmin) {
+    return (
+      <div className="flexanimate-load-in justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="h-full animate-load-in">
