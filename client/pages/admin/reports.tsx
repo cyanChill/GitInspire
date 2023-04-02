@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { TbClipboardCheck } from "react-icons/tb";
+import { BiExpandVertical, BiX } from "react-icons/bi";
 
 import { REPORT_REASON_OPTIONS } from "~data";
 import useUserContext from "~hooks/useUserContext";
@@ -17,10 +17,10 @@ type ReportsDictType = {
 const TYPES_WITH_CONTENT_ID = ["repository", "tag", "user"];
 
 export default function AdminReportsPage() {
-  const router = useRouter();
   const { redirectIfNotAdmin } = useUserContext();
 
   const [selectedType, setSelectedType] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [reportsDict, setReportsDict] = useState<ReportsDictType>({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,6 +32,13 @@ export default function AdminReportsPage() {
     const reasonOpt = REPORT_REASON_OPTIONS.find((rpt) => rpt.value === val);
     if (!reasonOpt) return "Other";
     else return reasonOpt.label;
+  };
+
+  const handleTypeSelection = (type: string) => {
+    const diffSelection = type !== selectedType;
+    setSelectedType(type);
+    setMenuOpen(false);
+    if (diffSelection) window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleReportAction = async (action: string) => {
@@ -86,39 +93,58 @@ export default function AdminReportsPage() {
   }
 
   return (
-    <div className="grid h-full animate-load-in grid-cols-[15em_1fr] grid-rows-[min-content_1fr]">
-      <h1 className="col-span-2 row-span-1 mb-4 text-center text-4xl font-semibold underline">
+    <div className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]">
+      <h1 className="mb-4 text-center text-4xl font-semibold underline">
         Reports Page
       </h1>
 
-      <aside className="z-10 col-[1/3] row-[2/3] border-red-500 md:col-span-1 md:row-span-1 md:border-r-2 md:bg-slate-700">
-        <ul className="sticky top-0 bg-slate-700 p-2 md:bg-transparent">
-          {reportTypes.map((type) => (
-            <p
-              key={type}
-              onClick={() => setSelectedType(type)}
-              className={`m-3 text-lg font-semibold ${
-                selectedType === type
-                  ? "underline"
-                  : "hover:cursor-pointer hover:underline"
-              }`}
-            >
-              {type[0].toUpperCase() + type.substring(1)}
+      <main className="h-full divide-y divide-slate-400 border-slate-400 dark:divide-slate-100 dark:border-slate-100">
+        {/* Navigation between different types of reports */}
+        <aside className="sticky top-2 mb-2 rounded-md bg-zinc-50 p-2 shadow dark:bg-slate-700">
+          {/* Closed State */}
+          <div
+            className={`flex hover:cursor-pointer ${
+              menuOpen ? "hidden" : "block"
+            }`}
+            onClick={() => setMenuOpen(true)}
+          >
+            <p className="flex-1">
+              {selectedType[0].toUpperCase() + selectedType.substring(1)}
             </p>
-          ))}
-        </ul>
-      </aside>
+            <BiExpandVertical className="text-xl" />
+          </div>
+          {/* Open State */}
+          <div className={`flex ${menuOpen ? "block" : "hidden"}`}>
+            <ul className="flex-1">
+              {reportTypes.map((type) => (
+                <li
+                  key={type}
+                  onClick={() => handleTypeSelection(type)}
+                  className="mb-2 last:mb-0 hover:cursor-pointer"
+                >
+                  {type[0].toUpperCase() + type.substring(1)}
+                </li>
+              ))}
+            </ul>
+            <BiX
+              className="text-xl hover:cursor-pointer"
+              onClick={() => setMenuOpen(false)}
+            />
+          </div>
+        </aside>
 
-      <main className="col-[1/3] row-[2/3] h-full divide-y divide-slate-100 border-slate-100 px-2 md:col-span-1 md:row-span-1 md:border-t">
+        {/* List of reports */}
         {Array.isArray(reportsDict[selectedType]) &&
           reportsDict[selectedType].map((rpt) => (
-            <article key={rpt.id} className="flex flex-col px-2 py-4 sm:py-6">
-              <h2 className="mt-2 text-lg font-semibold">
-                <span className="rounded-md bg-gray-600 py-0.5 px-1 text-white">
+            <article key={rpt.id} className="flex flex-col p-2 sm:py-3">
+              <h2 className="mt-2 text-base font-semibold">
+                <span className="rounded-md bg-gray-300 py-0.5 px-1 dark:bg-gray-600">
                   {getReportReason(rpt.reason)}
                 </span>{" "}
                 {TYPES_WITH_CONTENT_ID.includes(selectedType) &&
                   (() => {
+                    // TODO: Once other admin management pages are finishes, redirect there
+                    // instead of these pages
                     let redirectLink = "";
                     if (selectedType === "repository")
                       redirectLink = `/repository/${rpt.content_id}`;
@@ -126,29 +152,60 @@ export default function AdminReportsPage() {
                       redirectLink = `/profile/${rpt.content_id}`;
 
                     return (
-                      <span
-                        onClick={() => router.push(redirectLink)}
+                      <a
+                        href={redirectLink}
+                        target="_blank"
+                        rel="noreferrer"
                         className="hover:cursor-pointer hover:underline"
                       >
                         ({rpt.content_id})
-                      </span>
+                      </a>
                     );
                   })()}
               </h2>
 
               <time
                 dateTime={`${rpt.created_at}`}
-                className="order-first font-mono text-sm leading-7 text-slate-300"
+                className="order-first font-mono text-xs leading-7 text-slate-500 dark:text-slate-300"
               >
                 {cleanDate2(rpt.created_at)}
               </time>
 
-              <p className="mt-1 text-base leading-7 text-slate-100">
-                <span className="font-semibold underline">More Info:</span>{" "}
+              {rpt.reason === "maintain_link" && (
+                <p className="mt-1 truncate text-sm dark:text-slate-100">
+                  <span className="font-semibold underline">
+                    Maintain Link:
+                  </span>{" "}
+                  <a
+                    href={rpt.maintain_link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline"
+                  >
+                    {rpt.maintain_link}
+                  </a>
+                </p>
+              )}
+
+              <p className="mt-1 text-sm leading-6 dark:text-slate-100">
+                <span className="font-semibold underline">Description:</span>{" "}
                 {rpt.info}
               </p>
 
-              <div className="mt-3 flex items-center gap-4">
+              <p className="truncate text-right text-xs italic text-slate-400">
+                Submitted by {rpt.reported_by.username}{" "}
+                {/* TODO: Once other admin management pages are finishes, redirect there instead of profile page */}
+                <a
+                  href={`/profile/${rpt.reported_by.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:cursor hover:underline"
+                >
+                  ({rpt.reported_by.id})
+                </a>
+              </p>
+              {/* Report Actions */}
+              <div className="mt-1 flex items-center gap-4">
                 <button
                   className="flex items-center text-sm font-bold leading-6 text-green-500 hover:text-green-700 active:text-green-900"
                   onClick={() => handleReportAction("resolve")}
@@ -156,9 +213,7 @@ export default function AdminReportsPage() {
                   <TbClipboardCheck />
                   <span className="ml-3">Resolve</span>
                 </button>
-
                 <span>/</span>
-
                 <button
                   className="flex items-center text-sm font-bold leading-6 text-rose-500 hover:text-rose-700 active:text-rose-900"
                   onClick={() => handleReportAction("dismiss")}
