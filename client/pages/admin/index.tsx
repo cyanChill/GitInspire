@@ -1,45 +1,78 @@
-import { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { GoBrowser, GoTag } from "react-icons/go";
+import { TbReport, TbHistory } from "react-icons/tb";
+import { FaUsersCog } from "react-icons/fa";
 
 import useUserContext from "~hooks/useUserContext";
-import { getCookie } from "~utils/cookies";
-import { ReportObjType } from "~utils/types";
+import {
+  SelectionMenuFormOptions,
+  SelectMenuOption,
+} from "~components/form/SelectionMenuForm";
+
+const REDIRECT_OPTIONS: SelectMenuOption[] = [
+  {
+    title: "View Reports",
+    description: "View all open reports.",
+    value: "/admin/reports",
+    icon: <TbReport />,
+    bkgClr: "bg-emerald-500",
+  },
+  {
+    title: "View Log History",
+    description: "View all logs of admin & automatic server actions.",
+    value: "/admin/logs",
+    icon: <TbHistory />,
+    bkgClr: "bg-indigo-500",
+  },
+  {
+    title: "Manage Tags",
+    description: "Update and delete tags that may be incorrect or duplicated.",
+    value: "/admin/tags",
+    icon: <GoTag />,
+    bkgClr: "bg-sky-500",
+  },
+  {
+    title: "Manage Repositories",
+    description:
+      "Update tags or the maintain links or delete any problematic repositories.",
+    value: "/admin/repositories",
+    icon: <GoBrowser />,
+    bkgClr: "bg-orange-500",
+  },
+  {
+    title: "Manage Users",
+    description: "Update a user's status if they're problematic.",
+    value: "/admin/users",
+    icon: <FaUsersCog />,
+    bkgClr: "bg-pink-500",
+  },
+];
 
 export default function AdminPage() {
+  const router = useRouter();
   const { redirectIfNotAdmin } = useUserContext();
 
-  const [data, setData] = useState<ReportObjType[]>();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(true);
-
-    fetch("/api/report", {
-      method: "GET",
-      headers: { "X-CSRF-TOKEN": getCookie("csrf_access_token") || "" },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          // There's no errors that'll stem from the inputs provided in the query string
-          toast.error("Something went wrong with fetching reports.");
-        } else {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        setData(data.reports);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
-  }, []);
+  const handleSelection = (route: string) => {
+    router.push(route);
+  };
 
   useEffect(() => {
     redirectIfNotAdmin();
   }, [redirectIfNotAdmin]);
 
-  return <div className="animate-load-in">Admin Panel</div>;
+  return (
+    <div className="flex h-full animate-load-in flex-col items-center justify-center">
+      <span className="my-3 text-center font-bold text-red-400">
+        Admin Panel
+      </span>
+      <h1 className="text-center text-4xl font-bold">Avaliable Actions</h1>
+
+      <SelectionMenuFormOptions
+        options={REDIRECT_OPTIONS}
+        selectOption={handleSelection}
+        className="w-full min-w-0 max-w-fit"
+      />
+    </div>
+  );
 }
