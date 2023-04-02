@@ -48,6 +48,15 @@ export type ReportObjType = {
   created_at: Date;
 };
 
+export type LogObjType = {
+  id: number;
+  action: string;
+  type: string;
+  content_id: string;
+  enacted_by: UserObjType;
+  created_at: Date;
+};
+
 export interface Generic_Obj {
   [key: string]: any;
 }

@@ -14,7 +14,6 @@ class Log(db.Model):
     action = Column(String, nullable=False)
     type = Column(String, nullable=False)
     content_id = Column(String)
-    info = Column(String)
 
     enacted_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User")

@@ -45,7 +45,7 @@ def create_app(configName=None):
     init_jwt(app)
 
     # Register our routes
-    from server.routes import auth, languages, random, repositories, tags, user, report
+    from server.routes import auth, languages, random, repositories, tags, user, report, log
 
     # Disable redirecting to URL with trailing slash when visiting URL
     # without trailing slash
@@ -60,6 +60,7 @@ def create_app(configName=None):
     api.register_blueprint(tags.bp)
     api.register_blueprint(user.bp)
     api.register_blueprint(report.bp)
+    api.register_blueprint(log.bp)
 
     app.register_blueprint(api)
 

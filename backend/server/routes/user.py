@@ -8,7 +8,7 @@ from server.utils import isXDayOld
 from server.db import db
 from server.models.User import User
 
-bp = Blueprint("user", __name__, url_prefix="/users")
+bp = Blueprint("users", __name__, url_prefix="/users")
 
 
 # Route to get general information on the user
