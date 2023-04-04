@@ -11,14 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - uses: actions/checkout@v3
       - name: Notify user that workflow tests passed
         run: echo 'The triggering workflow passed'
       - name: Deploy our app to Render
-        run: curl ${{ vars.RENDER_DEPLOY_HOOK }}
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
+      - uses: actions/checkout@v3
       - name: Notify user that workflow tests failed
         run: echo 'The triggering workflow failed'
+      - name: Cause action to fail
+        run: exit 1
