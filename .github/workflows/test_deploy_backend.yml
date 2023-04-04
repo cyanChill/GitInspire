@@ -1,4 +1,4 @@
-name: Test & Deploy Backend Flask Server to Render
+name: Test & Deploy Backend
 
 on:
   pull_request:
