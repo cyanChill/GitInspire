@@ -183,7 +183,7 @@ class Tags_Route_Test(testBase.TestBase):
                 expected_error_message="A maintain link must be provided.",
             ),
             TestCase(
-                test_name="Content Id > 25 characters",
+                test_name="Content Id is > 25 characters",
                 request_body={
                     "type": "repository",
                     "reason": "other",
@@ -194,7 +194,7 @@ class Tags_Route_Test(testBase.TestBase):
                 expected_error_message="Content id/name can\\'t be more than 25 characters.",
             ),
             TestCase(
-                test_name="Additional info > 280 characters",
+                test_name="Additional info is > 280 characters",
                 request_body={
                     "type": "repository",
                     "reason": "other",

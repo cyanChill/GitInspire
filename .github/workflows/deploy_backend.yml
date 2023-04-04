@@ -16,7 +16,7 @@ on:
 
 jobs:
   test-job:
-    uses: cyanChill/GitInspire/.github/workflows/text_backend.yml
+    uses: ./.github/workflows/test_backend.yml
   
   deploy-job-success:
     if: success()
