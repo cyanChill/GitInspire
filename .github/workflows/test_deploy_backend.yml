@@ -1,4 +1,4 @@
-name: Test Backend Flask Server
+name: Test & Deploy Backend Flask Server to Render
 
 on:
   pull_request:
@@ -36,3 +36,16 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
+
+  deploy:
+    name: Deploy application
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy our app to Render if success
+        if: ${{ success() }}
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: Cause action to fail if tests failed
+        if: ${{ failure() }}
+        run: exit 1
