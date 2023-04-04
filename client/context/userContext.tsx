@@ -124,7 +124,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
   useEffect(() => {
     // On initialization, refresh userdata from cookie if it exists
     refreshSession();
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <UserContext.Provider
