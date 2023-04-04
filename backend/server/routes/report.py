@@ -12,7 +12,6 @@ bp = Blueprint("report", __name__, url_prefix="/report")
 
 
 @bp.route("/")
-@jwt_required()
 @admin_required()
 def get_all_reports():
     user = g.user.as_dict()
@@ -97,7 +96,6 @@ def create_report():
 
 
 @bp.route("/<int:reportId>", methods=["DELETE"])
-@jwt_required()
 @admin_required()
 def handle_report(reportId):
     action = request.args.get("action", default="", type=str).strip()

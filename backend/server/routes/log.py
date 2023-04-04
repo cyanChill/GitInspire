@@ -13,7 +13,6 @@ bp = Blueprint("logs", __name__, url_prefix="/logs")
 
 
 @bp.route("/")
-@jwt_required()
 @admin_required()
 def filtered_repositories():
     # Extracting values from query string
