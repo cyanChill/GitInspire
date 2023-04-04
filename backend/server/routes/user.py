@@ -1,4 +1,4 @@
-from flask import Blueprint, g, request, jsonify, current_app as app
+from flask import Blueprint, jsonify, current_app as app
 from flask_jwt_extended import jwt_required
 from sqlalchemy import update
 import requests

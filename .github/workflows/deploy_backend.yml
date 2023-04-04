@@ -1,15 +1,27 @@
 name: Deploy Backend Flask Server to Render
 
 on:
-  workflow_run:
-    workflows: ["Test Backend Flask Server"]
-    types: [completed]
-    branches: [main]
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - main
+    paths-ignore:
+      - README.md
+      - client/** # Should only run on backend changes
+      - .gitignore
+      - .github/**
+  workflow_dispatch:
 
 jobs:
-  on-success:
+  test-job:
+    uses: cyanChill/GitInspire/.github/workflows/text_backend.yml
+  
+  deploy-job-success:
+    if: success()
+    needs: [test-job]
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v3
       - name: Notify user that workflow tests passed
@@ -17,9 +29,10 @@ jobs:
       - name: Deploy our app to Render
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
-  on-failure:
+  deploy-job-fail:
+    if: failure()
+    needs: [test-job]
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
       - uses: actions/checkout@v3
       - name: Notify user that workflow tests failed
