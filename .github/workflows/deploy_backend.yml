@@ -1,0 +1,24 @@
+name: Deploy Backend Flask Server to Render
+
+on:
+  workflow_run:
+    workflows: ["Test Backend Flask Server"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Notify user that workflow tests passed
+        run: echo 'The triggering workflow passed'
+      - name: Deploy our app to Render
+        run: curl ${{ vars.RENDER_DEPLOY_HOOK }}
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Notify user that workflow tests failed
+        run: echo 'The triggering workflow failed'
