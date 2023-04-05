@@ -32,4 +32,4 @@ A platform to discover and bring life back to abandoned repositories and more.
 |                    |                Continuous Deployment                 |   5%   |  :white_check_mark:  |
 |                    |      JWT (JSON Web Token) Local Authentication       |  10%   | :white_large_square: |
 
-> **Note:** The `Authentication` & `Project Specific` APIs are the same (since I also used GitHub's REST API to do authentication).
+> **Note:** The `Authentication` & `Project Specific` APIs are the "same" (the main API used is GitHub's REST API while we use a GitHub OAuth app to do authentication & handle it through GitHub's API).
