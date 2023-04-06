@@ -62,33 +62,36 @@ describe("<RepoInfoCard />", () => {
   });
 
   it("displays <author>/<reponame>", () => {
-    expect(screen.getByTestId("RepoInfoCard-card-title")).toHaveTextContent(
-      "cyanChill/Battleship"
-    );
+    const element = screen.getByTestId("RepoInfoCard-card-title");
+    expect(element).toHaveTextContent("cyanChill/Battleship");
   });
 
   it("displays correct number of stars", () => {
-    expect(screen.getByTestId("RepoInfoCard-stars")).toHaveTextContent("0");
+    const element = screen.getByTestId("RepoInfoCard-stars");
+    expect(element).toHaveTextContent("0");
   });
 
   it("displays correct number of widgets (tags + languages)", () => {
-    expect(screen.getByTestId("RepoInfoCard-widgets")).toHaveTextContent(
-      "JavaScriptCSSHTMLProject Idea"
-    );
+    const element = screen.getByTestId("RepoInfoCard-widgets");
+    expect(element.childElementCount).toBe(4);
   });
 
   it("displays correct description", () => {
-    expect(screen.getByTestId("RepoInfoCard-description")).toHaveTextContent(
-      "No Description"
-    );
+    const element = screen.getByTestId("RepoInfoCard-description");
+    expect(element).toHaveTextContent("No Description");
   });
 
   it("displays correct accredition", () => {
-    expect(screen.getByTestId("RepoInfoCard-suggested_by")).toHaveTextContent(
-      "Suggested By: cyanChill"
-    );
-    expect(screen.getByTestId("RepoInfoCard-last_updated")).toHaveTextContent(
-      "Last Updated: 01/01/2022 21:49:19"
-    );
+    const element1 = screen.getByTestId("RepoInfoCard-suggested_by");
+    expect(element1).toHaveTextContent("Suggested By: cyanChill");
+    const element2 = screen.getByTestId("RepoInfoCard-last_updated");
+    expect(element2).toHaveTextContent("Last Updated: 01/01/2022 21:49:19");
+  });
+
+  it("displays no maintain link", () => {
+    // use "queryByTestId" instead of "getByTestId" as we want get a "null" value
+    // instead of an error
+    const element = screen.queryByTestId("RepoInfoCard-maintain_link");
+    expect(element).not.toBeInTheDocument();
   });
 });

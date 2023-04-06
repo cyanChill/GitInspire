@@ -150,20 +150,28 @@ export default function RepoInfoCard({
       </div>
 
       {/* Repo Description */}
-      <div className="m-2 rounded-sm border-[1px] p-2 text-sm italic" data-testid="RepoInfoCard-description">
-        <p>
+      <div className="m-2 rounded-sm border-[1px] p-2 text-sm italic">
+        <p data-testid="RepoInfoCard-description">
           {repository.description ? repository.description : "No Description"}
         </p>
 
         {repository.maintain_link && (
-          <a
-            href={repository.maintain_link}
-            target="_blank"
-            rel="noreferrer"
-            className="text-right"
+          <p
+            className="mt-2 not-italic"
+            data-testid="RepoInfoCard-maintain_link"
           >
-            New Maintainer Link
-          </a>
+            <span className="font-semibold underline">
+              New Maintainer Link:
+            </span>{" "}
+            <a
+              href={repository.maintain_link}
+              target="_blank"
+              rel="noreferrer"
+              className="italic hover:underline"
+            >
+              {repository.maintain_link}
+            </a>
+          </p>
         )}
       </div>
 
@@ -179,7 +187,10 @@ export default function RepoInfoCard({
           </Link>
         </p>
 
-        <p className="text-right text-sm italic text-slate-500" data-testid="RepoInfoCard-last_updated">
+        <p
+          className="text-right text-sm italic text-slate-500"
+          data-testid="RepoInfoCard-last_updated"
+        >
           Last Updated: {cleanDate(repository.last_updated)}
         </p>
       </div>
