@@ -25,6 +25,13 @@ jobs:
         node-version: [16, 18, 19]
     steps:
       - uses: actions/checkout@v3
+      - name: Inialize Environment Variables
+        env:
+          NEXT_PUBLIC_CLIENT_ID: "test"
+          NEXT_PUBLIC_REDIRECT_URI: "http://localhost:3000/auth/login"
+          NEXT_PUBLIC_GITHUB_AUTH_URL: "https://github.com/login/oauth/authorize?client_id=test&redirect_uri=http://localhost:3000/auth/login"
+          NEXT_PUBLIC_DOMAIN: "https://gitinspire.vercel.app"
+          NEXT_PUBLIC_BACKEND_URL: "http://localhost:5000"
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
