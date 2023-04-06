@@ -34,7 +34,7 @@ export const dateIgnoreTimeZone = (date: Date) => {
   const temp_date = new Date(date);
   const userTimezoneOffset = temp_date.getTimezoneOffset() * 60000;
   return new Date(
-    date.getTime() + userTimezoneOffset * Math.sign(userTimezoneOffset)
+    temp_date.getTime() + userTimezoneOffset * Math.sign(userTimezoneOffset)
   );
 };
 
