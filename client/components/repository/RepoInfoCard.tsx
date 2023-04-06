@@ -100,20 +100,26 @@ export default function RepoInfoCard({
           rel="noreferrer"
           className="ml-2 flex min-w-0 items-center text-xl font-semibold hover:underline"
         >
-          <span className="truncate">
+          <span className="truncate" data-testid="RepoInfoCard-card-title">
             {repository.author}/{repository.repo_name}
           </span>{" "}
           <RxExternalLink className="ml-2 shrink-0" />
         </a>
 
         {/* Stars */}
-        <p className="fixed bottom-[-1.5rem] left-[5.5rem] flex items-center justify-center gap-1 rounded-xl bg-yellow-200 px-2 text-sm text-black dark:bg-yellow-400">
+        <p
+          className="fixed bottom-[-1.5rem] left-[5.5rem] flex items-center justify-center gap-1 rounded-xl bg-yellow-200 px-2 text-sm text-black dark:bg-yellow-400"
+          data-testid="RepoInfoCard-stars"
+        >
           <RxStarFilled className="shrink-0" /> {shrinkNum(repository.stars)}
         </p>
       </div>
 
       {/* Languages & Tags */}
-      <div className="flex flex-wrap gap-1 p-2 text-sm">
+      <div
+        className="flex flex-wrap gap-1 p-2 text-sm"
+        data-testid="RepoInfoCard-widgets"
+      >
         {repository.languages.map((lang) => (
           <span
             key={lang.name}
@@ -144,7 +150,7 @@ export default function RepoInfoCard({
       </div>
 
       {/* Repo Description */}
-      <div className="m-2 rounded-sm border-[1px] p-2 text-sm italic">
+      <div className="m-2 rounded-sm border-[1px] p-2 text-sm italic" data-testid="RepoInfoCard-description">
         <p>
           {repository.description ? repository.description : "No Description"}
         </p>
@@ -163,7 +169,7 @@ export default function RepoInfoCard({
 
       {/* Accreditation + States */}
       <div className="mt-auto p-2 text-right text-sm italic">
-        <p>
+        <p data-testid="RepoInfoCard-suggested_by">
           <span className="font-bold">Suggested By:</span>{" "}
           <Link
             href={`/profile/${repository.suggested_by.id}`}
@@ -173,7 +179,7 @@ export default function RepoInfoCard({
           </Link>
         </p>
 
-        <p className="text-right text-sm italic text-slate-500">
+        <p className="text-right text-sm italic text-slate-500" data-testid="RepoInfoCard-last_updated">
           Last Updated: {cleanDate(repository.last_updated)}
         </p>
       </div>
