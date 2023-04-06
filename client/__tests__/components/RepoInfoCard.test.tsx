@@ -88,7 +88,7 @@ describe("<RepoInfoCard />", () => {
       "Suggested By: cyanChill"
     );
     expect(screen.getByTestId("RepoInfoCard-last_updated")).toHaveTextContent(
-      "Last Updated: 01/01/2022 16:49:19"
+      "Last Updated: 01/01/2022 21:49:19"
     );
   });
 });

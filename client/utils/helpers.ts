@@ -30,12 +30,20 @@ export const fromURLQueryVal = {
   },
 };
 
+export const dateIgnoreTimeZone = (date: Date) => {
+  const temp_date = new Date(date);
+  const userTimezoneOffset = temp_date.getTimezoneOffset() * 60000;
+  return new Date(
+    date.getTime() + userTimezoneOffset * Math.sign(userTimezoneOffset)
+  );
+};
+
 export const cleanDate = (date: Date) => {
-  return format(new Date(date), "MM/dd/yyyy kk:mm:ss");
+  return format(dateIgnoreTimeZone(date), "MM/dd/yyyy kk:mm:ss");
 };
 
 export const cleanDate2 = (date: Date) => {
-  return format(new Date(date), "MMMM dd, yyyy kk:mm:ss");
+  return format(dateIgnoreTimeZone(date), "MMMM dd, yyyy kk:mm:ss");
 };
 
 export const isXDaysOld = (date: Date, days: number) => {
