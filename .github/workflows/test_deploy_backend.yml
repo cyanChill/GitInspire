@@ -3,10 +3,10 @@ name: Test & Deploy Backend
 on:
   pull_request:
     branches:
-    - main
+      - main
   push:
     branches:
-    - main
+      - main
     paths-ignore:
       - README.md
       - client/** # Should only run on backend changes
@@ -29,7 +29,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          cache: "pip"
       - name: Install dependencies
         run: |
           pip install -r "./server/requirements.txt"
