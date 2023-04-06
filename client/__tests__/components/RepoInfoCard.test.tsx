@@ -46,7 +46,7 @@ describe("<RepoInfoCard />", () => {
     primary_tag: primaryTag,
     tags: [],
     suggested_by: user,
-    last_updated: new Date("2022-01-01T21:49:19Z"),
+    last_updated: new Date("2023-04-06 20:38:43.524121"),
   };
 
   useRouter.mockImplementation(() => ({ push: () => {} }));
@@ -85,7 +85,7 @@ describe("<RepoInfoCard />", () => {
     const element1 = screen.getByTestId("RepoInfoCard-suggested_by");
     expect(element1).toHaveTextContent("Suggested By: cyanChill");
     const element2 = screen.getByTestId("RepoInfoCard-last_updated");
-    expect(element2).toHaveTextContent("Last Updated: 01/01/2022 21:49:19");
+    expect(element2).toHaveTextContent("Last Updated: 04/06/2023 20:38:43");
   });
 
   it("displays no maintain link", () => {
