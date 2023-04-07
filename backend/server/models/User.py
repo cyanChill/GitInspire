@@ -6,10 +6,12 @@ from sqlalchemy.orm import relationship
 from server.db import db
 from server.utils import serialize_sqlalchemy_objs
 
+
 # https://docs.sqlalchemy.org/en/14/core/type_basics.html#sqlalchemy.types.Enum
 class AccountStatusEnum(enum.Enum):
     banned = 1
     user = 2
+    bot = 3
     admin = 50
     owner = 100
 

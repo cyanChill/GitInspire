@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from flask import Flask, Blueprint
 from flask_cors import CORS
+from datetime import datetime
 
 import server.configuration as configuration
 
@@ -45,7 +46,16 @@ def create_app(configName=None):
     init_jwt(app)
 
     # Register our routes
-    from server.routes import auth, languages, random, repositories, tags, user, report, log
+    from server.routes import (
+        auth,
+        languages,
+        random,
+        repositories,
+        tags,
+        user,
+        report,
+        log,
+    )
 
     # Disable redirecting to URL with trailing slash when visiting URL
     # without trailing slash
@@ -63,5 +73,24 @@ def create_app(configName=None):
     api.register_blueprint(log.bp)
 
     app.register_blueprint(api)
+
+    with app.app_context():
+        from server.db import db
+        from server.models.User import User, AccountStatusEnum
+
+        # Create a bot account if it doesn't exist
+        bot_account = User.query.filter_by(id="-1337").first()
+        if bot_account == None:
+            bot_account = User(
+                id="-1337",
+                username="GitInspire_Bot",
+                avatar_url="",
+                github_created_at=datetime.strftime(
+                    datetime.now(), "%Y-%m-%dT%H:%M:%SZ"
+                ),
+                account_status=AccountStatusEnum["bot"],
+            )
+            db.session.add(bot_account)
+            db.session.commit()
 
     return app
