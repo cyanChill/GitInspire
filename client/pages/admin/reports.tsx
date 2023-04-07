@@ -139,7 +139,10 @@ export default function AdminReportsPage() {
   }
 
   return (
-    <div className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]">
+    <div
+      className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]"
+      data-overflow="clip"
+    >
       <h1 className="mb-4 text-center text-4xl font-semibold underline">
         Reports Page
       </h1>

@@ -1,3 +1,5 @@
+const plugin = require("tailwindcss/plugin");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
@@ -30,5 +32,11 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [
+    require("@tailwindcss/line-clamp"),
+    plugin(function ({ addVariant }) {
+      addVariant("not-last", "&:not(:last-child)");
+      addVariant("has-clip", '&:has(div[data-overflow="clip"])');
+    }),
+  ],
 };

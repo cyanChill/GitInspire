@@ -1,8 +1,12 @@
 import React from "react";
 
-export interface ReactChildren {
+export type ReactChildren = {
   children: React.ReactNode;
-}
+};
+
+export type ChildrenNClass = {
+  className?: string;
+} & ReactChildren;
 
 export type UserObjType = {
   id: number;
