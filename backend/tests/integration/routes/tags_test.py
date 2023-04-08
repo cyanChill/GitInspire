@@ -74,7 +74,7 @@ class Tags_Route_Test(testBase.TestBase):
 
             for test_case in test_cases:
                 # Set authorization token to be user >1 year old
-                self.webtest_app.authorization = ("Bearer", self.user_0_token)
+                self.webtest_app.authorization = ("Bearer", self.user_exp_token)
 
                 with self.subTest(msg=test_case.test_name):
                     # Send an HTTP Post Request to "/tags"
@@ -141,10 +141,10 @@ class Tags_Route_Test(testBase.TestBase):
             for idx, test_case in enumerate(test_cases):
                 if idx < 1:
                     # Set authorization token to be user <1 year old
-                    self.webtest_app.authorization = ("Bearer", self.user_1_token)
+                    self.webtest_app.authorization = ("Bearer", self.user_new_token)
                 else:
                     # Set authorization token to be user >1 year old
-                    self.webtest_app.authorization = ("Bearer", self.user_0_token)
+                    self.webtest_app.authorization = ("Bearer", self.user_exp_token)
 
                 with self.subTest(msg=test_case.test_name):
                     # Assert validation errors are raised for the test cases defined above.
@@ -161,5 +161,13 @@ class Tags_Route_Test(testBase.TestBase):
         pass
 
     @pytest.mark.skip(reason="Not implemented.")
+    def test_update_tag_bad_request(self):
+        pass
+
+    @pytest.mark.skip(reason="Not implemented.")
     def test_delete_tag(self):
+        pass
+
+    @pytest.mark.skip(reason="Not implemented.")
+    def test_delete_tag_bad_request(self):
         pass

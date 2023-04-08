@@ -37,6 +37,16 @@ def gen_dummyData():
         account_status=AccountStatusEnum["admin"],
         last_updated=datetime.strptime("2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"),
     )
+    d_user_3 = User(
+        id=3,
+        username="owner-user",
+        avatar_url="https://avatars.githubusercontent.com/u/83375816?v=4",
+        github_created_at=datetime.strptime(
+            "2020-04-28T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
+        ),
+        account_status=AccountStatusEnum["owner"],
+        last_updated=datetime.strptime("2022-01-01T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"),
+    )
 
     d_primary_tag_1 = Tag(
         name=normalizeStr("Project Idea"),
@@ -117,6 +127,7 @@ def gen_dummyData():
         d_user_0,
         d_user_1,
         d_user_2,
+        d_user_3,
         d_primary_tag_1,
         d_primary_tag_2,
         d_tag,

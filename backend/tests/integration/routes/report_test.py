@@ -56,7 +56,7 @@ class Tags_Route_Test(testBase.TestBase):
         with self.app.app_context():
             for test_case in test_cases:
                 # Set authorization token to be not an admin user
-                self.webtest_app.authorization = ("Bearer", self.user_0_token)
+                self.webtest_app.authorization = ("Bearer", self.user_exp_token)
 
                 with self.subTest(msg=test_case.test_name):
                     # Assert validation errors are raised for the test cases defined above.
@@ -120,7 +120,7 @@ class Tags_Route_Test(testBase.TestBase):
         with self.app.app_context():
             for test_case in test_cases:
                 # Set authorization token to be user >1 year old
-                self.webtest_app.authorization = ("Bearer", self.user_0_token)
+                self.webtest_app.authorization = ("Bearer", self.user_exp_token)
 
                 with self.subTest(msg=test_case.test_name):
                     # Send an HTTP Post Request to "/report"
@@ -209,7 +209,7 @@ class Tags_Route_Test(testBase.TestBase):
         with self.app.app_context():
             for test_case in test_cases:
                 # Set authorization token to be user >1 year old
-                self.webtest_app.authorization = ("Bearer", self.user_0_token)
+                self.webtest_app.authorization = ("Bearer", self.user_exp_token)
 
                 with self.subTest(msg=test_case.test_name):
                     # Assert validation errors are raised for the test cases defined above.

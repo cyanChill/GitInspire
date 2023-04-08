@@ -27,9 +27,10 @@ class TestBase(unittest.TestCase):
 
             # Generate fake user credentials for accessing protected
             # API routes (User Age >1 year id: 0, User Age <3 Months id: 1)
-            self.user_0_token = create_access_token(identity=0)
-            self.user_1_token = create_access_token(identity=1)
+            self.user_exp_token = create_access_token(identity=0)
+            self.user_new_token = create_access_token(identity=1)
             self.user_admin_token = create_access_token(identity=83375816)
+            self.user_owner_token = create_access_token(identity=3)
 
         self.app = api
         self.webtest_app = webtest.TestApp(api)
