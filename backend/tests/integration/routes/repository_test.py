@@ -6,6 +6,7 @@ from datetime import datetime
 from tests import testBase
 from server.db import db
 from server.models.Repository import Repository, RepoLanguage, RepoTag
+from server.models.Log import Log
 
 
 class Repository_Route_Test(testBase.TestBase):
@@ -476,8 +477,12 @@ class Repository_Route_Test(testBase.TestBase):
                         dlt_lang_rel = RepoLanguage.query.filter_by(repo_id=0).all()
                         dlt_tag_rel = RepoTag.query.filter_by(repo_id=0).all()
                         self.assertTrue(dlt_repo == None)
-                        self.assertTrue(len(dlt_lang_rel) == 0)
-                        self.assertTrue(len(dlt_tag_rel) == 0)
+                        self.assertEqual(len(dlt_lang_rel), 0)
+                        self.assertEqual(len(dlt_tag_rel), 0)
+
+                        # Check to see if log is created
+                        logs = Log.query.all()
+                        self.assertEqual(len(logs), 1)
 
     @pytest.mark.skip(reason="Not implemented.")
     def test_update_repository(self):

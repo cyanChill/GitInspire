@@ -8,7 +8,7 @@ from server.models.Tag import Tag, TagTypeEnum
 from server.models.Repository import Repository, RepoTag
 from server.models.Log import Log
 from server.utils import serialize_sqlalchemy_objs, isXMonthOld, normalizeStr
-from server.routes.auth import not_banned, admin_required, owner_required
+from server.routes.auth import not_banned, admin_required
 
 bp = Blueprint("tags", __name__, url_prefix="/tags")
 

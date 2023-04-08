@@ -16,6 +16,7 @@ from server.routes.auth import not_banned, admin_required
 from server.db import db
 from server.models.Language import Language
 from server.models.Tag import Tag
+from server.models.Log import Log
 from server.models.Repository import Repository, RepoLanguage, RepoTag
 
 bp = Blueprint("repositories", __name__, url_prefix="/repositories")
@@ -302,8 +303,21 @@ def refresh_repository(repoId):
         db.session.execute(delete(Repository).where(Repository.id == repoId))
         db.session.commit()
 
-        # TODO: Future Feature - Create a log noting this repository has
-        # been removed from our database through this method
+        # Log the automatic deletion
+        log = Log(
+            action=f"delete (auto)",
+            type="repository",
+            content_id=repoId,
+            enacted_by="-1337",  # Bot user id
+        )
+        try:
+            db.session.execute(
+                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+            )
+        except:
+            pass
+        db.session.add(log)
+        db.session.commit()
 
         response = {
             "message": "Repository is no longer accessible via the GitHub API and has been deleted from our database."
