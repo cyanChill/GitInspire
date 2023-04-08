@@ -1,3 +1,5 @@
+import { forwardRef } from "react";
+
 type TextAreaProps = {
   textarea: true;
   rows: number;
@@ -9,12 +11,10 @@ type InputProps = {
   [x: string]: any;
 } & (TextAreaProps | {});
 
-export default function Input({
-  className = "",
-  textarea = false,
-  rows = 2,
-  ...rest
-}: InputProps) {
+export default forwardRef(function Input(
+  { className = "", textarea = false, rows = 2, ...rest }: InputProps,
+  ref: React.ForwardedRef<any>
+) {
   const baseClasses =
     "p-1.5 rounded-md bg-zinc-50 dark:bg-slate-700 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 dark:shadow-slate-600 outline-slate-300 dark:outline-slate-800";
 
@@ -23,13 +23,16 @@ export default function Input({
       <textarea
         className={`${baseClasses} ${className} resize-none`}
         rows={rows}
+        ref={ref}
         {...rest}
       />
     );
   } else {
-    return <input className={`${baseClasses} ${className}`} {...rest} />;
+    return (
+      <input className={`${baseClasses} ${className}`} {...rest} ref={ref} />
+    );
   }
-}
+});
 
 interface InputGroupProps {
   label: string;

@@ -16,6 +16,7 @@ interface AppContextInterface {
   languages: LangObjType[];
   tags: TagsType;
   addTag: (newTag: TagObjType) => void;
+  removeTag: (rmTag: TagObjType) => void;
   selOptionFormat: {
     languages: SelectOption[];
     primary_tags: SelectOption[];
@@ -43,6 +44,21 @@ export default function AppContextProvider({ children }: ReactChildren) {
       if (tags.primary.findIndex((el) => el.name === newTag.name) === -1) {
         setTags((prev) => ({ ...prev, primary: [...prev.primary, newTag] }));
       }
+    }
+  };
+
+  // Function to remove locally a tag [does not remove from backend database]
+  const removeTag = (rmTag: TagObjType) => {
+    if (rmTag.type === "user_gen") {
+      setTags((prev) => ({
+        ...prev,
+        user_gen: prev.user_gen.filter((tg) => tg.name !== rmTag.name),
+      }));
+    } else if (rmTag.type === "primary") {
+      setTags((prev) => ({
+        ...prev,
+        primary: prev.primary.filter((tg) => tg.name !== rmTag.name),
+      }));
     }
   };
 
@@ -99,7 +115,9 @@ export default function AppContextProvider({ children }: ReactChildren) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ languages, tags, addTag, selOptionFormat }}>
+    <AppContext.Provider
+      value={{ languages, tags, addTag, removeTag, selOptionFormat }}
+    >
       {children}
     </AppContext.Provider>
   );
