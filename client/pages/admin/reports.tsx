@@ -207,6 +207,8 @@ export default function AdminReportsPage() {
                       redirectLink = `/repository/${rpt.content_id}`;
                     if (selectedType === "user")
                       redirectLink = `/profile/${rpt.content_id}`;
+                    if (selectedType === "tag")
+                      redirectLink = `/admin/tags?tag=${rpt.content_id}`;
 
                     return (
                       <a

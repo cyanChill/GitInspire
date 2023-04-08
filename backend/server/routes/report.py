@@ -80,7 +80,11 @@ def create_report():
     report.reported_by = user["id"]
 
     try:
-        # Add the Tag to the database and commit the transaction.
+        # Make sure ids sequence value is correct
+        db.session.execute(
+            "SELECT setval(pg_get_serial_sequence('reports', 'id'), coalesce(max(id)+1, 1), false) FROM reports"
+        )
+        # Add the Report to the database and commit the transaction.
         db.session.add(report)
         db.session.commit()
 
