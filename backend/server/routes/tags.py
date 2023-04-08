@@ -95,7 +95,7 @@ def update_tag():
     if old_tagName == "":
         response = {"message": "You must provide the old tag name."}
         return jsonify(response), 400
-    new_displayName = request.json.get("displayName", "").strip()
+    new_displayName = request.json.get("newDisplayName", "").strip()
     if new_displayName == "":
         response = {"message": "You must provide a new tag name."}
         return jsonify(response), 400
@@ -191,7 +191,10 @@ def update_tag():
         return jsonify(response), 500
 
 
-@bp.route("/", methods=["DELETE"])
+# Use a PUT method for delete since "tagName" can include "/" which would cause a route "/api/tags/<string:tagName>"
+# to fail (ie: tagName = "libaries/modules" would be read as "/api/tags/libaries/modules")
+#   - In addition, we also have the option to replace other values in addition to deleting
+@bp.route("/", methods=["PUT"])
 @admin_required()
 def delete_tag():
     user = g.user.as_dict()

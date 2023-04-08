@@ -57,7 +57,10 @@ export default function AdminTagsPage() {
         "Content-Type": "application/json",
         "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
       },
-      body: JSON.stringify({ oldName: selTag.name, displayName: newTagName }),
+      body: JSON.stringify({
+        oldName: selTag.name,
+        newDisplayName: newTagName,
+      }),
     });
 
     try {
@@ -98,7 +101,7 @@ export default function AdminTagsPage() {
 
     setIsLoading(true);
     const res = await fetch("/api/tags", {
-      method: "DELETE",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",

@@ -60,9 +60,15 @@ def gen_dummyData():
         type=TagTypeEnum["primary"],
         suggested_by=d_user_0.id,
     )
-    d_tag = Tag(
+    d_tag_1 = Tag(
         name=normalizeStr("Frontend"),
         display_name="Frontend",
+        type=TagTypeEnum["user_gen"],
+        suggested_by=d_user_0.id,
+    )
+    d_tag_2 = Tag(
+        name=normalizeStr("Machine Learning"),
+        display_name="Machine Learning",
         type=TagTypeEnum["user_gen"],
         suggested_by=d_user_0.id,
     )
@@ -120,8 +126,8 @@ def gen_dummyData():
         is_primary=False,
     )
 
-    d_repo_tag_relation_1 = RepoTag(repo_id=d_repo_1.id, tag_name=d_tag.name)
-    d_repo_tag_relation_2 = RepoTag(repo_id=d_repo_3.id, tag_name=d_tag.name)
+    d_repo_tag_relation_1 = RepoTag(repo_id=d_repo_1.id, tag_name=d_tag_1.name)
+    d_repo_tag_relation_2 = RepoTag(repo_id=d_repo_3.id, tag_name=d_tag_1.name)
 
     return [
         d_user_0,
@@ -130,7 +136,8 @@ def gen_dummyData():
         d_user_3,
         d_primary_tag_1,
         d_primary_tag_2,
-        d_tag,
+        d_tag_1,
+        d_tag_2,
         d_language_1,
         d_language_2,
         d_language_3,
