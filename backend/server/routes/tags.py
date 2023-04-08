@@ -8,7 +8,7 @@ from server.models.Tag import Tag, TagTypeEnum
 from server.models.Repository import Repository, RepoTag
 from server.models.Log import Log
 from server.utils import serialize_sqlalchemy_objs, isXMonthOld, normalizeStr
-from server.routes.auth import not_banned, admin_required
+from server.routes.auth import not_banned, admin_required, owner_required
 
 bp = Blueprint("tags", __name__, url_prefix="/tags")
 
@@ -191,7 +191,86 @@ def update_tag():
         return jsonify(response), 500
 
 
-@bp.route("/<string:tagName>", methods=["DELETE"])
+@bp.route("/", methods=["DELETE"])
 @admin_required()
-def delete_tag(tagName):
-    return jsonify({"message": "Deleted tag."})
+def delete_tag():
+    user = g.user.as_dict()
+
+    old_tagName = request.json.get("oldTagName", "").strip()
+    if old_tagName == "":
+        response = {"message": "You must provide the old tag name."}
+        return jsonify(response), 400
+    old_tag = Tag.query.filter_by(name=old_tagName).first()
+    if old_tag == None:
+        response = {"message": "Tag no longer exists in the database."}
+        return jsonify(response), 400
+    if old_tag.type.name == "primary" and user["account_status"] != "owner":
+        response = {"message": "You don't have permission to delete this tag."}
+        return jsonify(response), 401
+
+    # Below only will matter if the user is an owner & tag is primary
+    rplc_tagName = request.json.get("replacementTagName", "").strip()
+    rplc_tag = None
+    if old_tag.type.name == "primary" and user["account_status"] == "owner":
+        if rplc_tagName == "":
+            response = {"message": "You must provide a replacement tag name."}
+            return jsonify(response), 400
+
+        rplc_tag = Tag.query.filter_by(name=rplc_tagName).first()
+        if rplc_tag == None:
+            response = {"message": "Replacement tag no longer exists in the database."}
+            return jsonify(response), 400
+        if rplc_tag.name == old_tag.name:
+            response = {"message": "Replacement tag is the same as deleting tag."}
+            return jsonify(response), 400
+
+    # Proceed with replacement process
+    try:
+        actionMsg = "delete"
+        contentId = old_tag.name
+        # Update all entries that used the old primary tag
+        if old_tag.type.name == "primary":
+            actionMsg = f"delete ({old_tag.name} -> {rplc_tag.name})"
+            contentId = rplc_tag.name
+            update_stmt = (
+                update(Repository)
+                .where(Repository._primary_tag == old_tag.name)
+                .values(_primary_tag=rplc_tag.name)
+            )
+            db.session.execute(update_stmt)
+            db.session.commit()
+
+        # Delete old user-gen tags references
+        if old_tag.type.name == "user_gen":
+            db.session.execute(delete(RepoTag).where(RepoTag.tag_name == old_tag.name))
+            db.session.commit()
+
+        # Delete old tag
+        delete_stmt = delete(Tag).where(Tag.name == old_tag.name)
+        db.session.execute(delete_stmt)
+        db.session.commit()
+
+        # Log the update action
+        log = Log(
+            action=actionMsg,
+            type="tag",
+            content_id=contentId,
+            enacted_by=user["id"],
+        )
+        try:
+            # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id for Postgresql Database)
+            #   - Ref: https://stackoverflow.com/a/37972960
+            db.session.execute(
+                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+            )
+        except:
+            pass
+        db.session.add(log)
+        db.session.commit()
+
+        response = {"message": "Successfully delete old tag."}
+        return jsonify(response), 200
+    except:
+        print(traceback.format_exc())
+        response = {"message": "Something went wrong with updating tag."}
+        return jsonify(response), 500

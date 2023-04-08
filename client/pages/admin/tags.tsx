@@ -79,6 +79,55 @@ export default function AdminTagsPage() {
     }
   };
 
+  const submitDeleteRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selTag || isLoading) return;
+
+    if (selTag.type === "primary" && !replacementTag) {
+      toast.error("You must select a replacement primary tag.");
+      return;
+    }
+    if (
+      selTag.type === "primary" &&
+      replacementTag &&
+      replacementTag.label == selTag.display_name
+    ) {
+      toast.error("Replacement tag is the tag to be deleted.");
+      return;
+    }
+
+    setIsLoading(true);
+    const res = await fetch("/api/tags", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
+      },
+      body: JSON.stringify({
+        oldTagName: selTag.name,
+        replacementTagName: replacementTag?.value || "",
+      }),
+    });
+
+    try {
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
+      removeTag(selTag);
+      toast.success("Succsesfully deleted tag.");
+      router.push(
+        replaceURLParam(router.asPath, "tag", `${replacementTag?.value || ""}`)
+      );
+      setReplacementTag(undefined);
+    } catch (err) {
+      toast.error("Something unexpected occurred.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     redirectIfNotAdmin();
   }, [redirectIfNotAdmin]);
@@ -211,12 +260,17 @@ export default function AdminTagsPage() {
 
             {/* Delete Form */}
             {action === "delete" && (
-              <form className="my-2 flex animate-load-in flex-col">
+              <form
+                className="my-2 flex animate-load-in flex-col"
+                onSubmit={submitDeleteRequest}
+              >
                 {isOwner && selTag.type === "primary" && (
                   <InputGroupAlt label="Replacement Tag:" required>
                     <Select
                       multiple={false}
-                      options={selOptionFormat.primary_tags}
+                      options={selOptionFormat.primary_tags.filter(
+                        (tg) => tg.value !== selTag.name
+                      )}
                       value={replacementTag}
                       onChange={(val: SelectOption | undefined) =>
                         setReplacementTag(val)
