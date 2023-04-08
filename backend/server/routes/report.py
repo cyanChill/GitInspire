@@ -80,10 +80,13 @@ def create_report():
     report.reported_by = user["id"]
 
     try:
-        # Make sure ids sequence value is correct
-        db.session.execute(
-            "SELECT setval(pg_get_serial_sequence('reports', 'id'), coalesce(max(id)+1, 1), false) FROM reports"
-        )
+        try:
+            # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id for Postgresql Database)
+            db.session.execute(
+                "SELECT setval(pg_get_serial_sequence('reports', 'id'), coalesce(max(id)+1, 1), false) FROM reports"
+            )
+        except:
+            pass
         # Add the Report to the database and commit the transaction.
         db.session.add(report)
         db.session.commit()

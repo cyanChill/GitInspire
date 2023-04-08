@@ -85,8 +85,9 @@ def create_app(configName=None):
                 id="-1337",
                 username="GitInspire_Bot",
                 avatar_url="",
-                github_created_at=datetime.strftime(
-                    datetime.now(), "%Y-%m-%dT%H:%M:%SZ"
+                github_created_at=datetime.strptime(
+                    datetime.strftime(datetime.now(), "%Y-%m-%dT%H:%M:%SZ"),
+                    "%Y-%m-%dT%H:%M:%SZ",
                 ),
                 account_status=AccountStatusEnum["bot"],
             )

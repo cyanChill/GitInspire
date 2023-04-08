@@ -169,11 +169,14 @@ def update_tag():
             content_id=new_tag.name,
             enacted_by=user["id"],
         )
-        # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id)
-        #   - Ref: https://stackoverflow.com/a/37972960
-        db.session.execute(
-            "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
-        )
+        try:
+            # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id for Postgresql Database)
+            #   - Ref: https://stackoverflow.com/a/37972960
+            db.session.execute(
+                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+            )
+        except:
+            pass
         db.session.add(log)
         db.session.commit()
 
