@@ -300,7 +300,6 @@ class Tags_Route_Test(testBase.TestBase):
             ).all()
             self.assertEqual(len(updated_repos), 3)
 
-    @pytest.mark.skip(reason="Not implemented.")
     def test_delete_tag_bad_request(self):
         TestCase = collections.namedtuple(
             "TestCase",
@@ -350,13 +349,13 @@ class Tags_Route_Test(testBase.TestBase):
                 expected_error_message="You must provide a replacement tag name.",
             ),
             TestCase(
-                test_name="Didn't provide replacement tag name",
+                test_name="Replacement tag doesn't exist",
                 request_body={
                     "oldTagName": "resource",
                     "replacementTagName": "new_tag",
                 },
                 expected_error_code="400",
-                expected_error_message="You must provide a replacement tag name.",
+                expected_error_message="Replacement tag no longer exists in the database.",
             ),
             TestCase(
                 test_name="Replacement tag is the tag to be deleted",
