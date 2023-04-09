@@ -413,6 +413,12 @@ def refresh_repository(repoId):
 def update_repository(repoId):
     user = g.user.as_dict()
 
+    # Check if repository still exists in our database
+    existing_repo = Repository.query.filter_by(id=repoId).first()
+    if existing_repo == None:
+        response = {"message": "Repository no longer exists in the database."}
+        return jsonify(response), 400
+
     primary_tag = request.json.get("primary_tag", None)
     tags = request.json.get("tags", [])
     maintain_link = request.json.get("maintain_link", "")
@@ -424,13 +430,13 @@ def update_repository(repoId):
     try:
         if maintain_link != "" and not validators.url(maintain_link, public=True):
             response = {
-                "message": "Maintain URL is not in a valid format (valid is: https://.*)"
+                "message": "Maintain URL is not in a valid format (valid is: https://.*)."
             }
             return jsonify(response), 400
     except:
         # Reach here if a "ValidationError" is thrown
         response = {
-            "message": "Maintain URL is not in a valid format (valid is: https://.*)"
+            "message": "Maintain URL is not in a valid format (valid is: https://.*)."
         }
         return jsonify(response), 400
 
@@ -449,13 +455,13 @@ def update_repository(repoId):
         print(traceback.format_exc())
         return jsonify({"message": "Something went wrong with validating tags."}), 500
 
-    # Check if repository still exists in our database
-    existing_repo = Repository.query.filter_by(id=repoId).first()
-    if existing_repo == None:
-        response = {"message": "Repository no longer exists in the database."}
-        return jsonify(response), 400
-
     try:
+        action_msg = (
+            "update (maintain link)"
+            if maintain_link != "" and maintain_link != existing_repo.maintain_link
+            else "update"
+        )
+
         # Update primary tag
         update_stmt = (
             update(Repository)
@@ -482,7 +488,7 @@ def update_repository(repoId):
 
         # Log the update action
         log = Log(
-            action=f"update",
+            action=action_msg,
             type="repository",
             content_id=repoId,
             enacted_by=user["id"],

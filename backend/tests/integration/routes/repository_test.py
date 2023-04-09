@@ -484,10 +484,151 @@ class Repository_Route_Test(testBase.TestBase):
                         logs = Log.query.all()
                         self.assertEqual(len(logs), 1)
 
-    @pytest.mark.skip(reason="Not implemented.")
     def test_update_repository(self):
-        pass
+        with self.app.app_context():
+            self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+            response = self.webtest_app.patch_json(
+                "/api/repositories/394012075",
+                {"primary_tag": {"value": "resource"}, "tags": []},
+            ).json
+            self.assertEqual(response["message"], "Successfully updated repository.")
+            self.assertEqual(response["repository"]["primary_tag"]["name"], "resource")
+            self.assertEqual(len(response["repository"]["tags"]), 0)
 
-    @pytest.mark.skip(reason="Not implemented.")
+    def test_update_repository_bad_request(self):
+        TestCase = collections.namedtuple(
+            "TestCase",
+            [
+                "test_name",
+                "repoId",
+                "request_body",
+                "expected_error_code",
+                "expected_error_message",
+            ],
+        )
+
+        user_test_cases = [
+            TestCase(
+                test_name="User unauthorized access",
+                repoId="1337",
+                request_body={},
+                expected_error_code="403",
+                expected_error_message="Admin only.",
+            ),
+        ]
+
+        admin_test_cases = [
+            TestCase(
+                test_name="Updating non-existent repository",
+                repoId="1337",
+                request_body={},
+                expected_error_code="400",
+                expected_error_message="Repository no longer exists in the database.",
+            ),
+            TestCase(
+                test_name="No primary tag",
+                repoId="394012075",
+                request_body={},
+                expected_error_code="400",
+                expected_error_message="You must provide a primary tag.",
+            ),
+            TestCase(
+                test_name="Invalid maintain link",
+                repoId="394012075",
+                request_body={
+                    "primary_tag": {"value": "abandoned"},
+                    "maintain_link": "google.com",
+                },
+                expected_error_code="400",
+                expected_error_message="Maintain URL is not in a valid format (valid is: https://.*).",
+            ),
+            TestCase(
+                test_name="Invalid tags",
+                repoId="394012075",
+                request_body={"primary_tag": {"value": "fake"}},
+                expected_error_code="400",
+                expected_error_message="Invalid tags.",
+            ),
+        ]
+
+        all_test_cases = [user_test_cases, admin_test_cases]
+
+        with self.app.app_context():
+            for idx, test_cases in enumerate(all_test_cases):
+                if idx < 1:
+                    self.webtest_app.authorization = ("Bearer", self.user_new_token)
+                else:
+                    self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+
+                for test_case in test_cases:
+                    with self.subTest(msg=test_case.test_name):
+                        # Assert validation errors are raised for the test cases defined above.
+                        with self.assertRaises(webtest.AppError) as exception:
+                            self.webtest_app.patch_json(
+                                f"/api/repositories/{test_case.repoId}",
+                                test_case.request_body,
+                            )
+
+                        # Assert the HTTP Response Code and the error messages are what we expect.
+                        res_code, res_body = str(exception.exception).split("\n")
+                        self.assertTrue(test_case.expected_error_code in res_code)
+                        self.assertTrue(test_case.expected_error_message in res_body)
+
     def test_delete_repository(self):
-        pass
+        with self.app.app_context():
+            self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+            response = self.webtest_app.delete("/api/repositories/0").json
+            self.assertEqual(response["message"], "Successfully delete old repository.")
+            deleted_repo = Repository.query.filter_by(id="0").first()
+            self.assertTrue(deleted_repo == None)
+
+    def test_delete_repository_bad_request(self):
+        TestCase = collections.namedtuple(
+            "TestCase",
+            [
+                "test_name",
+                "repoId",
+                "expected_error_code",
+                "expected_error_message",
+            ],
+        )
+
+        user_test_cases = [
+            TestCase(
+                test_name="User unauthorized access",
+                repoId="1337",
+                expected_error_code="403",
+                expected_error_message="Admin only.",
+            ),
+        ]
+
+        admin_test_cases = [
+            TestCase(
+                test_name="Deleting non-existent repository",
+                repoId="1337",
+                expected_error_code="400",
+                expected_error_message="Repository no longer exists in the database.",
+            ),
+        ]
+
+        all_test_cases = [user_test_cases, admin_test_cases]
+
+        with self.app.app_context():
+            for idx, test_cases in enumerate(all_test_cases):
+                if idx == 0:
+                    self.webtest_app.authorization = ("Bearer", self.user_new_token)
+                else:
+                    self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+
+                for test_case in test_cases:
+                    with self.subTest(msg=test_case.test_name):
+                        # Assert validation errors are raised for the test cases defined above.
+                        with self.assertRaises(webtest.AppError) as exception:
+                            self.webtest_app.delete(
+                                f"/api/repositories/{test_case.repoId}",
+                            )
+
+                        # Assert the HTTP Response Code and the error messages are what we expect.
+                        res_code, res_body = str(exception.exception).split("\n")
+                        self.assertTrue(test_case.expected_error_code in res_code)
+                        self.assertTrue(test_case.expected_error_message in res_body)
