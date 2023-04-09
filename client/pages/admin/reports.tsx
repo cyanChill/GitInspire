@@ -200,13 +200,11 @@ export default function AdminReportsPage() {
                 </span>{" "}
                 {TYPES_WITH_CONTENT_ID.includes(selectedType) &&
                   (() => {
-                    // TODO: Once other admin management pages are finishes, redirect there
-                    // instead of these pages
                     let redirectLink = "";
                     if (selectedType === "repository")
-                      redirectLink = `/repository/${rpt.content_id}`;
+                      redirectLink = `/admin/repositories?repository=${rpt.content_id}`;
                     if (selectedType === "user")
-                      redirectLink = `/profile/${rpt.content_id}`;
+                      redirectLink = `/admin/users?user=${rpt.content_id}`;
                     if (selectedType === "tag")
                       redirectLink = `/admin/tags?tag=${rpt.content_id}`;
 
@@ -253,9 +251,8 @@ export default function AdminReportsPage() {
 
               <p className="truncate text-right text-xs italic text-slate-400">
                 Submitted by {rpt.reported_by.username}{" "}
-                {/* TODO: Once other admin management pages are finishes, redirect there instead of profile page */}
                 <a
-                  href={`/profile/${rpt.reported_by.id}`}
+                  href={`/admin/users?user=${rpt.reported_by.id}`}
                   target="_blank"
                   rel="noreferrer"
                   className="hover:cursor hover:underline"

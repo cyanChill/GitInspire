@@ -4,6 +4,7 @@ from sqlalchemy import delete, update
 import requests
 from math import ceil
 import traceback
+import validators
 
 from server.utils import (
     isXDayOld,
@@ -410,10 +411,142 @@ def refresh_repository(repoId):
 @bp.route("/<int:repoId>", methods=["PATCH"])
 @admin_required()
 def update_repository(repoId):
-    return jsonify({"message": "Updated repository."})
+    user = g.user.as_dict()
+
+    primary_tag = request.json.get("primary_tag", None)
+    tags = request.json.get("tags", [])
+    maintain_link = request.json.get("maintain_link", "")
+
+    if not primary_tag:
+        response = {"message": "You must provide a primary tag."}
+        return jsonify(response), 400
+
+    try:
+        if maintain_link != "" and not validators.url(maintain_link, public=True):
+            response = {
+                "message": "Maintain URL is not in a valid format (valid is: https://.*)"
+            }
+            return jsonify(response), 400
+    except:
+        # Reach here if a "ValidationError" is thrown
+        response = {
+            "message": "Maintain URL is not in a valid format (valid is: https://.*)"
+        }
+        return jsonify(response), 400
+
+    # Validation of tags
+    try:
+        tags_existence = []
+        # See if primary & additional tag exists
+        tags_existence.append(Tag.query.filter_by(name=primary_tag["value"]).first())
+        for tg in tags:
+            tags_existence.append(Tag.query.filter_by(name=tg["value"]).first())
+
+        for tg in tags_existence:
+            if tg == None:
+                return jsonify({"message": "Invalid tags."}), 400
+    except:
+        print(traceback.format_exc())
+        return jsonify({"message": "Something went wrong with validating tags."}), 500
+
+    # Check if repository still exists in our database
+    existing_repo = Repository.query.filter_by(id=repoId).first()
+    if existing_repo == None:
+        response = {"message": "Repository no longer exists in the database."}
+        return jsonify(response), 400
+
+    try:
+        # Update primary tag
+        update_stmt = (
+            update(Repository)
+            .filter_by(id=repoId)
+            .values(_primary_tag=primary_tag["value"], maintain_link=maintain_link)
+        )
+        db.session.execute(update_stmt)
+        db.session.commit()
+
+        # Update tags
+        delete_stmt = delete(RepoTag).where(RepoTag.repo_id == repoId)
+        db.session.execute(delete_stmt)
+        db.session.commit()
+
+        # Add the updated tags relations with repository
+        if tags:
+            for tag in tags:
+                new_tag_rel = RepoTag(
+                    repo_id=repoId,
+                    tag_name=normalizeStr(tag["value"]),
+                )
+                db.session.add(new_tag_rel)
+        db.session.commit()
+
+        # Log the update action
+        log = Log(
+            action=f"update",
+            type="repository",
+            content_id=repoId,
+            enacted_by=user["id"],
+        )
+        try:
+            db.session.execute(
+                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+            )
+        except:
+            pass
+        db.session.add(log)
+        db.session.commit()
+
+        response = {
+            "message": "Successfully updated repository.",
+            "repository": existing_repo.as_dict(),
+        }
+        return jsonify(response), 200
+    except:
+        print(traceback.format_exc())
+        response = {"message": "Something went wrong with updating repository."}
+        return jsonify(response), 500
 
 
 @bp.route("/<int:repoId>", methods=["DELETE"])
 @admin_required()
 def delete_repository(repoId):
-    return jsonify({"message": "Delete repository."})
+    user = g.user.as_dict()
+
+    # Check if repository still exists in our database
+    existing_repo = Repository.query.filter_by(id=repoId).first()
+    if existing_repo == None:
+        response = {"message": "Repository no longer exists in the database."}
+        return jsonify(response), 400
+
+    # Proceed with delete process
+    try:
+        delete_stmt1 = delete(RepoTag).where(RepoTag.repo_id == repoId)
+        delete_stmt2 = delete(RepoLanguage).where(RepoLanguage.repo_id == repoId)
+        delete_stmt3 = delete(Repository).where(Repository.id == repoId)
+        db.session.execute(delete_stmt1)
+        db.session.execute(delete_stmt2)
+        db.session.execute(delete_stmt3)
+        db.session.commit()
+
+        # Log the delete action
+        log = Log(
+            action="delete",
+            type="repository",
+            content_id=repoId,
+            enacted_by=user["id"],
+        )
+        try:
+            db.session.execute(
+                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+            )
+        except:
+            pass
+        db.session.add(log)
+        db.session.commit()
+
+        response = {"message": "Successfully delete old repository."}
+        return jsonify(response), 200
+    except:
+        print(traceback.format_exc())
+        response = {"message": "Something went wrong with updating repository."}
+        return jsonify(response), 500
