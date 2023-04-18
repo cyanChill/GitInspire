@@ -1,7 +1,8 @@
+import type { AppProps } from "next/app";
+import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "react-hot-toast";
 
 import "../styles/globals.css";
-import type { AppProps } from "next/app";
 import AppContextProvider from "~context/appContext";
 import UserContextProvider from "~context/userContext";
 import ThemeContextProvider from "~context/themeContext";
@@ -16,6 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
           <Layout>
             <Component {...pageProps} />
+            <Analytics />
           </Layout>
         </AppContextProvider>
       </ThemeContextProvider>
