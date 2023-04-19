@@ -110,7 +110,10 @@ export default function UserContextProvider({ children }: ReactChildren) {
 
     const res = await fetch("/api/auth/logout", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": getCookie("csrf_refresh_token") || "",
+      },
     });
 
     console.log("[UserContext] Successfully logged out.");

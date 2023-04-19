@@ -208,6 +208,7 @@ def refresh_token():
 
 # Send response to frontend to delete cookies to logout.
 @bp.route("/logout", methods=["POST"])
+@jwt_required()
 def logout():
     resp = jsonify({"logout": True})
     unset_jwt_cookies(resp)
