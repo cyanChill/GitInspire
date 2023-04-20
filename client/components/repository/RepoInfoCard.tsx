@@ -75,48 +75,53 @@ export default function RepoInfoCard({
   };
 
   return (
-    <div className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white shadow-md dark:bg-slate-800 dark:shadow-slate-700">
+    <article className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white shadow-md dark:bg-slate-800 dark:shadow-slate-700">
       {/* Card Header */}
-      <div className="h-25 relative mb-10 flex min-w-0 items-end bg-gradient-to-t from-amber-400 to-amber-300 p-2 py-3 drop-shadow-md dark:from-cyan-700 dark:to-cyan-600 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]">
+      <section className="h-25 mb-10 flex min-w-0 flex-col items-end bg-gradient-to-t from-amber-400 to-amber-300 p-2 drop-shadow-md dark:from-cyan-700 dark:to-cyan-600 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]">
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="fixed top-2 right-2 text-2xl hover:text-red-500"
+          className="self-end text-2xl hover:text-red-500"
         >
           <RxCross2 />
         </button>
 
-        <Image
-          src="/assets/github.svg"
-          width={75}
-          height={75}
-          alt="Github Logo"
-          className="translate-y-[40px] rounded-md bg-white p-1 drop-shadow-md dark:bg-neutral-200 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]"
-        />
+        <div className="flex w-full">
+          <Image
+            src="/assets/github.svg"
+            width={75}
+            height={75}
+            alt="Github Logo"
+            className="translate-y-[40px] rounded-md bg-white p-1 drop-shadow-md dark:bg-neutral-200 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]"
+          />
 
-        <a
-          href={repository.repo_link}
-          target="_blank"
-          rel="noreferrer"
-          className="ml-2 flex min-w-0 items-center text-xl font-semibold hover:underline"
-        >
-          <span className="truncate" data-testid="RepoInfoCard-card-title">
-            {repository.author}/{repository.repo_name}
-          </span>{" "}
-          <RxExternalLink className="ml-2 shrink-0" />
-        </a>
+          <div className="min-w-0 translate-y-[35px] self-end px-2">
+            <a
+              href={repository.repo_link}
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-w-0 items-center pb-3 text-xl font-semibold hover:underline"
+            >
+              <span className="truncate" data-testid="RepoInfoCard-card-title">
+                {repository.author}/{repository.repo_name}
+              </span>{" "}
+              <RxExternalLink className="ml-2 shrink-0" />
+            </a>
 
-        {/* Stars */}
-        <p
-          className="fixed bottom-[-1.5rem] left-[5.5rem] flex items-center justify-center gap-1 rounded-xl bg-yellow-200 px-2 text-sm text-black dark:bg-yellow-400"
-          data-testid="RepoInfoCard-stars"
-        >
-          <RxStarFilled className="shrink-0" /> {shrinkNum(repository.stars)}
-        </p>
-      </div>
+            {/* Stars */}
+            <p
+              className="flex w-min items-center justify-center gap-1 rounded-xl bg-yellow-200 px-2 text-sm text-black dark:bg-yellow-400"
+              data-testid="RepoInfoCard-stars"
+            >
+              <RxStarFilled className="shrink-0" />{" "}
+              {shrinkNum(repository.stars)}
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Languages & Tags */}
-      <div
+      <section
         className="flex flex-wrap gap-1 p-2 text-sm"
         data-testid="RepoInfoCard-widgets"
       >
@@ -147,10 +152,10 @@ export default function RepoInfoCard({
             {tg.display_name}
           </span>
         ))}
-      </div>
+      </section>
 
       {/* Repo Description */}
-      <div className="m-2 rounded-sm border-[1px] p-2 text-sm italic">
+      <section className="m-2 rounded-sm border-[1px] p-2 text-sm italic">
         <p data-testid="RepoInfoCard-description">
           {repository.description ? repository.description : "No Description"}
         </p>
@@ -173,10 +178,10 @@ export default function RepoInfoCard({
             </a>
           </p>
         )}
-      </div>
+      </section>
 
       {/* Accreditation + States */}
-      <div className="mt-auto p-2 text-right text-sm italic">
+      <section className="mt-auto p-2 text-right text-sm italic">
         <p data-testid="RepoInfoCard-suggested_by">
           <span className="font-bold">Suggested By:</span>{" "}
           <Link
@@ -193,28 +198,31 @@ export default function RepoInfoCard({
         >
           Last Updated: {cleanDate(repository.last_updated)}
         </p>
-      </div>
+      </section>
 
       {/* Action */}
       <hr className="mx-2" />
       <div className="flex flex-wrap justify-end gap-3 px-2 py-1 text-sm">
         {isAuthenticated && (
-          <button
-            className="text-slate-500 hover:underline dark:text-gray-50"
-            onClick={handleReport}
-          >
-            Report a Problem
-          </button>
-        )}
-        {repository.primary_tag.name === "abandoned" &&
-          !repository.maintain_link && (
+          <>
             <button
-              className="text-red-500 hover:underline dark:text-red-400"
-              onClick={suggestLink}
+              className="text-slate-500 hover:underline dark:text-gray-50"
+              onClick={handleReport}
             >
-              Suggest Link
+              Report a Problem
             </button>
-          )}
+            {repository.primary_tag.name === "abandoned" &&
+              !repository.maintain_link && (
+                <button
+                  className="text-red-500 hover:underline dark:text-red-400"
+                  onClick={suggestLink}
+                >
+                  Suggest Link
+                </button>
+              )}
+          </>
+        )}
+
         {/* Allow refresh button for non-authenticated users */}
         <Button
           className="w-max"
@@ -228,6 +236,6 @@ export default function RepoInfoCard({
           Refresh Data
         </Button>
       </div>
-    </div>
+    </article>
   );
 }
