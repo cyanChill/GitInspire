@@ -112,7 +112,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_refresh_token") || "",
+        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
       },
     });
 
