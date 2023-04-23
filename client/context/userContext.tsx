@@ -36,7 +36,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<UserObjType | null>(null);
 
-  // "Logs" in user from temporary code provided by Github
+  // "Logs in" user from temporary code provided by Github
   //  - NOTE: mainly to be used in the "/login" route
   const authenticateFromCode = async () => {
     const url = window.location.href;
@@ -73,13 +73,17 @@ export default function UserContextProvider({ children }: ReactChildren) {
 
   // Attempts to refresh session with access token
   const refreshSession = async () => {
+    // Remove unecessary calls to backend for refresh
+    const refreshToken = getCookie("csrf_refresh_token");
+    if (!refreshToken) return;
+
     setIsLoading(true);
 
     const res = await fetch("/api/auth/token/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_refresh_token") || "",
+        "X-CSRF-TOKEN": refreshToken,
       },
     });
 
