@@ -138,7 +138,7 @@ export default function AdminRepositoriesPage() {
     const abort_ctrl = new AbortController();
     setIsLoading(true);
     setCurrQuery(repoId);
-    fetch(`/api/repositories/${repoId}`)
+    fetch(`/api/repositories/${repoId}`, { signal: abort_ctrl.signal })
       .then((res) => {
         if (!res.ok) {
           toast.error(
