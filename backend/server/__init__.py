@@ -10,8 +10,6 @@ import server.configuration as configuration
 def create_app(configName=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    # NOTE: Make sure the origins matches with the frontend URL
-    CORS(app, origins=["http://localhost:3000", "https://gitinspire.vercel.app"])
 
     # Load configs to override production values if provided
     configName = (
@@ -19,8 +17,13 @@ def create_app(configName=None):
         if configName
         else os.environ.get("ENVIRONMENT", configuration.ConfigurationName.DEVELOPMENT)
     )
-
     app.config.from_object(configuration.configuration[configName])
+
+    # NOTE: Make sure the origins matches with the frontend URL
+    origins = ["https://gitinspire.vercel.app"]
+    if configName != configuration.ConfigurationName.PRODUCTION:
+        origins.append("http://localhost:3000")
+    CORS(app, origins=origins)
 
     app.config.update(
         SECRET_KEY=os.environ.get("SECRET_KEY", "dev"),
