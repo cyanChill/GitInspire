@@ -36,4 +36,6 @@ To push the data from the CSV files created from the `pull_db_data.py` file, we 
 
 To run the server code, run `flask --app server run` while in the `backend` directory.
 
-- To run the code in debug mode, do `flask --app server --debug run`.
+- For running the code in **`production mode`** for **`UNIX`**, we have the `gunicorn` package, in which we run `gunicorn "server:create_app()"` in the `backend` directory.
+
+- To run the code in **`debug mode`**, do `flask --app server --debug run`.
