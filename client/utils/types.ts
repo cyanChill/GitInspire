@@ -15,6 +15,7 @@ export type UserObjType = {
   github_created_at: Date;
   account_status: "banned" | "user" | "admin" | "owner";
   last_updated: Date;
+  ban_reason?: string;
 };
 
 export type NameValsType = { name: string; display_name: string };

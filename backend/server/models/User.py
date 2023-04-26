@@ -49,6 +49,7 @@ class User(db.Model):
             "github_created_at": self.github_created_at,
             "account_status": self.account_status.name,
             "last_updated": self.last_updated.isoformat(),
+            "ban_reason": self.ban_reason,
         }
 
     def __repr__(self):
