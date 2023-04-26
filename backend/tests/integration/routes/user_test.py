@@ -86,7 +86,7 @@ class User_Route_Test(testBase.TestBase):
                 ),
                 account_status=AccountStatusEnum["user"],
             )
-            # Add recent repo
+            # Add recent user
             db.session.add(recent_user)
             db.session.commit()
 
@@ -175,6 +175,122 @@ class User_Route_Test(testBase.TestBase):
                     self.assertTrue(test_case.expected_error_code in response_code)
                     self.assertTrue(test_case.expected_error_message in response_body)
 
-    @pytest.mark.skip(reason="Not implemented.")
-    def test_delete_user(self):
-        pass
+    def test_update_user(self):
+        with self.app.app_context():
+            new_user = User(
+                id=15688979789,
+                username="new user",
+                avatar_url="https://avatars.githubusercontent.com/u/83375816?v=4",
+                github_created_at=datetime.strptime(
+                    "2021-04-28T21:49:19Z", "%Y-%m-%dT%H:%M:%SZ"
+                ),
+                account_status=AccountStatusEnum["user"],
+            )
+            db.session.add(new_user)
+            db.session.commit()
+
+            self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+            response = self.webtest_app.patch_json(
+                "/api/users/15688979789",
+                {"account_status": "banned", "ban_reason": "Test ban"},
+            ).json
+            self.assertEqual(response["message"], "Successfully updated user.")
+            self.assertEqual(response["user"]["account_status"], "banned")
+            self.assertEqual(response["user"]["ban_reason"], "Test ban")
+
+    def test_update_repository_bad_request(self):
+        TestCase = collections.namedtuple(
+            "TestCase",
+            [
+                "test_name",
+                "userId",
+                "request_body",
+                "expected_error_code",
+                "expected_error_message",
+            ],
+        )
+
+        user_test_cases = [
+            TestCase(
+                test_name="User unauthorized access",
+                userId="83375816",
+                request_body={},
+                expected_error_code="403",
+                expected_error_message="Admin only.",
+            ),
+        ]
+
+        admin_test_cases = [
+            TestCase(
+                test_name="Can't update self",
+                userId="83375816",
+                request_body={},
+                expected_error_code="400",
+                expected_error_message="You cannot update yourself.",
+            ),
+            TestCase(
+                test_name="No account status provided",
+                userId="83375813453456",
+                request_body={},
+                expected_error_code="400",
+                expected_error_message="You must provide an account status.",
+            ),
+            TestCase(
+                test_name="Invalid account status",
+                userId="83375813453456",
+                request_body={"account_status": "bot"},
+                expected_error_code="400",
+                expected_error_message='\\\\"bot\\\\" is an invalid account status.',
+            ),
+            TestCase(
+                test_name="No permission to set admin account status",
+                userId="83375813453456",
+                request_body={"account_status": "admin"},
+                expected_error_code="400",
+                expected_error_message="You don\\'t have permission to set this account status.",
+            ),
+            TestCase(
+                test_name="Non-existent user",
+                userId="83375813453456",
+                request_body={"account_status": "user"},
+                expected_error_code="400",
+                expected_error_message="User does not exist in the database.",
+            ),
+            TestCase(
+                test_name="No change",
+                userId="0",
+                request_body={"account_status": "user"},
+                expected_error_code="400",
+                expected_error_message="Nothing is being updated.",
+            ),
+            TestCase(
+                test_name="Can't update owner (or other admins) as admin",
+                userId="3",
+                request_body={"account_status": "user"},
+                expected_error_code="400",
+                expected_error_message="You don\\'t have permission to update this user.",
+            ),
+        ]
+
+        all_test_cases = [user_test_cases, admin_test_cases]
+
+        with self.app.app_context():
+            for idx, test_cases in enumerate(all_test_cases):
+                if idx < 1:
+                    self.webtest_app.authorization = ("Bearer", self.user_new_token)
+                else:
+                    self.webtest_app.authorization = ("Bearer", self.user_admin_token)
+
+                for test_case in test_cases:
+                    with self.subTest(msg=test_case.test_name):
+                        # Assert validation errors are raised for the test cases defined above.
+                        with self.assertRaises(webtest.AppError) as exception:
+                            self.webtest_app.patch_json(
+                                f"/api/users/{test_case.userId}",
+                                test_case.request_body,
+                            )
+
+                        # Assert the HTTP Response Code and the error messages are what we expect.
+                        res_code, res_body = str(exception.exception).split("\n")
+                        self.assertTrue(test_case.expected_error_code in res_code)
+                        self.assertTrue(test_case.expected_error_message in res_body)

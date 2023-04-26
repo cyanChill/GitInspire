@@ -145,7 +145,7 @@ def update_user(userId):
         return jsonify({"message": "You cannot update yourself."}), 400
 
     account_status = request.json.get("account_status", None)
-    ban_reason = request.json.get("ban_reason", "")
+    ban_reason = request.json.get("ban_reason", None)
 
     if not account_status:
         response = {"message": "You must provide an account status."}
