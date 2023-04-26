@@ -73,12 +73,9 @@ export default function UserContextProvider({ children }: ReactChildren) {
 
   // Attempts to refresh session with access token
   const refreshSession = async () => {
-    // Remove unecessary calls to backend for refresh
-    const refreshToken = getCookie("csrf_refresh_token");
-    if (!refreshToken) return;
+    const refreshToken = getCookie("csrf_refresh_token") || "";
 
     setIsLoading(true);
-
     const res = await fetch("/api/auth/token/refresh", {
       method: "POST",
       headers: {
