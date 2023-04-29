@@ -6,6 +6,23 @@
 
 A platform to discover and bring life back to abandoned repositories and more.
 
+## Features
+
+GitInspire is an application that allows users to discover repositories on GitHub based on certain languages and a range of stars.
+
+Alternatively, you can discover more specific repositories suit for your needs through our **Discover** feature which allows GitHub users to suggest repositories they may find helpful to others and label them with tags to help the search process.
+
+- Some primary tags that can be filtered through our database of suggested repositories include `Abandoned`, `Project Ideas`, `Open Source`, and `Resource` repositories.
+
+Fellow developers and GitHub users can help contribute to our database of categorized repositories through our **Contribute** feature.
+
+- GitHub users that are >3 months old can contribute by suggesting repositories that can be helpful to others.
+- GitHub users that are >1 year old can contribute suggesting tags to provide more labeling options and help fine-tune your search.
+
+With repositories labeled as `Abandoned`, you can help other by suggesting links to repositories that are alternatives or picks off what was left off.
+
+Since this is an app centered on GitHub repositories, login is through your GitHub account.
+
 ## General Rubric
 
 |      Category      |                     Subcategory                      | Weight |      Completed       |

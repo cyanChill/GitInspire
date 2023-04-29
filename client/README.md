@@ -17,3 +17,4 @@ For this project, we require a `.env.local` file to store our environment variab
 To run the frontend code (in development mode), run `npm run dev` while in the `client` directory.
 
 - For production, you need to build the code using `npm run build` and then do `npm run start` to run off that build.
+- A suggestion for hosting this frontend application is [Vercel](https://vercel.com/).
