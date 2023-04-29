@@ -1,5 +1,9 @@
 # GitInspire
 
+![License](https://badgen.net/github/license/cyanChill/GitInspire)
+![Backend Tests](https://github.com/cyanChill/GitInspire/actions/workflows/test_deploy_backend.yml/badge.svg)
+![Client Tests](https://github.com/cyanChill/GitInspire/actions/workflows/test_deploy_frontend.yml/badge.svg)
+
 A platform to discover and bring life back to abandoned repositories and more.
 
 ## General Rubric
