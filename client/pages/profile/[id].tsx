@@ -58,7 +58,7 @@ export default function UserProfilePage() {
       setIsLoading(true);
 
       fetch(`/api/users/${router.query.id}`, { signal: abortCtrl.signal })
-        .then((res) => res.json())
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
         .then((data) => {
           if (!data) {
             setUser(undefined);

@@ -43,7 +43,7 @@ export default function RepositoryPage() {
       fetch(`/api/repositories/${router.query.id}`, {
         signal: abortCtrl.signal,
       })
-        .then((res) => res.json())
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
         .then((data) => {
           if (!data) {
             setRepo(undefined);
