@@ -8,7 +8,7 @@ import useAppContext from "~hooks/useAppContext";
 import useUserContext from "~hooks/useUserContext";
 import { TagObjType } from "~utils/types";
 import { fromURLQueryVal, normalizeStr, replaceURLParam } from "~utils/helpers";
-import { getCookie } from "~utils/cookies";
+import { authFetch } from "~utils/cookies";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
@@ -52,12 +52,8 @@ export default function AdminTagsPage() {
     }
 
     setIsLoading(true);
-    const res = await fetch("/api/tags", {
+    const res = await authFetch("/api/tags", {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify({
         oldName: selTag.name,
         newDisplayName: newTagName,
@@ -101,12 +97,8 @@ export default function AdminTagsPage() {
     }
 
     setIsLoading(true);
-    const res = await fetch("/api/tags", {
+    const res = await authFetch("/api/tags", {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify({
         oldTagName: selTag.name,
         replacementTagName: replacementTag?.value || "",

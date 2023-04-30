@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { REPORT_TYPE_OPTIONS, REPORT_REASON_OPTIONS } from "~data";
 import useUserContext from "~hooks/useUserContext";
 import { fromURLQueryVal } from "~utils/helpers";
-import { getCookie } from "~utils/cookies";
+import { authFetch } from "~utils/cookies";
 import Select, { SelectOption } from "~components/form/Select";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import { Button2 } from "~components/form/Button";
@@ -88,12 +88,8 @@ export default function ReportPage() {
     }
 
     setIsLoading(true);
-    const res = await fetch("/api/report", {
+    const res = await authFetch("/api/report", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify({
         ...reportData,
         type: reportData.type.value,

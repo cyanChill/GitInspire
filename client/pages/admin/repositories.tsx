@@ -8,7 +8,7 @@ import useAppContext from "~hooks/useAppContext";
 import useUserContext from "~hooks/useUserContext";
 import { RepositoryObjType, TagObjType } from "~utils/types";
 import { fromURLQueryVal, normalizeStr, replaceURLParam } from "~utils/helpers";
-import { getCookie } from "~utils/cookies";
+import { authFetch } from "~utils/cookies";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
@@ -72,12 +72,8 @@ export default function AdminRepositoriesPage() {
     }
 
     setIsLoading(true);
-    const res = await fetch(`/api/repositories/${selRepo.id}`, {
+    const res = await authFetch(`/api/repositories/${selRepo.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify(newRepoVals),
     });
 
@@ -102,12 +98,8 @@ export default function AdminRepositoriesPage() {
     if (!selRepo || isLoading) return;
 
     setIsLoading(true);
-    const res = await fetch(`/api/repositories/${selRepo.id}`, {
+    const res = await authFetch(`/api/repositories/${selRepo.id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
     });
 
     try {

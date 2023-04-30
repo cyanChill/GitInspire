@@ -57,9 +57,7 @@ export default function UserProfilePage() {
     if (router.query && router.query.id) {
       setIsLoading(true);
 
-      fetch(`/api/users/${router.query.id}`, {
-        signal: abortCtrl.signal,
-      })
+      fetch(`/api/users/${router.query.id}`, { signal: abortCtrl.signal })
         .then((res) => res.json())
         .then((data) => {
           if (!data) {

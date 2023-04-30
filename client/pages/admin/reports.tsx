@@ -5,7 +5,7 @@ import { BiExpandVertical, BiX } from "react-icons/bi";
 
 import { REPORT_REASON_OPTIONS } from "~data";
 import useUserContext from "~hooks/useUserContext";
-import { getCookie } from "~utils/cookies";
+import { authFetch } from "~utils/cookies";
 import { ReportObjType } from "~utils/types";
 import { cleanDate2 } from "~utils/helpers";
 import Spinner from "~components/Spinner";
@@ -43,12 +43,8 @@ export default function AdminReportsPage() {
   };
 
   const handleReportAction = async (rptId: number, action: string) => {
-    const res = await fetch(`/api/report/${rptId}?action=${action}`, {
+    const res = await authFetch(`/api/report/${rptId}?action=${action}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
     });
 
     if (!res.ok) {
@@ -73,10 +69,7 @@ export default function AdminReportsPage() {
     if (!isAdmin) return;
 
     setIsLoading(true);
-    fetch("/api/report", {
-      method: "GET",
-      headers: { "X-CSRF-TOKEN": getCookie("csrf_access_token") || "" },
-    })
+    authFetch("/api/report")
       .then((res) => {
         if (!res.ok) {
           // There's no errors that'll stem from the inputs provided in the query string

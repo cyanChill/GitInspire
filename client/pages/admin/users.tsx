@@ -7,7 +7,7 @@ import { IoSearch } from "react-icons/io5";
 import useUserContext from "~hooks/useUserContext";
 import { UserObjType } from "~utils/types";
 import { fromURLQueryVal, replaceURLParam, normalizeStr } from "~utils/helpers";
-import { getCookie } from "~utils/cookies";
+import { authFetch } from "~utils/cookies";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup } from "~components/form/Input";
 import SEO from "~components/layout/SEO";
@@ -48,12 +48,8 @@ export default function AdminUsersPage() {
     const acc_status = target.account_status.value;
 
     setIsLoading(true);
-    const res = await fetch(`/api/users/${selUser.id}`, {
+    const res = await authFetch(`/api/users/${selUser.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify({
         account_status: acc_status,
         ban_reason: target.ban_reason.value,
@@ -92,13 +88,7 @@ export default function AdminUsersPage() {
     if (!isAdmin) return;
 
     const abort_ctrl = new AbortController();
-    fetch(`/api/users/banned`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
-      signal: abort_ctrl.signal,
-    })
+    authFetch(`/api/users/banned`, { signal: abort_ctrl.signal })
       .then((res) => {
         if (!res.ok) toast.error("Failed to fetch banned users.");
         else return res.json();
@@ -126,13 +116,7 @@ export default function AdminUsersPage() {
 
     const abort_ctrl = new AbortController();
     setIsLoading(true);
-    fetch(`/api/users/${userId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
-      signal: abort_ctrl.signal,
-    })
+    authFetch(`/api/users/${userId}`, { signal: abort_ctrl.signal })
       .then((res) => {
         if (!res.ok) {
           toast.error(

@@ -2,7 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import useAppContext from "~hooks/useAppContext";
-import { getCookie } from "~utils/cookies";
+import { authFetch } from "~utils/cookies";
 import { TagObjType, RepositoryObjType } from "~utils/types";
 import { SelectOption } from "~components/form/Select";
 import Button from "~components/form/Button";
@@ -43,12 +43,8 @@ export default function ContributeSubmitForm({
   const [error, setError] = useState(false);
 
   const submitNewRepo = async () => {
-    const res = await fetch("/api/repositories", {
+    const res = await authFetch("/api/repositories", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify({ author, repo_name, primary_tag, tags: add_tags }),
     });
     const data = await res.json();
@@ -57,12 +53,8 @@ export default function ContributeSubmitForm({
   };
 
   const submitNewTag = async () => {
-    const res = await fetch("/api/tags", {
+    const res = await authFetch("/api/tags", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
       body: JSON.stringify({ display_name: new_tag_name, type: new_tag_type }),
     });
     const data = await res.json();

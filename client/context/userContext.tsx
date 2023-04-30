@@ -12,7 +12,7 @@ import { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { ReactChildren, UserObjType } from "~utils/types";
-import { getCookie } from "~utils/cookies";
+import { getCookie, authFetch } from "~utils/cookies";
 
 interface UserContextInterface {
   errors: { errMsg: string; authErr: boolean };
@@ -51,7 +51,6 @@ export default function UserContextProvider({ children }: ReactChildren) {
 
       const res = await fetch("/api/auth/authenticate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
       });
       const data = await res.json();
@@ -109,13 +108,7 @@ export default function UserContextProvider({ children }: ReactChildren) {
   const logout = async () => {
     setIsLoading(true);
 
-    const res = await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": getCookie("csrf_access_token") || "",
-      },
-    });
+    const res = await authFetch("/api/auth/logout", { Fmethod: "POST" });
 
     console.log("[UserContext] Successfully logged out.");
     setErrors({ errMsg: "", authErr: false });
