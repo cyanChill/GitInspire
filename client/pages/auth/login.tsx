@@ -11,7 +11,7 @@ import SEO from "~components/layout/SEO";
 const GITHUB_AUTH_URL = process.env.NEXT_PUBLIC_GITHUB_AUTH_URL || "";
 
 export default function LoginPage() {
-  const { errors, isAuthenticated, redirectIfAuth, authenticateFromCode } =
+  const { error, isAuthenticated, redirectIfAuth, authenticateFromCode } =
     useUserContext();
 
   const router = useRouter();
@@ -28,12 +28,12 @@ export default function LoginPage() {
 
   // Handle redirect on succesfully authentication
   useEffect(() => {
-    if (isAuthenticated) redirectIfAuth();
-  }, [isAuthenticated]); /* eslint-disable-line */
+    redirectIfAuth();
+  }, [redirectIfAuth]); /* eslint-disable-line */
 
   useEffect(() => {
-    if (errors.errMsg && errors.authErr) toast.error(errors.errMsg);
-  }, [errors]);
+    if (error) toast.error(error);
+  }, [error]);
 
   return (
     <>
@@ -46,7 +46,7 @@ export default function LoginPage() {
           />
         </div>
 
-        {(urlHasCode || isAuthenticated) && !errors.authErr ? (
+        {(urlHasCode || isAuthenticated) && !error ? (
           <div className="w-full text-center">
             <h3 className="my-4 animate-pulse text-center text-lg font-semibold tracking-tight min-[400px]:text-2xl">
               Logging in with Github

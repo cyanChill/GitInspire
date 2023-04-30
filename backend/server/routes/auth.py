@@ -153,6 +153,7 @@ def authenicateOAuth():
         )
         github_user_data = usr_dt_resp.json()
     except:
+        print(traceback.format_exc())
         return jsonify({"message": "Failed to authenticate user."}), 401
 
     user_id = github_user_data["id"]
