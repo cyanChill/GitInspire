@@ -12,6 +12,7 @@ import { getCookie } from "~utils/cookies";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
+import SEO from "~components/layout/SEO";
 
 type RepoUpdateValType = {
   primary_tag: SelectOption | undefined;
@@ -170,187 +171,193 @@ export default function AdminRepositoriesPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flex animate-load-in justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Repository Management" />
+        <div className="flex animate-load-in justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="animate-load-in">
-      <h1 className="mb-4 text-center text-4xl font-semibold underline">
-        Manage Repository
-      </h1>
+    <>
+      <SEO pageName="Repository Management" />
+      <div className="animate-load-in">
+        <h1 className="mb-4 text-center text-4xl font-semibold underline">
+          Manage Repository
+        </h1>
 
-      {/* Search Bar */}
-      <form
-        className="grid grid-cols-[1fr_min-content]"
-        onSubmit={searchRepository}
-      >
-        <Input
-          name="repo_id"
-          type="text"
-          placeholder="Enter a repository id to get started"
-          className="w-full rounded-r-none"
-          ref={searchRef}
-          required
-        />
-        <button
-          type="submit"
-          className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hover:bg-sky-600"
+        {/* Search Bar */}
+        <form
+          className="grid grid-cols-[1fr_min-content]"
+          onSubmit={searchRepository}
         >
-          <IoSearch className="text-white" />
-        </button>
-      </form>
+          <Input
+            name="repo_id"
+            type="text"
+            placeholder="Enter a repository id to get started"
+            className="w-full rounded-r-none"
+            ref={searchRef}
+            required
+          />
+          <button
+            type="submit"
+            className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hover:bg-sky-600"
+          >
+            <IoSearch className="text-white" />
+          </button>
+        </form>
 
-      {/* Results */}
-      <main className="my-2 animate-load-in">
-        {isLoading && <Spinner />}
+        {/* Results */}
+        <main className="my-2 animate-load-in">
+          {isLoading && <Spinner />}
 
-        {!selRepo && !currQuery && (
-          <p className="text-center font-semibold text-red-400">
-            Find a repository to get started.
-          </p>
-        )}
+          {!selRepo && !currQuery && (
+            <p className="text-center font-semibold text-red-400">
+              Find a repository to get started.
+            </p>
+          )}
 
-        {!isLoading && !selRepo && currQuery && (
-          <p className="text-center font-semibold text-red-400">
-            That repository doesn&apos;t exist.
-          </p>
-        )}
+          {!isLoading && !selRepo && currQuery && (
+            <p className="text-center font-semibold text-red-400">
+              That repository doesn&apos;t exist.
+            </p>
+          )}
 
-        {/* Repository summary and management tools */}
-        {selRepo && (
-          <div className="my-4 flex animate-load-in flex-col">
-            {/* Repository Info Preview */}
-            <div className="flex min-w-0 max-w-full items-center gap-2 self-center rounded-md bg-gray-200 p-1.5 shadow shadow-xl dark:bg-slate-800 dark:shadow-slate-600">
-              <GoBrowser className="h-10 w-10 shrink-0 rounded-md bg-orange-500 p-1 text-white" />
-              <div className="w-min min-w-0">
-                <a
-                  href={selRepo.repo_link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block truncate font-semibold hover:underline"
-                >
-                  {selRepo.author}/{selRepo.repo_name}
-                </a>
-                <p className="flex flex-wrap gap-1 text-xs">
-                  {selRepo.languages.map((lang) => (
-                    <span
-                      key={lang.name}
-                      className="rounded-md bg-orange-300 px-1 py-0.5 dark:bg-amber-700"
-                    >
-                      {lang.display_name}
-                    </span>
-                  ))}
-                </p>
+          {/* Repository summary and management tools */}
+          {selRepo && (
+            <div className="my-4 flex animate-load-in flex-col">
+              {/* Repository Info Preview */}
+              <div className="flex min-w-0 max-w-full items-center gap-2 self-center rounded-md bg-gray-200 p-1.5 shadow shadow-xl dark:bg-slate-800 dark:shadow-slate-600">
+                <GoBrowser className="h-10 w-10 shrink-0 rounded-md bg-orange-500 p-1 text-white" />
+                <div className="w-min min-w-0">
+                  <a
+                    href={selRepo.repo_link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block truncate font-semibold hover:underline"
+                  >
+                    {selRepo.author}/{selRepo.repo_name}
+                  </a>
+                  <p className="flex flex-wrap gap-1 text-xs">
+                    {selRepo.languages.map((lang) => (
+                      <span
+                        key={lang.name}
+                        className="rounded-md bg-orange-300 px-1 py-0.5 dark:bg-amber-700"
+                      >
+                        {lang.display_name}
+                      </span>
+                    ))}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {/* Management Options */}
-            <div className="flex gap-2 overflow-x-auto font-semibold">
-              <button
-                className={
-                  action === "update" ? "underline" : "hover:underline"
-                }
-                disabled={action === "update"}
-                onClick={() => setAction("update")}
-              >
-                Update
-              </button>
-              <button
-                className={
-                  action === "delete" ? "underline" : "hover:underline"
-                }
-                disabled={action === "delete"}
-                onClick={() => setAction("delete")}
-              >
-                Delete
-              </button>
-            </div>
-            {/* Update Form */}
-            {action === "update" && (
-              <form
-                className="my-2 flex animate-load-in flex-col"
-                onSubmit={submitUpdateRequest}
-              >
-                <InputGroupAlt label="Primary Tag" required>
-                  <Select
-                    multiple={false}
-                    options={selOptionFormat.primary_tags}
-                    value={newRepoVals.primary_tag}
-                    onChange={(value: SelectOption | undefined) =>
-                      setNewRepoVals((prev) => ({
-                        ...prev,
-                        primary_tag: value,
-                      }))
-                    }
-                  />
-                </InputGroupAlt>
-
-                <InputGroupAlt label="Additional Tags (Max 5)">
-                  <Select
-                    multiple={true}
-                    options={selOptionFormat.user_tags}
-                    max={5}
-                    value={newRepoVals.tags}
-                    onChange={(value: SelectOption[]) =>
-                      setNewRepoVals((prev) => ({ ...prev, tags: value }))
-                    }
-                  />
-                </InputGroupAlt>
-
-                {newRepoVals.primary_tag?.value == "abandoned" && (
-                  <InputGroup label="Maintain Link">
-                    <Input
-                      type="url"
-                      value={newRepoVals.maintain_link}
-                      placeholder="ie: https://example.com"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              {/* Management Options */}
+              <div className="flex gap-2 overflow-x-auto font-semibold">
+                <button
+                  className={
+                    action === "update" ? "underline" : "hover:underline"
+                  }
+                  disabled={action === "update"}
+                  onClick={() => setAction("update")}
+                >
+                  Update
+                </button>
+                <button
+                  className={
+                    action === "delete" ? "underline" : "hover:underline"
+                  }
+                  disabled={action === "delete"}
+                  onClick={() => setAction("delete")}
+                >
+                  Delete
+                </button>
+              </div>
+              {/* Update Form */}
+              {action === "update" && (
+                <form
+                  className="my-2 flex animate-load-in flex-col"
+                  onSubmit={submitUpdateRequest}
+                >
+                  <InputGroupAlt label="Primary Tag" required>
+                    <Select
+                      multiple={false}
+                      options={selOptionFormat.primary_tags}
+                      value={newRepoVals.primary_tag}
+                      onChange={(value: SelectOption | undefined) =>
                         setNewRepoVals((prev) => ({
                           ...prev,
-                          maintain_link: e.target.value,
+                          primary_tag: value,
                         }))
                       }
-                      className="w-full"
                     />
-                  </InputGroup>
-                )}
+                  </InputGroupAlt>
 
-                <button
-                  type="submit"
-                  className={`mt-2 self-end font-semibold text-green-500 active:text-green-900 ${
-                    isLoading
-                      ? "hover:cursor-not-allowed"
-                      : "hover:text-green-700 hover:underline"
-                  }`}
-                  disabled={isLoading}
-                >
-                  Update Repository
-                </button>
-              </form>
-            )}
+                  <InputGroupAlt label="Additional Tags (Max 5)">
+                    <Select
+                      multiple={true}
+                      options={selOptionFormat.user_tags}
+                      max={5}
+                      value={newRepoVals.tags}
+                      onChange={(value: SelectOption[]) =>
+                        setNewRepoVals((prev) => ({ ...prev, tags: value }))
+                      }
+                    />
+                  </InputGroupAlt>
 
-            {/* Delete Form */}
-            {action === "delete" && (
-              <form
-                className="my-2 flex animate-load-in flex-col"
-                onSubmit={submitDeleteRequest}
-              >
-                <button
-                  type="submit"
-                  className={`mt-2 self-end font-semibold text-red-500 hover:text-red-700 active:text-red-900 ${
-                    isLoading ? "" : "hover:underline"
-                  }`}
-                  disabled={isLoading}
+                  {newRepoVals.primary_tag?.value == "abandoned" && (
+                    <InputGroup label="Maintain Link">
+                      <Input
+                        type="url"
+                        value={newRepoVals.maintain_link}
+                        placeholder="ie: https://example.com"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setNewRepoVals((prev) => ({
+                            ...prev,
+                            maintain_link: e.target.value,
+                          }))
+                        }
+                        className="w-full"
+                      />
+                    </InputGroup>
+                  )}
+
+                  <button
+                    type="submit"
+                    className={`mt-2 self-end font-semibold text-green-500 active:text-green-900 ${
+                      isLoading
+                        ? "hover:cursor-not-allowed"
+                        : "hover:text-green-700 hover:underline"
+                    }`}
+                    disabled={isLoading}
+                  >
+                    Update Repository
+                  </button>
+                </form>
+              )}
+
+              {/* Delete Form */}
+              {action === "delete" && (
+                <form
+                  className="my-2 flex animate-load-in flex-col"
+                  onSubmit={submitDeleteRequest}
                 >
-                  Delete Repository
-                </button>
-              </form>
-            )}
-          </div>
-        )}
-      </main>
-    </div>
+                  <button
+                    type="submit"
+                    className={`mt-2 self-end font-semibold text-red-500 hover:text-red-700 active:text-red-900 ${
+                      isLoading ? "" : "hover:underline"
+                    }`}
+                    disabled={isLoading}
+                  >
+                    Delete Repository
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
+        </main>
+      </div>
+    </>
   );
 }

@@ -10,6 +10,7 @@ import { fromURLQueryVal, replaceURLParam, normalizeStr } from "~utils/helpers";
 import { getCookie } from "~utils/cookies";
 import Spinner from "~components/Spinner";
 import Input, { InputGroup } from "~components/form/Input";
+import SEO from "~components/layout/SEO";
 
 export default function AdminUsersPage() {
   const router = useRouter();
@@ -158,146 +159,152 @@ export default function AdminUsersPage() {
 
   if (!isAdmin || isLoading) {
     return (
-      <div className="flexanimate-load-in justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="User Management" />
+        <div className="flexanimate-load-in justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="animate-load-in">
-      <h1 className="mb-4 text-center text-4xl font-semibold underline">
-        Manage Users
-      </h1>
+    <>
+      <SEO pageName="User Management" />
+      <div className="animate-load-in">
+        <h1 className="mb-4 text-center text-4xl font-semibold underline">
+          Manage Users
+        </h1>
 
-      {/* Tabs Options */}
-      <div className="flex gap-2 overflow-x-auto font-semibold">
-        <button
-          className={tab === "update" ? "underline" : "hover:underline"}
-          disabled={tab === "update"}
-          onClick={() => setTab("update")}
-        >
-          Update
-        </button>
-        <button
-          className={tab === "list" ? "underline" : "hover:underline"}
-          disabled={tab === "list"}
-          onClick={() => setTab("list")}
-        >
-          List
-        </button>
-      </div>
-
-      {/* Tab list for updating a user's status */}
-      {tab === "update" && (
-        <main>
-          {/* Search Bar */}
-          <form
-            className="my-2 grid grid-cols-[1fr_min-content]"
-            onSubmit={searchUser}
+        {/* Tabs Options */}
+        <div className="flex gap-2 overflow-x-auto font-semibold">
+          <button
+            className={tab === "update" ? "underline" : "hover:underline"}
+            disabled={tab === "update"}
+            onClick={() => setTab("update")}
           >
-            <Input
-              name="user_id"
-              type="text"
-              placeholder="Enter a user id to get started"
-              className="w-full rounded-r-none"
-              defaultValue={selUser?.id || ""}
-              ref={searchRef}
-              required
-              disabled={isLoading}
-            />
-            <button
-              type="submit"
-              className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hover:bg-sky-600"
+            Update
+          </button>
+          <button
+            className={tab === "list" ? "underline" : "hover:underline"}
+            disabled={tab === "list"}
+            onClick={() => setTab("list")}
+          >
+            List
+          </button>
+        </div>
+
+        {/* Tab list for updating a user's status */}
+        {tab === "update" && (
+          <main>
+            {/* Search Bar */}
+            <form
+              className="my-2 grid grid-cols-[1fr_min-content]"
+              onSubmit={searchUser}
             >
-              <IoSearch className="text-white" />
-            </button>
-          </form>
-
-          {/* Display found user */}
-          {selUser && (
-            <article className="mt-4 flex flex-col">
-              {/* User Preview */}
-              <div className="shadow-l flex min-w-0 max-w-full items-center gap-2 self-center rounded-md bg-gray-200 p-1.5 shadow dark:bg-slate-800 dark:shadow-slate-600">
-                <Image
-                  src={selUser?.avatar_url ?? "/assets/default_avatar.png"}
-                  alt={`${selUser?.username} profile picture`}
-                  width={24}
-                  height={24}
-                  className="h-10 w-10 shrink-0 rounded-md p-1 text-white"
-                />
-                <p className="truncate font-semibold">{selUser.username}</p>
-              </div>
-
-              {/* Update Form */}
-              <form
-                className="my-2 flex animate-load-in flex-col"
-                onSubmit={submitUpdateRequest}
+              <Input
+                name="user_id"
+                type="text"
+                placeholder="Enter a user id to get started"
+                className="w-full rounded-r-none"
+                defaultValue={selUser?.id || ""}
+                ref={searchRef}
+                required
+                disabled={isLoading}
+              />
+              <button
+                type="submit"
+                className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hover:bg-sky-600"
               >
-                <InputGroup
-                  label="Account Status"
-                  className="mt-3"
-                  required={true}
-                >
-                  <select
-                    name="account_status"
-                    defaultValue={selUser.account_status}
-                    required
-                    className="w-full rounded-md bg-zinc-50 p-1.5 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 hover:cursor-pointer dark:bg-slate-700 dark:shadow-slate-600"
-                  >
-                    <option value="user">User</option>
-                    <option value="banned">Banned</option>
-                    {isOwner && <option value="admin">Admin</option>}
-                  </select>
-                </InputGroup>
+                <IoSearch className="text-white" />
+              </button>
+            </form>
 
-                <InputGroup label="Ban Reason" className="mt-3">
-                  <Input
-                    name="ban_reason"
-                    type="text"
-                    className="w-full"
-                    defaultValue={selUser?.ban_reason || ""}
-                    disabled={isLoading}
+            {/* Display found user */}
+            {selUser && (
+              <article className="mt-4 flex flex-col">
+                {/* User Preview */}
+                <div className="shadow-l flex min-w-0 max-w-full items-center gap-2 self-center rounded-md bg-gray-200 p-1.5 shadow dark:bg-slate-800 dark:shadow-slate-600">
+                  <Image
+                    src={selUser?.avatar_url ?? "/assets/default_avatar.png"}
+                    alt={`${selUser?.username} profile picture`}
+                    width={24}
+                    height={24}
+                    className="h-10 w-10 shrink-0 rounded-md p-1 text-white"
                   />
-                </InputGroup>
+                  <p className="truncate font-semibold">{selUser.username}</p>
+                </div>
 
-                <button
-                  type="submit"
-                  className={`mt-2 self-end font-semibold text-green-500 active:text-green-900 ${
-                    isLoading
-                      ? "hover:cursor-not-allowed"
-                      : "hover:text-green-700 hover:underline"
-                  }`}
-                  disabled={isLoading}
+                {/* Update Form */}
+                <form
+                  className="my-2 flex animate-load-in flex-col"
+                  onSubmit={submitUpdateRequest}
                 >
-                  Update User
-                </button>
-              </form>
-            </article>
-          )}
-        </main>
-      )}
+                  <InputGroup
+                    label="Account Status"
+                    className="mt-3"
+                    required={true}
+                  >
+                    <select
+                      name="account_status"
+                      defaultValue={selUser.account_status}
+                      required
+                      className="w-full rounded-md bg-zinc-50 p-1.5 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 hover:cursor-pointer dark:bg-slate-700 dark:shadow-slate-600"
+                    >
+                      <option value="user">User</option>
+                      <option value="banned">Banned</option>
+                      {isOwner && <option value="admin">Admin</option>}
+                    </select>
+                  </InputGroup>
 
-      {/* Tab for list of banned users */}
-      {tab === "list" && (
-        <main>
-          <h2 className="my-2 text-xl font-semibold underline">
-            Banned Users:
-          </h2>
-          {bannedUsers.length === 0 && (
-            <p className="italic">No banned users found.</p>
-          )}
-          {bannedUsers.length > 0 && (
-            <ul className="flex flex-col gap-y-1">
-              {bannedUsers.map((usr) => (
-                <li key={usr.id}>
-                  {usr.username} ({usr.id}) - &quot;{usr.ban_reason}&quot;
-                </li>
-              ))}
-            </ul>
-          )}
-        </main>
-      )}
-    </div>
+                  <InputGroup label="Ban Reason" className="mt-3">
+                    <Input
+                      name="ban_reason"
+                      type="text"
+                      className="w-full"
+                      defaultValue={selUser?.ban_reason || ""}
+                      disabled={isLoading}
+                    />
+                  </InputGroup>
+
+                  <button
+                    type="submit"
+                    className={`mt-2 self-end font-semibold text-green-500 active:text-green-900 ${
+                      isLoading
+                        ? "hover:cursor-not-allowed"
+                        : "hover:text-green-700 hover:underline"
+                    }`}
+                    disabled={isLoading}
+                  >
+                    Update User
+                  </button>
+                </form>
+              </article>
+            )}
+          </main>
+        )}
+
+        {/* Tab for list of banned users */}
+        {tab === "list" && (
+          <main>
+            <h2 className="my-2 text-xl font-semibold underline">
+              Banned Users:
+            </h2>
+            {bannedUsers.length === 0 && (
+              <p className="italic">No banned users found.</p>
+            )}
+            {bannedUsers.length > 0 && (
+              <ul className="flex flex-col gap-y-1">
+                {bannedUsers.map((usr) => (
+                  <li key={usr.id}>
+                    {usr.username} ({usr.id}) - &quot;{usr.ban_reason}&quot;
+                  </li>
+                ))}
+              </ul>
+            )}
+          </main>
+        )}
+      </div>
+    </>
   );
 }

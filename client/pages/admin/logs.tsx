@@ -7,6 +7,7 @@ import { LogObjType, ChildrenNClass } from "~utils/types";
 import { replaceURLParam, cleanDate2 } from "~utils/helpers";
 import Pagnation from "~components/form/Pagnation";
 import Spinner from "~components/Spinner";
+import SEO from "~components/layout/SEO";
 
 type LogResults = {
   [x: number]: LogObjType[];
@@ -79,90 +80,96 @@ export default function AdminLogsPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flexanimate-load-in justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Logs" />
+        <div className="flexanimate-load-in justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="h-full animate-load-in">
-      <h1 className="mb-4 text-center text-4xl font-semibold underline">
-        Logs Page
-      </h1>
+    <>
+      <SEO pageName="Logs" />
+      <div className="h-full animate-load-in">
+        <h1 className="mb-4 text-center text-4xl font-semibold underline">
+          Logs Page
+        </h1>
 
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <main className="my-4 overflow-x-auto text-left shadow-lg">
-          <table className="w-full table-auto overflow-scroll">
-            <thead>
-              <tr className="rounded-lg border-b-[1px] border-slate-300 bg-slate-200 dark:border-slate-500 dark:bg-slate-800">
-                <TH className="rounded-tl-md">Created At</TH>
-                <TH>Action</TH>
-                <TH>Type</TH>
-                <TH>Content Reference</TH>
-                <TH className="rounded-tr-md">Handled By</TH>
-              </tr>
-            </thead>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <main className="my-4 overflow-x-auto text-left shadow-lg">
+            <table className="w-full table-auto overflow-scroll">
+              <thead>
+                <tr className="rounded-lg border-b-[1px] border-slate-300 bg-slate-200 dark:border-slate-500 dark:bg-slate-800">
+                  <TH className="rounded-tl-md">Created At</TH>
+                  <TH>Action</TH>
+                  <TH>Type</TH>
+                  <TH>Content Reference</TH>
+                  <TH className="rounded-tr-md">Handled By</TH>
+                </tr>
+              </thead>
 
-            <tbody>
-              {results[currPg].map((log) => {
-                let content_val: string | JSX.Element = log.content_id;
-                if (["repository", "user"].includes(log.type)) {
-                  const link =
-                    log.type === "user"
-                      ? `/profile/${log.content_id}`
-                      : `/repository/${log.content_id}`;
-                  content_val = (
-                    <a
-                      href={link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:underline"
-                    >
-                      {log.content_id}
-                    </a>
-                  );
-                }
-
-                return (
-                  <tr
-                    key={log.id}
-                    className="group bg-white not-last:border-b-[1px] not-last:border-slate-300 dark:bg-slate-700 not-last:dark:border-slate-500"
-                  >
-                    <TD className="group-last:rounded-bl-md">
-                      {cleanDate2(log.created_at)}
-                    </TD>
-                    <TD>{log.action}</TD>
-                    <TD>{log.type}</TD>
-                    <TD>{content_val}</TD>
-                    <TD className="group-last:rounded-br-md">
+              <tbody>
+                {results[currPg].map((log) => {
+                  let content_val: string | JSX.Element = log.content_id;
+                  if (["repository", "user"].includes(log.type)) {
+                    const link =
+                      log.type === "user"
+                        ? `/profile/${log.content_id}`
+                        : `/repository/${log.content_id}`;
+                    content_val = (
                       <a
-                        href={`/profile/${log.enacted_by.id}`}
+                        href={link}
                         target="_blank"
                         rel="noreferrer"
                         className="hover:underline"
                       >
-                        {log.enacted_by.username}
+                        {log.content_id}
                       </a>
-                    </TD>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </main>
-      )}
+                    );
+                  }
 
-      {/* Pagnation */}
-      <Pagnation
-        currPg={currPg}
-        maxPg={maxPgs}
-        siblingCount={2}
-        onPgChange={updateURLPage}
-      />
-    </div>
+                  return (
+                    <tr
+                      key={log.id}
+                      className="group bg-white not-last:border-b-[1px] not-last:border-slate-300 dark:bg-slate-700 not-last:dark:border-slate-500"
+                    >
+                      <TD className="group-last:rounded-bl-md">
+                        {cleanDate2(log.created_at)}
+                      </TD>
+                      <TD>{log.action}</TD>
+                      <TD>{log.type}</TD>
+                      <TD>{content_val}</TD>
+                      <TD className="group-last:rounded-br-md">
+                        <a
+                          href={`/profile/${log.enacted_by.id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:underline"
+                        >
+                          {log.enacted_by.username}
+                        </a>
+                      </TD>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </main>
+        )}
+
+        {/* Pagnation */}
+        <Pagnation
+          currPg={currPg}
+          maxPg={maxPgs}
+          siblingCount={2}
+          onPgChange={updateURLPage}
+        />
+      </div>
+    </>
   );
 }
 

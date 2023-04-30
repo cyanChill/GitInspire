@@ -18,6 +18,7 @@ import Spinner from "~components/Spinner";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
 import Pagnation from "~components/form/Pagnation";
+import SEO from "~components/layout/SEO";
 
 // Key is the page number of results for current search filter
 interface RepoResults {
@@ -171,89 +172,92 @@ export default function DiscoverPage() {
   }, [router.query]);
 
   return (
-    <div className="animate-load-in">
-      <PageHeader
-        name="Discover"
-        description="Find inspiration from repositories suggested by fellow developers."
-        icon={{ iconEl: FaCompass }}
-        clr={{
-          bkg: "bg-gradient-to-r from-blue-500 to-teal-500",
-          txt: "text-slate-100",
-          txtAcc: "text-gray-100",
-        }}
-      />
+    <>
+      <SEO pageName="Discover" />
+      <div className="animate-load-in">
+        <PageHeader
+          name="Discover"
+          description="Find inspiration from repositories suggested by fellow developers."
+          icon={{ iconEl: FaCompass }}
+          clr={{
+            bkg: "bg-gradient-to-r from-blue-500 to-teal-500",
+            txt: "text-slate-100",
+            txtAcc: "text-gray-100",
+          }}
+        />
 
-      <div className="mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 sm:grid-cols-2 sm:grid-rows-[minmax(30rem,calc(100vh-15rem))]">
-        {/* Data Column */}
-        <div className="col-start-1 row-start-1  flex flex-col">
-          {/* Filter and Sort button */}
-          <div className="relative flex flex-initial gap-2 border-b-2 border-gray-300 p-1 py-2 dark:border-gray-600">
-            <FilterMenu
-              currentFilter={currFilters}
-              currentSortMethod={sortMethod}
-              resetState={clearSelectedRepo}
-              disabled={isLoading}
-            />
-            {/* Sort Button */}
-            <SortMenu
-              onChange={updateURLSortMethod}
-              currentSortMethod={sortMethod}
-              disabled={isLoading}
+        <div className="mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 sm:grid-cols-2 sm:grid-rows-[minmax(30rem,calc(100vh-15rem))]">
+          {/* Data Column */}
+          <div className="col-start-1 row-start-1  flex flex-col">
+            {/* Filter and Sort button */}
+            <div className="relative flex flex-initial gap-2 border-b-2 border-gray-300 p-1 py-2 dark:border-gray-600">
+              <FilterMenu
+                currentFilter={currFilters}
+                currentSortMethod={sortMethod}
+                resetState={clearSelectedRepo}
+                disabled={isLoading}
+              />
+              {/* Sort Button */}
+              <SortMenu
+                onChange={updateURLSortMethod}
+                currentSortMethod={sortMethod}
+                disabled={isLoading}
+              />
+            </div>
+
+            {/* Found Repositories */}
+            <div className="flex-auto overflow-y-auto px-2">
+              {results[currPg] && results[currPg].length > 0 && !isLoading ? (
+                results[currPg].map((repo) => {
+                  const selected = selectedRepo?.id === repo.id;
+
+                  return (
+                    <p
+                      key={repo.id}
+                      className={`my-2 truncate rounded-md border-[1px] border-slate-300 p-1.5 hover:cursor-pointer hover:underline dark:border-slate-600 ${
+                        selected ? "bg-slate-200 dark:bg-slate-700" : ""
+                      } hover:bg-slate-300 dark:hover:bg-slate-600`}
+                      onClick={() => setSelectedRepo(repo)}
+                    >
+                      {repo.author}/{repo.repo_name}
+                    </p>
+                  );
+                })
+              ) : isLoading ? (
+                <Spinner />
+              ) : (
+                <p className="text-red:500 mt-5 text-center dark:text-red-400">
+                  No repositories found with given filter.
+                </p>
+              )}
+            </div>
+
+            {/* Pagnation */}
+            <Pagnation
+              currPg={currPg}
+              maxPg={maxPgs}
+              siblingCount={1}
+              onPgChange={updateURLPage}
             />
           </div>
 
-          {/* Found Repositories */}
-          <div className="flex-auto overflow-y-auto px-2">
-            {results[currPg] && results[currPg].length > 0 && !isLoading ? (
-              results[currPg].map((repo) => {
-                const selected = selectedRepo?.id === repo.id;
-
-                return (
-                  <p
-                    key={repo.id}
-                    className={`my-2 truncate rounded-md border-[1px] border-slate-300 p-1.5 hover:cursor-pointer hover:underline dark:border-slate-600 ${
-                      selected ? "bg-slate-200 dark:bg-slate-700" : ""
-                    } hover:bg-slate-300 dark:hover:bg-slate-600`}
-                    onClick={() => setSelectedRepo(repo)}
-                  >
-                    {repo.author}/{repo.repo_name}
-                  </p>
-                );
-              })
-            ) : isLoading ? (
-              <Spinner />
-            ) : (
-              <p className="text-red:500 mt-5 text-center dark:text-red-400">
-                No repositories found with given filter.
-              </p>
+          {/* Selected Repository Info */}
+          <div
+            className={`z-20 col-start-1 row-span-full h-full sm:col-start-2 sm:row-start-1 ${
+              !selectedRepo ? "pointer-events-none" : ""
+            }`}
+          >
+            {selectedRepo && (
+              <RepoInfoCard
+                handleRefresh={onRepoRefresh}
+                handleClose={clearSelectedRepo}
+                repository={selectedRepo}
+              />
             )}
           </div>
-
-          {/* Pagnation */}
-          <Pagnation
-            currPg={currPg}
-            maxPg={maxPgs}
-            siblingCount={1}
-            onPgChange={updateURLPage}
-          />
-        </div>
-
-        {/* Selected Repository Info */}
-        <div
-          className={`z-20 col-start-1 row-span-full h-full sm:col-start-2 sm:row-start-1 ${
-            !selectedRepo ? "pointer-events-none" : ""
-          }`}
-        >
-          {selectedRepo && (
-            <RepoInfoCard
-              handleRefresh={onRepoRefresh}
-              handleClose={clearSelectedRepo}
-              repository={selectedRepo}
-            />
-          )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -383,7 +387,7 @@ function FilterMenu({
       <div
         className={`${
           isVisible ? "block" : "hidden"
-        } absolute top-12 left-0 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800`}
+        } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800`}
       >
         <p className="mb-4 text-center text-xl font-medium underline">
           Filters
@@ -542,7 +546,7 @@ function SortMenu({
       <div
         className={`${
           isOpen ? "visible" : "hidden"
-        } absolute top-[calc(100%+0.25rem)] top-12 right-0 w-max animate-load-in overflow-hidden rounded-md border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800`}
+        } absolute right-0 top-12 top-[calc(100%+0.25rem)] w-max animate-load-in overflow-hidden rounded-md border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800`}
       >
         {SORT_OPTS.map((opt) => {
           const selected = opt.value === currentSortMethod;

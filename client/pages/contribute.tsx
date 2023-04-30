@@ -141,9 +141,12 @@ export default function ContributePage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-full items-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Contribute" />
+        <div className="flex h-full items-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 

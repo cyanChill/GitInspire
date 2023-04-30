@@ -9,6 +9,7 @@ import { getCookie } from "~utils/cookies";
 import Select, { SelectOption } from "~components/form/Select";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import { Button2 } from "~components/form/Button";
+import SEO from "~components/layout/SEO";
 
 type ReportDataType = {
   type?: SelectOption;
@@ -137,92 +138,95 @@ export default function ReportPage() {
   }, [redirectIfNotAuth]);
 
   return (
-    <div className="flex animate-load-in justify-center">
-      <div className="w-full max-w-4xl bg-white p-2 shadow-md dark:bg-slate-800 dark:shadow-slate-700">
-        <h1 className="text-center text-2xl font-semibold underline">
-          Report or Suggest Something
-        </h1>
-        <form onSubmit={onReportSubmit} className="flex flex-col gap-y-2 ">
-          <InputGroupAlt label="Report Type" required>
-            <Select
-              options={REPORT_TYPE_OPTIONS}
-              onChange={(value) =>
-                setReportData((prev) => ({ ...prev, type: value }))
-              }
-              value={reportData.type}
-            />
-          </InputGroupAlt>
+    <>
+      <SEO pageName="Report" />
+      <div className="flex animate-load-in justify-center">
+        <div className="w-full max-w-4xl bg-white p-2 shadow-md dark:bg-slate-800 dark:shadow-slate-700">
+          <h1 className="text-center text-2xl font-semibold underline">
+            Report or Suggest Something
+          </h1>
+          <form onSubmit={onReportSubmit} className="flex flex-col gap-y-2 ">
+            <InputGroupAlt label="Report Type" required>
+              <Select
+                options={REPORT_TYPE_OPTIONS}
+                onChange={(value) =>
+                  setReportData((prev) => ({ ...prev, type: value }))
+                }
+                value={reportData.type}
+              />
+            </InputGroupAlt>
 
-          {reportData.type && isReportWithId && (
-            <InputGroup label="Content Id/Name" required>
+            {reportData.type && isReportWithId && (
+              <InputGroup label="Content Id/Name" required>
+                <Input
+                  type="text"
+                  value={reportData.content_id}
+                  className="mb-2 w-full"
+                  maxLength={25}
+                  required
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setReportData((prev) => ({
+                      ...prev,
+                      content_id: e.target.value,
+                    }))
+                  }
+                />
+              </InputGroup>
+            )}
+
+            <InputGroupAlt label="Reason" required>
+              <Select
+                options={REPORT_REASON_OPTIONS}
+                onChange={(value) =>
+                  setReportData((prev) => ({ ...prev, reason: value }))
+                }
+                value={reportData.reason}
+              />
+            </InputGroupAlt>
+            {reportData.reason && isMaintainReport && (
+              <InputGroup label="Maintain Link" required>
+                <Input
+                  type="url"
+                  value={reportData.maintain_link}
+                  className="mb-2 w-full"
+                  required
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setReportData((prev) => ({
+                      ...prev,
+                      maintain_link: e.target.value,
+                    }))
+                  }
+                />
+              </InputGroup>
+            )}
+
+            <InputGroup label="Additional Information" required>
               <Input
                 type="text"
-                value={reportData.content_id}
+                value={reportData.info}
                 className="mb-2 w-full"
-                maxLength={25}
+                textarea={true}
+                rows={4}
+                maxLength={280}
                 required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setReportData((prev) => ({
                     ...prev,
-                    content_id: e.target.value,
+                    info: e.target.value,
                   }))
                 }
               />
             </InputGroup>
-          )}
-
-          <InputGroupAlt label="Reason" required>
-            <Select
-              options={REPORT_REASON_OPTIONS}
-              onChange={(value) =>
-                setReportData((prev) => ({ ...prev, reason: value }))
-              }
-              value={reportData.reason}
-            />
-          </InputGroupAlt>
-          {reportData.reason && isMaintainReport && (
-            <InputGroup label="Maintain Link" required>
-              <Input
-                type="url"
-                value={reportData.maintain_link}
-                className="mb-2 w-full"
-                required
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setReportData((prev) => ({
-                    ...prev,
-                    maintain_link: e.target.value,
-                  }))
-                }
-              />
-            </InputGroup>
-          )}
-
-          <InputGroup label="Additional Information" required>
-            <Input
-              type="text"
-              value={reportData.info}
-              className="mb-2 w-full"
-              textarea={true}
-              rows={4}
-              maxLength={280}
-              required
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setReportData((prev) => ({
-                  ...prev,
-                  info: e.target.value,
-                }))
-              }
-            />
-          </InputGroup>
-          <Button2
-            type="submit"
-            className="w-fit self-end py-1"
-            disabled={isLoading}
-          >
-            Submit Report
-          </Button2>
-        </form>
+            <Button2
+              type="submit"
+              className="w-fit self-end py-1"
+              disabled={isLoading}
+            >
+              Submit Report
+            </Button2>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

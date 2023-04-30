@@ -9,6 +9,7 @@ import { getCookie } from "~utils/cookies";
 import { ReportObjType } from "~utils/types";
 import { cleanDate2 } from "~utils/helpers";
 import Spinner from "~components/Spinner";
+import SEO from "~components/layout/SEO";
 
 type ReportsDictType = {
   [x: string]: ReportObjType[];
@@ -110,176 +111,188 @@ export default function AdminReportsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex animate-load-in justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Reports" />
+        <div className="flex animate-load-in justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 
   if (!isAdmin) {
     return (
-      <div className="flexanimate-load-in justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Reports" />
+        <div className="flexanimate-load-in justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 
   if (Object.keys(reportsDict).length === 0) {
     return (
-      <div className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]">
-        <h1 className="mb-4 text-center text-4xl font-semibold underline">
-          Reports Page
-        </h1>
+      <>
+        <SEO pageName="Reports" />
+        <div className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]">
+          <h1 className="mb-4 text-center text-4xl font-semibold underline">
+            Reports Page
+          </h1>
 
-        <p className="py-2 text-center font-mono text-slate-500 dark:text-slate-300">
-          All reports have been handled!
-        </p>
-      </div>
+          <p className="py-2 text-center font-mono text-slate-500 dark:text-slate-300">
+            All reports have been handled!
+          </p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div
-      className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]"
-      data-overflow="clip"
-    >
-      <h1 className="mb-4 text-center text-4xl font-semibold underline">
-        Reports Page
-      </h1>
+    <>
+      <SEO pageName="Reports" />
+      <div
+        className="grid h-full animate-load-in grid-cols-1 grid-rows-[min-content_1fr]"
+        data-overflow="clip"
+      >
+        <h1 className="mb-4 text-center text-4xl font-semibold underline">
+          Reports Page
+        </h1>
 
-      <main className="h-full divide-y divide-slate-400 border-slate-400 dark:divide-slate-100 dark:border-slate-100">
-        {/* Navigation between different types of reports */}
-        <aside className="sticky top-2 mb-2 rounded-md bg-zinc-50 p-2 shadow dark:bg-slate-700">
-          {/* Closed State */}
-          <div
-            className={`flex hover:cursor-pointer ${
-              menuOpen ? "hidden" : "block"
-            }`}
-            onClick={() => setMenuOpen(true)}
-          >
-            <p className="flex-1">
-              {selectedType[0].toUpperCase() + selectedType.substring(1)}
-            </p>
-            <BiExpandVertical className="text-xl" />
-          </div>
-          {/* Open State */}
-          <div className={`flex ${menuOpen ? "block" : "hidden"}`}>
-            <ul className="flex-1">
-              {reportTypes.map((type) => (
-                <li
-                  key={type}
-                  onClick={() => handleTypeSelection(type)}
-                  className="mb-2 last:mb-0 hover:cursor-pointer"
-                >
-                  {type[0].toUpperCase() + type.substring(1)}
-                </li>
-              ))}
-            </ul>
-            <BiX
-              className="text-xl hover:cursor-pointer"
-              onClick={() => setMenuOpen(false)}
-            />
-          </div>
-        </aside>
+        <main className="h-full divide-y divide-slate-400 border-slate-400 dark:divide-slate-100 dark:border-slate-100">
+          {/* Navigation between different types of reports */}
+          <aside className="sticky top-2 mb-2 rounded-md bg-zinc-50 p-2 shadow dark:bg-slate-700">
+            {/* Closed State */}
+            <div
+              className={`flex hover:cursor-pointer ${
+                menuOpen ? "hidden" : "block"
+              }`}
+              onClick={() => setMenuOpen(true)}
+            >
+              <p className="flex-1">
+                {selectedType[0].toUpperCase() + selectedType.substring(1)}
+              </p>
+              <BiExpandVertical className="text-xl" />
+            </div>
+            {/* Open State */}
+            <div className={`flex ${menuOpen ? "block" : "hidden"}`}>
+              <ul className="flex-1">
+                {reportTypes.map((type) => (
+                  <li
+                    key={type}
+                    onClick={() => handleTypeSelection(type)}
+                    className="mb-2 last:mb-0 hover:cursor-pointer"
+                  >
+                    {type[0].toUpperCase() + type.substring(1)}
+                  </li>
+                ))}
+              </ul>
+              <BiX
+                className="text-xl hover:cursor-pointer"
+                onClick={() => setMenuOpen(false)}
+              />
+            </div>
+          </aside>
 
-        {/* No Reports */}
-        {Array.isArray(reportsDict[selectedType]) &&
-          reportsDict[selectedType].length === 0 && (
-            <p className="py-2 text-center font-mono text-slate-500 dark:text-slate-300">
-              All &quot;{selectedType}&quot;-type reports have been handled!
-            </p>
-          )}
+          {/* No Reports */}
+          {Array.isArray(reportsDict[selectedType]) &&
+            reportsDict[selectedType].length === 0 && (
+              <p className="py-2 text-center font-mono text-slate-500 dark:text-slate-300">
+                All &quot;{selectedType}&quot;-type reports have been handled!
+              </p>
+            )}
 
-        {/* List of reports */}
-        {Array.isArray(reportsDict[selectedType]) &&
-          reportsDict[selectedType].map((rpt) => (
-            <article key={rpt.id} className="flex flex-col p-2 sm:py-3">
-              <h2 className="mt-2 text-base font-semibold">
-                <span className="rounded-md bg-gray-300 py-0.5 px-1 dark:bg-gray-600">
-                  {getReportReason(rpt.reason)}
-                </span>{" "}
-                {TYPES_WITH_CONTENT_ID.includes(selectedType) &&
-                  (() => {
-                    let redirectLink = "";
-                    if (selectedType === "repository")
-                      redirectLink = `/admin/repositories?repository=${rpt.content_id}`;
-                    if (selectedType === "user")
-                      redirectLink = `/admin/users?user=${rpt.content_id}`;
-                    if (selectedType === "tag")
-                      redirectLink = `/admin/tags?tag=${rpt.content_id}`;
-
-                    return (
-                      <a
-                        href={redirectLink}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="hover:cursor-pointer hover:underline"
-                      >
-                        ({rpt.content_id})
-                      </a>
-                    );
-                  })()}
-              </h2>
-
-              <time
-                dateTime={`${rpt.created_at}`}
-                className="order-first font-mono text-xs leading-7 text-slate-500 dark:text-slate-300"
-              >
-                {cleanDate2(rpt.created_at)}
-              </time>
-
-              {rpt.reason === "maintain_link" && (
-                <p className="mt-1 truncate text-sm dark:text-slate-100">
-                  <span className="font-semibold underline">
-                    Maintain Link:
+          {/* List of reports */}
+          {Array.isArray(reportsDict[selectedType]) &&
+            reportsDict[selectedType].map((rpt) => (
+              <article key={rpt.id} className="flex flex-col p-2 sm:py-3">
+                <h2 className="mt-2 text-base font-semibold">
+                  <span className="rounded-md bg-gray-300 px-1 py-0.5 dark:bg-gray-600">
+                    {getReportReason(rpt.reason)}
                   </span>{" "}
+                  {TYPES_WITH_CONTENT_ID.includes(selectedType) &&
+                    (() => {
+                      let redirectLink = "";
+                      if (selectedType === "repository")
+                        redirectLink = `/admin/repositories?repository=${rpt.content_id}`;
+                      if (selectedType === "user")
+                        redirectLink = `/admin/users?user=${rpt.content_id}`;
+                      if (selectedType === "tag")
+                        redirectLink = `/admin/tags?tag=${rpt.content_id}`;
+
+                      return (
+                        <a
+                          href={redirectLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:cursor-pointer hover:underline"
+                        >
+                          ({rpt.content_id})
+                        </a>
+                      );
+                    })()}
+                </h2>
+
+                <time
+                  dateTime={`${rpt.created_at}`}
+                  className="order-first font-mono text-xs leading-7 text-slate-500 dark:text-slate-300"
+                >
+                  {cleanDate2(rpt.created_at)}
+                </time>
+
+                {rpt.reason === "maintain_link" && (
+                  <p className="mt-1 truncate text-sm dark:text-slate-100">
+                    <span className="font-semibold underline">
+                      Maintain Link:
+                    </span>{" "}
+                    <a
+                      href={rpt.maintain_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:underline"
+                    >
+                      {rpt.maintain_link}
+                    </a>
+                  </p>
+                )}
+
+                <p className="mt-1 text-sm leading-6 dark:text-slate-100">
+                  <span className="font-semibold underline">Description:</span>{" "}
+                  {rpt.info}
+                </p>
+
+                <p className="truncate text-right text-xs italic text-slate-400">
+                  Submitted by {rpt.reported_by.username}{" "}
                   <a
-                    href={rpt.maintain_link}
+                    href={`/admin/users?user=${rpt.reported_by.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:underline"
+                    className="hover:cursor hover:underline"
                   >
-                    {rpt.maintain_link}
+                    ({rpt.reported_by.id})
                   </a>
                 </p>
-              )}
-
-              <p className="mt-1 text-sm leading-6 dark:text-slate-100">
-                <span className="font-semibold underline">Description:</span>{" "}
-                {rpt.info}
-              </p>
-
-              <p className="truncate text-right text-xs italic text-slate-400">
-                Submitted by {rpt.reported_by.username}{" "}
-                <a
-                  href={`/admin/users?user=${rpt.reported_by.id}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:cursor hover:underline"
-                >
-                  ({rpt.reported_by.id})
-                </a>
-              </p>
-              {/* Report Actions */}
-              <div className="mt-1 flex items-center gap-4">
-                <button
-                  className="flex items-center text-sm font-bold leading-6 text-green-500 hover:text-green-700 active:text-green-900"
-                  onClick={() => handleReportAction(rpt.id, "resolve")}
-                >
-                  <TbClipboardCheck />
-                  <span className="ml-3">Resolve</span>
-                </button>
-                <span>/</span>
-                <button
-                  className="flex items-center text-sm font-bold leading-6 text-rose-500 hover:text-rose-700 active:text-rose-900"
-                  onClick={() => handleReportAction(rpt.id, "dismiss")}
-                >
-                  Dismiss
-                </button>
-              </div>
-            </article>
-          ))}
-      </main>
-    </div>
+                {/* Report Actions */}
+                <div className="mt-1 flex items-center gap-4">
+                  <button
+                    className="flex items-center text-sm font-bold leading-6 text-green-500 hover:text-green-700 active:text-green-900"
+                    onClick={() => handleReportAction(rpt.id, "resolve")}
+                  >
+                    <TbClipboardCheck />
+                    <span className="ml-3">Resolve</span>
+                  </button>
+                  <span>/</span>
+                  <button
+                    className="flex items-center text-sm font-bold leading-6 text-rose-500 hover:text-rose-700 active:text-rose-900"
+                    onClick={() => handleReportAction(rpt.id, "dismiss")}
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </article>
+            ))}
+        </main>
+      </div>
+    </>
   );
 }

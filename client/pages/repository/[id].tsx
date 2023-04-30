@@ -6,6 +6,7 @@ import { RepositoryObjType } from "~utils/types";
 import Spinner from "~components/Spinner";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
 import PageRedirectForm from "~components/page_forms/PageRedirectForm";
+import SEO from "~components/layout/SEO";
 
 export default function RepositoryPage() {
   const router = useRouter();
@@ -69,31 +70,40 @@ export default function RepositoryPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Repository" />
+        <div className="flex h-full items-center justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   } else if (!repo) {
     return (
-      <div className="flex h-full animate-load-in flex-col items-center justify-center">
-        <h1 className="text-center text-4xl font-bold">
-          This repository does not exist
-        </h1>
-        <p className="my-6 text-center">
-          Sorry, but we couldn&apos;t find this repository in our database.
-        </p>
-        <PageRedirectForm />
-      </div>
+      <>
+        <SEO pageName="Repository" />
+        <div className="flex h-full animate-load-in flex-col items-center justify-center">
+          <h1 className="text-center text-4xl font-bold">
+            This repository does not exist
+          </h1>
+          <p className="my-6 text-center">
+            Sorry, but we couldn&apos;t find this repository in our database.
+          </p>
+          <PageRedirectForm />
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="h-full animate-load-in">
-      <RepoInfoCard
-        repository={repo}
-        handleRefresh={onRepoRefresh}
-        handleClose={onRepoClose}
-      />
-    </div>
+    <>
+      <SEO pageName="Repository" />
+      <div className="h-full animate-load-in">
+        <RepoInfoCard
+          repository={repo}
+          handleRefresh={onRepoRefresh}
+          handleClose={onRepoClose}
+        />
+      </div>
+    </>
   );
 }

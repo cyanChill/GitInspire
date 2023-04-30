@@ -10,6 +10,7 @@ import {
   SelectMenuOption,
 } from "~components/form/SelectionMenuForm";
 import Spinner from "~components/Spinner";
+import SEO from "~components/layout/SEO";
 
 const REDIRECT_OPTIONS: SelectMenuOption[] = [
   {
@@ -64,24 +65,30 @@ export default function AdminPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flexanimate-load-in justify-center">
-        <Spinner />
-      </div>
+      <>
+        <SEO pageName="Management" />
+        <div className="flexanimate-load-in justify-center">
+          <Spinner />
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="flex h-full animate-load-in flex-col items-center justify-center">
-      <span className="my-3 text-center font-bold text-red-400">
-        Admin Panel
-      </span>
-      <h1 className="text-center text-4xl font-bold">Avaliable Actions</h1>
+    <>
+      <SEO pageName="Management" />
+      <div className="flex h-full animate-load-in flex-col items-center justify-center">
+        <span className="my-3 text-center font-bold text-red-400">
+          Admin Panel
+        </span>
+        <h1 className="text-center text-4xl font-bold">Avaliable Actions</h1>
 
-      <SelectionMenuFormOptions
-        options={REDIRECT_OPTIONS}
-        selectOption={handleSelection}
-        className="w-full min-w-0 max-w-fit"
-      />
-    </div>
+        <SelectionMenuFormOptions
+          options={REDIRECT_OPTIONS}
+          selectOption={handleSelection}
+          className="w-full min-w-0 max-w-fit"
+        />
+      </div>
+    </>
   );
 }
