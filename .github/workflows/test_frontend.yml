@@ -1,15 +1,13 @@
 name: Test & Deploy Client
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths-ignore:
       - README.md
       - backend/** # Should only run on client changes
       - .gitignore
-      - .github/**
-  workflow_dispatch:
 
 jobs:
   test:
@@ -37,16 +35,3 @@ jobs:
         run: |
           npm ci
           npm test
-
-  deploy:
-    name: Deploy application
-    runs-on: ubuntu-latest
-    needs: [test]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy our app to Vercel if success
-        if: ${{ success() }}
-        run: curl ${{ secrets.VERCEL_DEPLOY_HOOK }}
-      - name: Cause action to fail if tests failed
-        if: ${{ failure() }}
-        run: exit 1
