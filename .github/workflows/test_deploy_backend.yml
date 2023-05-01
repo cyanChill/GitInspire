@@ -47,6 +47,8 @@ jobs:
       - name: Deploy our app to Render if success [for push on main]
         if: ${{ success() }} && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: View GitHub Event
+        run: echo github.ref && echo success() && echo github.event_name
       - name: Cause action to fail if tests failed
         if: ${{ failure() }}
         run: exit 1
