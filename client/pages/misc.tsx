@@ -1,16 +1,15 @@
+import Link from "next/link";
 import { FaCog } from "react-icons/fa";
-import { useRouter } from "next/router";
 
 import useUserContext from "~hooks/useUserContext";
 import useThemeContext from "~hooks/useThemeContext";
 import SEO from "~components/layout/SEO";
 import PageHeader from "~components/layout/PageHeader";
-import Button, { Button2 } from "~components/form/Button";
+import { Button2, ToggleBtn } from "~components/form/Button";
 
 export default function MiscPage() {
-  const router = useRouter();
   const { isAuthenticated, logout } = useUserContext();
-  const { toggleTheme } = useThemeContext();
+  const { theme, toggleTheme } = useThemeContext();
 
   return (
     <>
@@ -22,37 +21,56 @@ export default function MiscPage() {
           shadowAccentClr="shadow-teal-500"
         />
 
-        <div className="mt-8 flex flex-col gap-2">
-          <Button
-            onClick={toggleTheme}
-            clr={{
-              bkg: "bg-gradient-to-r from-cyan-500 hover:from-sky-500 to-blue-500 hover:to-indigo-500",
-              txt: "text-white",
-            }}
-          >
-            Toggle Theme
-          </Button>
+        <main className="mt-8 grid grid-cols-[1fr_3.75rem] gap-x-1 gap-y-3 font-sourceCodePro">
+          <h2 className="col-span-2 text-xl">General Settings</h2>
+          <div>
+            <p className="text-sm">Theme</p>
+            <p className="mt-1 text-xxs text-slate-600 dark:text-gray-400">
+              Choose between light and dark themes.
+            </p>
+          </div>
+          <ToggleBtn
+            defaultState={theme === "dark"}
+            onToggle={toggleTheme}
+            className="self-center"
+          />
 
           {isAuthenticated && (
             <>
-              <Button2
-                onClick={() => router.push("/report")}
-                className="!py-1.5"
+              <h2 className="col-span-2 mt-4 text-xl">Support</h2>
+              <div>
+                <p className="text-sm">Report a Problem</p>
+                <p className="mt-1 text-xxs text-slate-600 dark:text-gray-400">
+                  Send us a report about anything incorrect you find and
+                  we&apos;ll fix it as soon as possible. You can also send a
+                  report for any bug fixes or suggestions you may have.
+                </p>
+              </div>
+              <Link
+                href="/report"
+                className="block w-min self-center rounded-md bg-red-600 p-2 text-xxs text-white hover:bg-red-700"
               >
-                Report or Suggest Something
-              </Button2>
-              <Button
+                Report
+              </Link>
+
+              <h2 className="col-span-2 mt-4 text-xl">Account</h2>
+              <div>
+                <p className="text-sm">Logout</p>
+                <p className="mt-1 text-xxs text-slate-600 dark:text-gray-400">
+                  Make sure to sign out of GitInspire if you&apos;re on an
+                  unknown device after you&apos;re done.
+                </p>
+              </div>
+              <Button2
                 onClick={logout}
-                clr={{
-                  bkg: "bg-gradient-to-r from-orange-600 hover:from-red-600 to-red-500 hover:to-red-800",
-                  txt: "text-white",
-                }}
+                clr={{ bkg: "bg-red-600 hover:bg-red-700", txt: "text-white" }}
+                className="w-min self-center !rounded-md !p-2 text-xxs"
               >
                 Logout
-              </Button>
+              </Button2>
             </>
           )}
-        </div>
+        </main>
       </div>
     </>
   );

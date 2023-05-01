@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 type BtnProps = {
   link?: false;
 };
@@ -72,4 +74,43 @@ export function Button2({
       </button>
     );
   }
+}
+
+type TogglePropsType = {
+  defaultState: boolean;
+  accentClr?: { bkg: string; ring: string };
+  onToggle: () => void;
+  className?: string;
+};
+
+export function ToggleBtn({
+  defaultState,
+  accentClr = { bkg: "bg-purple-500", ring: "ring-purple-500" },
+  onToggle,
+  className = "",
+}: TogglePropsType) {
+  const [isActive, setIsActive] = useState(defaultState);
+
+  const onClick = () => {
+    setIsActive((prev) => !prev);
+    onToggle();
+  };
+
+  useEffect(() => {
+    setIsActive(defaultState);
+  }, [defaultState]);
+
+  const btnStyles = `h-min w-full max-w-[calc(2.5rem+4px)] rounded-full transition ${
+    isActive ? accentClr.bkg : "bg-gray-300"
+  } focus:ring border-2 border-zinc-100 dark:border-slate-900 focus:${accentClr.ring} ${className}`;
+
+  return (
+    <button className={btnStyles} onClick={onClick}>
+      <span
+        className={`block h-5 w-5 rounded-full bg-white transition-transform ${
+          isActive ? "translate-x-full" : ""
+        }`}
+      ></span>
+    </button>
+  );
 }
