@@ -47,8 +47,17 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v3
+      - uses: 8BitJonny/gh-get-current-pr@2.2.0
+        id: PR
+      - name: Exit if not push to main
+        if: needs.pr-check.outputs.number != 'null'
+        run:  |
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy our app to Vercel if success [for push on main]
-        if: ${{ success() }} && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: ${{ success() }}
         run: curl ${{ secrets.VERCEL_DEPLOY_HOOK }}
       - name: Cause action to fail if tests failed
         if: ${{ failure() }}
