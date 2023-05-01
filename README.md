@@ -45,7 +45,7 @@ Since this is an app centered on GitHub repositories, login is through your GitH
 |                    |                        Heroku                        |  10%   |  :white_check_mark:  |
 |    **TESTING**     |                                                      |        |                      |
 |                    |                API; Unit, Integration                |   5%   |  :white_check_mark:  |
-|                    |              Client; Unit, Integration               |   5%   | :white_large_square: |
+|                    |              Client; Unit, Integration               |   5%   | :white_check_mark: |
 |      **MISC**      |                                                      |        |                      |
 |                    |                        README                        |   5%   |  :white_check_mark:  |
 |     **BONUS**      |                                                      |        |                      |
