@@ -51,6 +51,8 @@ jobs:
         run:  |
           gh run cancel ${{ github.run_id }}
           gh run watch ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy our app to Render if success [for push on main]
         if: ${{ success() }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
