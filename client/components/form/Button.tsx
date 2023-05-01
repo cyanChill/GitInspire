@@ -85,7 +85,7 @@ type TogglePropsType = {
 
 export function ToggleBtn({
   defaultState,
-  accentClr = { bkg: "bg-purple-500", ring: "ring-purple-500" },
+  accentClr = { bkg: "bg-purple-500", ring: "focus:ring-purple-500" },
   onToggle,
   className = "",
 }: TogglePropsType) {
@@ -102,7 +102,7 @@ export function ToggleBtn({
 
   const btnStyles = `h-min w-full max-w-[calc(2.5rem+4px)] rounded-full transition ${
     isActive ? accentClr.bkg : "bg-gray-300"
-  } focus:ring border-2 border-zinc-100 dark:border-slate-900 focus:${accentClr.ring} ${className}`;
+  } focus:ring border-2 border-zinc-100 dark:border-slate-900 ${accentClr.ring} ${className}`;
 
   return (
     <button className={btnStyles} onClick={onClick}>
