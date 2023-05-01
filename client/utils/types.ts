@@ -4,7 +4,7 @@ export type ReactChildren = {
   children: React.ReactNode;
 };
 
-export type ChildrenNClass = {
+export type ChildrenClass = {
   className?: string;
 } & ReactChildren;
 

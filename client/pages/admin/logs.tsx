@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
 import useUserContext from "~hooks/useUserContext";
-import { LogObjType, ChildrenNClass } from "~utils/types";
+import { LogObjType, ChildrenClass } from "~utils/types";
 import { replaceURLParam, cleanDate2 } from "~utils/helpers";
 import Pagnation from "~components/form/Pagnation";
 import Spinner from "~components/Spinner";
@@ -173,7 +173,7 @@ export default function AdminLogsPage() {
   );
 }
 
-const TH = ({ className, children }: ChildrenNClass) => {
+const TH = ({ className, children }: ChildrenClass) => {
   return (
     <th className={`whitespace-nowrap p-2 py-1.5 font-semibold ${className}`}>
       {children}
@@ -181,7 +181,7 @@ const TH = ({ className, children }: ChildrenNClass) => {
   );
 };
 
-const TD = ({ className, children }: ChildrenNClass) => {
+const TD = ({ className, children }: ChildrenClass) => {
   return (
     <td className={`whitespace-nowrap p-2 py-1.5 ${className}`}>{children}</td>
   );
