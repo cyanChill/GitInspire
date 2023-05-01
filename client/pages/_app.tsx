@@ -10,7 +10,8 @@ import ThemeContextProvider from "~context/themeContext";
 import Layout from "~components/layout/Layout";
 
 const sourceCodePro = Source_Code_Pro({
-  variable: "--font-source-code-pro",
+  subsets: ["latin"],
+  variable: "--source-code-pro-font",
 });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -18,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <style jsx global>{`
         :root {
-          --font-source-code-pro: ${sourceCodePro.style.fontFamily};
+          --source-code-pro-font: ${sourceCodePro.style.fontFamily};
         }
       `}</style>
 

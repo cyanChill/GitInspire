@@ -100,9 +100,9 @@ export function ToggleBtn({
     setIsActive(defaultState);
   }, [defaultState]);
 
-  const btnStyles = `h-min w-full max-w-[calc(2.5rem+4px)] rounded-full transition ${
-    isActive ? accentClr.bkg : "bg-gray-300"
-  } focus:ring border-2 border-zinc-100 dark:border-slate-900 ${accentClr.ring} ${className}`;
+  const btnStyles = `h-min w-full max-w-[calc(2.5rem+8px)] rounded-full border-2 border-zinc-100 p-0.5 transition focus:ring dark:border-slate-900 ${
+    accentClr.ring
+  } ${className} ${isActive ? accentClr.bkg : "bg-gray-300"}`;
 
   return (
     <button className={btnStyles} onClick={onClick}>

@@ -20,7 +20,7 @@ module.exports = {
         "noti-leave": "noti-leave 150ms ease-in forwards",
       },
       fontFamily: {
-        sourceCodePro: ["var(--font-source-code-pro)", ...fontFamily.mono],
+        sourceCodePro: ["var(--source-code-pro-font)", ...fontFamily.mono],
       },
       fontSize: {
         xxs: "0.65rem",

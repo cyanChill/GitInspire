@@ -24,14 +24,14 @@ export default function PageHeader({
     >
       <h1 className="inline-flex items-center justify-center gap-x-2 pt-2">
         {icon && (
-          <icon.iconEl className="hidden shrink-0 text-5xl min-[400px]:block" />
+          <icon.iconEl className="hidden shrink-0 text-4xl min-[400px]:block" />
         )}{" "}
-        <span className="block text-xl min-[400px]:text-2xl">
+        <span className="block text-xl font-semibold min-[400px]:text-2xl">
           {name.toUpperCase()}
         </span>
       </h1>
       {description && (
-        <p className="mt-2 max-w-md text-xxs text-slate-600 dark:text-gray-50">
+        <p className="mt-2 text-sm text-slate-600 dark:text-gray-50">
           {description}
         </p>
       )}

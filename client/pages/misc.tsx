@@ -25,7 +25,7 @@ export default function MiscPage() {
           <h2 className="col-span-2 text-xl">General Settings</h2>
           <div>
             <p className="text-sm">Theme</p>
-            <p className="mt-1 text-xxs text-slate-600 dark:text-gray-400">
+            <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">
               Choose between light and dark themes.
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function MiscPage() {
               <h2 className="col-span-2 mt-4 text-xl">Support</h2>
               <div>
                 <p className="text-sm">Report a Problem</p>
-                <p className="mt-1 text-xxs text-slate-600 dark:text-gray-400">
+                <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">
                   Send us a report about anything incorrect you find and
                   we&apos;ll fix it as soon as possible. You can also send a
                   report for any bug fixes or suggestions you may have.
@@ -48,7 +48,7 @@ export default function MiscPage() {
               </div>
               <Link
                 href="/report"
-                className="block w-min self-center rounded-md bg-red-600 p-2 text-xxs text-white hover:bg-red-700"
+                className="block w-min self-center rounded-md bg-red-600 p-2 text-xs text-white hover:bg-red-700"
               >
                 Report
               </Link>
@@ -56,7 +56,7 @@ export default function MiscPage() {
               <h2 className="col-span-2 mt-4 text-xl">Account</h2>
               <div>
                 <p className="text-sm">Logout</p>
-                <p className="mt-1 text-xxs text-slate-600 dark:text-gray-400">
+                <p className="mt-1 text-xs text-slate-600 dark:text-gray-400">
                   Make sure to sign out of GitInspire if you&apos;re on an
                   unknown device after you&apos;re done.
                 </p>
@@ -64,7 +64,7 @@ export default function MiscPage() {
               <Button2
                 onClick={logout}
                 clr={{ bkg: "bg-red-600 hover:bg-red-700", txt: "text-white" }}
-                className="w-min self-center !rounded-md !p-2 text-xxs"
+                className="w-min self-center !rounded-md !p-2 text-xs"
               >
                 Logout
               </Button2>
