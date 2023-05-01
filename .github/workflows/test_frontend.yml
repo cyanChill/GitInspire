@@ -1,4 +1,4 @@
-name: Test & Deploy Client
+name: Test Client
 
 on:
   pull_request:
