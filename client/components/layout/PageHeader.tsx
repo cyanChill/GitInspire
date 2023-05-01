@@ -3,43 +3,35 @@
 */
 import { IconType } from "react-icons";
 
-interface PgHdrProps {
+type PgHdrPropsType = {
   name: string;
   description?: string;
   icon?: { iconEl: IconType };
-  clr?: { bkg: string; txt: string; txtAcc: string };
+  shadowAccentClr?: string;
   className?: string;
-}
+};
 
 export default function PageHeader({
   name,
   description,
   icon,
-  clr = {
-    bkg: "bg-white dark:bg-slate-800",
-    txt: "text-slate-900 dark:text-white",
-    txtAcc: "text-slate-500 dark:text-zinc-300",
-  },
+  shadowAccentClr = "shadow-yellow-400 dark:shadow-yellow-300",
   className = "",
-  ...rest
-}: PgHdrProps) {
+}: PgHdrPropsType) {
   return (
     <header
-      className={`z-10 relative w-full inline-flex flex-col justify-center items-center p-4 py-6 rounded-2xl text-center shadow-lg shadow-neutral-300 dark:shadow-slate-700 ${clr.txt} ${clr.bkg} ${className}`}
-      {...rest}
+      className={`border border-[1px] border-slate-300 bg-gray-100 p-2 shadow-[5px_5px] dark:border-slate-600 dark:bg-stone-950 ${shadowAccentClr} ${className} font-sourceCodePro`}
     >
-      <h1 className="inline-flex justify-center items-center gap-x-6">
+      <h1 className="inline-flex items-center justify-center gap-x-2 pt-2">
         {icon && (
-          <icon.iconEl className="hidden min-[400px]:block shrink-0 text-5xl" />
+          <icon.iconEl className="hidden shrink-0 text-5xl min-[400px]:block" />
         )}{" "}
-        <span className="text-2xl min-[400px]:text-3xl lg:text-4xl font-bold">
-          {name}
+        <span className="block text-xl min-[400px]:text-2xl">
+          {name.toUpperCase()}
         </span>
       </h1>
       {description && (
-        <p
-          className={`max-w-md mt-3 text-xs min-[400px]:text-sm italic ${clr.txtAcc}`}
-        >
+        <p className="mt-2 max-w-md text-xxs text-slate-600 dark:text-gray-50">
           {description}
         </p>
       )}

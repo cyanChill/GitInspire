@@ -241,11 +241,7 @@ const ContributePageWrapper = ({ children }: ReactChildren) => {
         <PageHeader
           name="Contribute to GitInspire"
           icon={{ iconEl: IoCreate }}
-          clr={{
-            bkg: "bg-gradient-to-r from-red-500 to-red-800",
-            txt: "text-slate-100",
-            txtAcc: "text-gray-100",
-          }}
+          shadowAccentClr="shadow-red-500"
         />
         {children}
       </div>

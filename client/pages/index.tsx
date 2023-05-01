@@ -17,18 +17,11 @@ export default function Home() {
   return (
     <>
       <SEO pageName="Home" />
-
-      <div className="relative animate-load-in rounded-3xl">
+      <div className="animate-load-in rounded-3xl">
         <PageHeader
           name="Find a Random Repository"
           description="Take a chance and find something new"
           icon={{ iconEl: GiRollingDices }}
-          clr={{
-            bkg: "bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600",
-            txt: "text-slate-100",
-            txtAcc: "text-gray-100",
-          }}
-          className="shadow-xl"
         />
         <RandomRepoForm />
       </div>
@@ -140,7 +133,8 @@ const RandomRepoForm = () => {
   };
 
   return (
-    <section className="mt-[-1.5rem] rounded-2xl rounded-t-none bg-gray-50 p-4 pt-12 pb-2 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500">
+    <section className="mt-10 rounded-2xl rounded-t-none bg-gray-50 p-4 pb-2 pt-12 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500">
+      {/* <section className="mt-[-1.5rem] rounded-2xl rounded-t-none bg-gray-50 p-4 pt-12 pb-2 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500"> */}
       <h2 className="mb-2 text-xl font-semibold">
         Languages{" "}
         <span className="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-400">
@@ -180,7 +174,7 @@ const RandomRepoForm = () => {
         </div>
       </InputGroup>
 
-      <h2 className="mt-4 mb-2 overflow-y-clip text-xl font-semibold">
+      <h2 className="mb-2 mt-4 overflow-y-clip text-xl font-semibold">
         Star Range
       </h2>
       <div className="flex flex-col gap-2 gap-x-6 text-base min-[400px]:flex-row">

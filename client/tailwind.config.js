@@ -1,4 +1,5 @@
 const plugin = require("tailwindcss/plugin");
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -17,6 +18,12 @@ module.exports = {
         "load-out": "load-out 250ms ease-in-out forwards",
         "noti-enter": "noti-enter 150ms ease-in forwards",
         "noti-leave": "noti-leave 150ms ease-in forwards",
+      },
+      fontFamily: {
+        sourceCodePro: ["var(--font-source-code-pro)", ...fontFamily.mono],
+      },
+      fontSize: {
+        xxs: "0.65rem",
       },
       keyframes: {
         "load-in": { "0%": { opacity: 0 }, "100%": { opacity: 1 } },

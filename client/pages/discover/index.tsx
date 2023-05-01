@@ -179,11 +179,7 @@ export default function DiscoverPage() {
           name="Discover"
           description="Find inspiration from repositories suggested by fellow developers."
           icon={{ iconEl: FaCompass }}
-          clr={{
-            bkg: "bg-gradient-to-r from-blue-500 to-teal-500",
-            txt: "text-slate-100",
-            txtAcc: "text-gray-100",
-          }}
+          shadowAccentClr="shadow-blue-500"
         />
 
         <div className="mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 sm:grid-cols-2 sm:grid-rows-[minmax(30rem,calc(100vh-15rem))]">

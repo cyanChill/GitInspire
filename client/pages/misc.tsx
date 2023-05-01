@@ -19,12 +19,7 @@ export default function MiscPage() {
         <PageHeader
           name="Miscellaneous"
           icon={{ iconEl: FaCog }}
-          clr={{
-            bkg: "bg-gradient-to-r from-teal-700 to-cyan-800",
-            txt: "text-slate-100",
-            txtAcc: "text-gray-100",
-          }}
-          className="dark:!shadow-slate-800"
+          shadowAccentClr="shadow-teal-500"
         />
 
         <div className="mt-8 flex flex-col gap-2">
