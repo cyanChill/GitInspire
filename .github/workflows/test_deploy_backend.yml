@@ -48,7 +48,9 @@ jobs:
         id: PR
       - name: Exit if not push to main
         if: needs.pr-check.outputs.number != 'null'
-        run: exit 0
+        run:  |
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
       - name: Deploy our app to Render if success [for push on main]
         if: ${{ success() }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
