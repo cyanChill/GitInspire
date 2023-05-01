@@ -39,17 +39,19 @@ const MAX_LANG = 3;
 const RandomRepoForm = () => {
   const { selOptionFormat } = useAppContext();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [langVals, setLangVals] = useState<SelectOption[]>([]);
   const [suggLang, setSuggLang] = useState("");
   const [stars, setStars] = useState<StarType>({ min: "", max: "" });
-  const [isLoading, setIsLoading] = useState(false);
+
   const [results, setResults] = useState<Generic_Obj[] | null>(null);
   const [display, setDisplay] = useState<Generic_Obj | null>(null);
 
   const addToLang = () => {
-    if (suggLang) {
+    if (suggLang && !!suggLang.trim()) {
       if (langVals.length === MAX_LANG) return;
-      const newLang = { label: suggLang, value: normalizeStr(suggLang) };
+      const newLang = { label: suggLang.trim(), value: normalizeStr(suggLang) };
       // If suggested language is not in list of language criterias
       if (!langVals.find((o) => o.value === newLang.value)) {
         setLangVals((prev) => [...prev, newLang]);
@@ -67,11 +69,10 @@ const RandomRepoForm = () => {
   };
 
   const findRepo = async () => {
+    if (isLoading) return;
     // Validation
     const errors = [];
-    const langs = langVals
-      .map((lg) => `${lg.value}`)
-      .filter((lg) => !!lg.trim());
+    const langs = langVals.filter((lg) => !!`${lg.value}`.trim());
     const langQueryString = langs.join(",");
     if (
       parseInt(`${stars.min}`) < 0 ||
@@ -133,8 +134,7 @@ const RandomRepoForm = () => {
   };
 
   return (
-    <section className="mt-10 rounded-2xl rounded-t-none bg-gray-50 p-4 pb-2 pt-12 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500">
-      {/* <section className="mt-[-1.5rem] rounded-2xl rounded-t-none bg-gray-50 p-4 pt-12 pb-2 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500"> */}
+    <main className="mt-8 rounded-xl bg-gray-50 p-4 pb-2 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500">
       <h2 className="mb-2 text-xl font-semibold">
         Languages{" "}
         <span className="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-400">
@@ -151,6 +151,7 @@ const RandomRepoForm = () => {
       <InputGroup label="Or Suggest Your Own" className="mt-3">
         <div className="flex flex-nowrap">
           <Input
+            disabled={isLoading}
             type="text"
             value={suggLang}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -162,9 +163,10 @@ const RandomRepoForm = () => {
             className="w-full max-w-[10rem] rounded-r-none"
           />
           <Button
+            disabled={isLoading}
             onClick={addToLang}
             clr={{
-              bkg: "bg-gradient-to-r from-rose-400 hover:from-rose-500 to-pink-400 hover:to-pink-500",
+              bkg: "bg-gradient-to-r from-rose-400 enabled:hover:from-rose-500 to-pink-400 enabled:hover:to-pink-500 disabled:opacity-25",
               txt: "text-white",
             }}
             className="!m-0 rounded-l-none"
@@ -180,6 +182,7 @@ const RandomRepoForm = () => {
       <div className="flex flex-col gap-2 gap-x-6 text-base min-[400px]:flex-row">
         <InputGroup label="MIN">
           <Input
+            disabled={isLoading}
             type="number"
             min={0}
             value={stars.min}
@@ -191,6 +194,7 @@ const RandomRepoForm = () => {
         </InputGroup>
         <InputGroup label="MAX">
           <Input
+            disabled={isLoading}
             type="number"
             value={stars.max}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -203,6 +207,7 @@ const RandomRepoForm = () => {
 
       <div className="flex justify-end gap-3 p-2 text-base">
         <Button
+          disabled={isLoading}
           onClick={clearForm}
           clr={{
             bkg: "",
@@ -239,6 +244,6 @@ const RandomRepoForm = () => {
           </div>
         </>
       )}
-    </section>
+    </main>
   );
 };
