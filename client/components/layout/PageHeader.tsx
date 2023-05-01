@@ -12,7 +12,7 @@ type PgHdrPropsType = {
 };
 
 export default function PageHeader({
-  name,
+  name = "",
   description,
   icon,
   shadowAccentClr = "shadow-yellow-400 dark:shadow-yellow-300",

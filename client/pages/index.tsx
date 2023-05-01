@@ -72,7 +72,9 @@ const RandomRepoForm = () => {
     if (isLoading) return;
     // Validation
     const errors = [];
-    const langs = langVals.filter((lg) => !!`${lg.value}`.trim());
+    const langs = langVals
+      .map((lg) => `${lg.value}`)
+      .filter((lg) => !!lg.trim());
     const langQueryString = langs.join(",");
     if (
       parseInt(`${stars.min}`) < 0 ||
