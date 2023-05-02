@@ -20,11 +20,15 @@ const DEFAULT_COLORS = {
   bkg: "bg-gradient-to-r from-amber-500 enabled:hover:from-amber-600 to-orange-500 enabled:hover:to-orange-600 disabled:opacity-25",
   txt: "text-white",
 };
+const DEFAULT_COLORS_LINK = {
+  bkg: "bg-gradient-to-r from-amber-500 hover:from-amber-600 to-orange-500 hover:to-orange-600 disabled:opacity-25",
+  txt: "text-white",
+};
 
 export default function Button({
   link,
   href,
-  clr = DEFAULT_COLORS,
+  clr = !link ? DEFAULT_COLORS : DEFAULT_COLORS_LINK,
   className = "",
   children,
   ...rest
@@ -50,11 +54,15 @@ const DEFAULT_COLORS2 = {
   bkg: "bg-violet-500 enabled:hover:bg-violet-600 disabled:opacity-25",
   txt: "text-white",
 };
+const DEFAULT_COLORS2_LINK = {
+  bkg: "bg-violet-500 hover:bg-violet-600 disabled:opacity-25",
+  txt: "text-white",
+};
 
 export function Button2({
   link,
   href,
-  clr = DEFAULT_COLORS2,
+  clr = !link ? DEFAULT_COLORS2 : DEFAULT_COLORS2_LINK,
   className = "",
   children,
   ...rest

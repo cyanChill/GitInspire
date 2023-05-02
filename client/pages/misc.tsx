@@ -21,7 +21,7 @@ export default function MiscPage() {
           shadowAccentClr="shadow-teal-500"
         />
 
-        <main className="mt-8 grid grid-cols-[1fr_3.75rem] gap-x-1 gap-y-3 font-sourceCodePro">
+        <main className="mt-8 grid grid-cols-[1fr_3.75rem] gap-x-2.5 gap-y-3 font-sourceCodePro">
           <h2 className="col-span-2 text-xl">General Settings</h2>
           <div>
             <p className="text-sm">Theme</p>
@@ -32,7 +32,7 @@ export default function MiscPage() {
           <ToggleBtn
             defaultState={theme === "dark"}
             onToggle={toggleTheme}
-            className="self-center"
+            className="self-center mx-auto"
           />
 
           {isAuthenticated && (
@@ -48,7 +48,7 @@ export default function MiscPage() {
               </div>
               <Link
                 href="/report"
-                className="block w-min self-center rounded-md bg-red-600 p-2 text-xs text-white hover:bg-red-700"
+                className="block w-full self-center rounded-md bg-red-600 p-2 text-xs text-white hover:bg-red-700"
               >
                 Report
               </Link>
@@ -64,7 +64,7 @@ export default function MiscPage() {
               <Button2
                 onClick={logout}
                 clr={{ bkg: "bg-red-600 hover:bg-red-700", txt: "text-white" }}
-                className="w-min self-center !rounded-md !p-2 text-xs"
+                className="w-full self-center !rounded-md !p-2 text-xs"
               >
                 Logout
               </Button2>

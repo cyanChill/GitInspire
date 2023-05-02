@@ -20,7 +20,7 @@ export default function PageHeader({
 }: PgHdrPropsType) {
   return (
     <header
-      className={`border border-[1px] border-slate-300 bg-gray-100 p-2 shadow-[5px_5px] dark:border-slate-600 dark:bg-stone-950 ${shadowAccentClr} ${className} font-sourceCodePro`}
+      className={`border border-[1px] border-slate-300 bg-white p-2 shadow-[5px_5px] dark:border-slate-600 dark:bg-stone-950 ${shadowAccentClr} ${className} font-sourceCodePro`}
     >
       <h1 className="inline-flex items-center justify-center gap-x-2 pt-2">
         {icon && (
