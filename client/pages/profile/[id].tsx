@@ -127,13 +127,13 @@ export default function UserProfilePage() {
             />
           )}
           {isLoading ? (
-            <LazyText dimensionStyle="self-end h-4 w-full min-[400px]:w-32 min-[400px]:h-6" />
+            <LazyText dimensionStyle="self-end h-7 w-full min-[400px]:w-52 min-[400px]:h-9" />
           ) : (
             <a
               href={`https://github.com/${user?.username}`}
               target="_blank"
               rel="noreferrer"
-              className="flex min-w-0 gap-2 items-center self-end text-xl font-semibold hover:underline min-[400px]:text-3xl"
+              className="flex min-w-0 items-center gap-2 self-end text-xl font-semibold hover:underline min-[400px]:text-3xl"
             >
               <span className="truncate">{user?.username}</span>
               <FaGithub className="shrink-0" />
@@ -150,7 +150,7 @@ export default function UserProfilePage() {
         {/* Contribution Information */}
         {isLoading ? (
           <>
-            <LazyText dimensionStyle="w-full min-[400px]:w-96 h-4 mt-4" />
+            <LazyText dimensionStyle="w-full min-[400px]:w-96 h-5 mt-4" />
             <LazyText dimensionStyle="w-full h-9 mt-4" />
             <LazyText dimensionStyle="w-full h-9 mt-4" />
           </>
@@ -160,7 +160,7 @@ export default function UserProfilePage() {
               They contributed{" "}
               <span className="font-semibold">{numCtbTags}</span> tags and{" "}
               <span className="font-semibold">{numCtbRepos}</span> repositories
-              to GitInspire.
+              to <span className="font-semibold">GitInspire</span>.
             </p>
 
             <ProfileAccordion amount={numCtbTags} variant="Tags">
