@@ -8,7 +8,7 @@ import useUserContext from "~hooks/useUserContext";
 import { authFetch } from "~utils/cookies";
 import { ReportObjType } from "~utils/types";
 import { cleanDate2 } from "~utils/helpers";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import SEO from "~components/layout/SEO";
 
 type ReportsDictType = {

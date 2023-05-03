@@ -9,7 +9,7 @@ import useUserContext from "~hooks/useUserContext";
 import { RepositoryObjType, TagObjType } from "~utils/types";
 import { fromURLQueryVal, normalizeStr, replaceURLParam } from "~utils/helpers";
 import { authFetch } from "~utils/cookies";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
 import SEO from "~components/layout/SEO";

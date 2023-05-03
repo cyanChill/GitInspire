@@ -19,7 +19,7 @@ import TagSuggForm from "~components/page_forms/TagSuggForm";
 import ContributeSubmitForm, {
   FormDataType,
 } from "~components/page_forms/ContributeSubmitForm";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 
 const DEFAULT_DATA: FormDataType = {
   formType: "",

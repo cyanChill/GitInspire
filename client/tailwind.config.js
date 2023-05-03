@@ -18,6 +18,7 @@ module.exports = {
         "load-out": "load-out 250ms ease-in-out forwards",
         "noti-enter": "noti-enter 150ms ease-in forwards",
         "noti-leave": "noti-leave 150ms ease-in forwards",
+        "lazy-bg": "bgPos 1s linear infinite",
       },
       colors: {
         "blood-red": "#bb0a1e",
@@ -52,6 +53,10 @@ module.exports = {
         "noti-leave": {
           "0%": { opacity: 1, transform: "scale(1)" },
           "100%": { opacity: 0, transform: "scale(0.75)" },
+        },
+        bgPos: {
+          "0%": { "background-position": "50% 0" },
+          "100%": { "background-position": "-150% 0" },
         },
       },
     },

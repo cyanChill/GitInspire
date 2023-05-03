@@ -52,4 +52,15 @@
       /* Bottom Left*/ 0% 100%
     );
   }
+
+  .lazy-bg {
+    background-image: linear-gradient(
+      to right,
+      #e9e5e5 0%,
+      #dcdcdf 10%,
+      #e9e5e5 20%,
+      #e9e5e5 100%
+    );
+    background-size: 200% 100%;
+  }
 }

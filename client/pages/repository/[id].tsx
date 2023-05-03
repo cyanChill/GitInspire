@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
 import { RepositoryObjType } from "~utils/types";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
 import PageRedirectForm from "~components/page_forms/PageRedirectForm";
 import SEO from "~components/layout/SEO";

@@ -8,7 +8,7 @@ import useUserContext from "~hooks/useUserContext";
 import { UserObjType } from "~utils/types";
 import { fromURLQueryVal, replaceURLParam, normalizeStr } from "~utils/helpers";
 import { authFetch } from "~utils/cookies";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import Input, { InputGroup } from "~components/form/Input";
 import SEO from "~components/layout/SEO";
 

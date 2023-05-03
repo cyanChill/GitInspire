@@ -9,7 +9,7 @@ import {
   SelectionMenuFormOptions,
   SelectMenuOption,
 } from "~components/form/SelectionMenuForm";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import SEO from "~components/layout/SEO";
 
 const REDIRECT_OPTIONS: SelectMenuOption[] = [

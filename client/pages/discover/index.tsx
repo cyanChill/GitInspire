@@ -14,7 +14,7 @@ import useAppContext from "~hooks/useAppContext";
 import PageHeader from "~components/layout/PageHeader";
 import { Button2 } from "~components/form/Button";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
 import Pagnation from "~components/form/Pagnation";

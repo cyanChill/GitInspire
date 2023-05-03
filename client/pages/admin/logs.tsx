@@ -6,7 +6,7 @@ import useUserContext from "~hooks/useUserContext";
 import { LogObjType, ChildrenClass } from "~utils/types";
 import { replaceURLParam, cleanDate2 } from "~utils/helpers";
 import Pagnation from "~components/form/Pagnation";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import SEO from "~components/layout/SEO";
 
 type LogResults = {

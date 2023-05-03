@@ -10,7 +10,7 @@ import SEO from "~components/layout/SEO";
 import PageHeader from "~components/layout/PageHeader";
 import Input, { InputGroup } from "~components/form/Input";
 import Button from "~components/form/Button";
-import Spinner from "~components/Spinner";
+import Spinner from "~components/Loading";
 import BriefWidget from "~components/repository/BriefWidget";
 
 export default function Home() {
