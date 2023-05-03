@@ -38,7 +38,7 @@ export default function LoginPage() {
   return (
     <>
       <SEO pageName="Login" />
-      <main className="m-auto grid animate-load-in grid-cols-[1fr] gap-x-3 border border-[1px] border-slate-300 bg-white font-sourceCodePro shadow-[5px_5px] shadow-[#eecf68] dark:border-slate-600 dark:bg-stone-950 min-[500px]:grid-cols-[200px_250px]">
+      <main className="m-auto grid animate-load-in grid-cols-[1fr] gap-x-3 border border-[1px] border-slate-300 bg-white font-sourceCodePro shadow-[5px_5px] shadow-yellow-p-600 dark:border-slate-600 dark:bg-stone-950 min-[500px]:grid-cols-[200px_250px]">
         <div className="inline-flex w-full items-center justify-center">
           <GitInspire
             aria-label="GitInspire logo"
@@ -58,7 +58,7 @@ export default function LoginPage() {
               href={GITHUB_AUTH_URL}
               link={true}
               clr={{
-                bkg: "bg-[#689c96] hover:bg-[#4b726e]",
+                bkg: "bg-teal-p-600 hover:bg-teal-p-700",
                 txt: "text-white",
               }}
               className="w-full"

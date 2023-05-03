@@ -19,6 +19,23 @@ module.exports = {
         "noti-enter": "noti-enter 150ms ease-in forwards",
         "noti-leave": "noti-leave 150ms ease-in forwards",
       },
+      colors: {
+        "blood-red": "#bb0a1e",
+        "red-p": {
+          600: "#992d28",
+        },
+        "orange-p": {
+          600: "#eca93c",
+        },
+        "yellow-p": {
+          600: "#eecf68",
+        },
+        "teal-p": {
+          100: "#85bdb2",
+          600: "#689c96",
+          700: "#4b726e",
+        },
+      },
       fontFamily: {
         sourceCodePro: ["var(--source-code-pro-font)", ...fontFamily.mono],
       },
@@ -40,7 +57,6 @@ module.exports = {
     },
   },
   plugins: [
-    require("@tailwindcss/line-clamp"),
     plugin(function ({ addVariant }) {
       addVariant("not-last", "&:not(:last-child)");
       addVariant("has-clip", '&:has(div[data-overflow="clip"])');

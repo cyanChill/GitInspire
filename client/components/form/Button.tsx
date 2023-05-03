@@ -33,7 +33,7 @@ export default function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const btnStyles = `flex justify-center items-center gap-2 p-3 py-1.5 my-2 font-medium tracking-tight rounded-md shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
+  const btnStyles = `transition-colors flex justify-center items-center gap-2 p-3 py-1.5 my-2 font-medium tracking-tight rounded-md shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
 
   if (link) {
     return (
@@ -67,7 +67,7 @@ export function Button2({
   children,
   ...rest
 }: ButtonProps) {
-  const btnStyles = `flex justify-center items-center gap-2 p-3 py-0.5 font-medium tracking-tight rounded-full shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
+  const btnStyles = `transition-colors flex justify-center items-center gap-2 p-3 py-0.5 font-medium tracking-tight rounded-full shadow-lg ${clr.bkg} ${clr.txt} ${className}`;
 
   if (link) {
     return (
@@ -93,7 +93,7 @@ type TogglePropsType = {
 
 export function ToggleBtn({
   defaultState,
-  accentClr = { bkg: "bg-purple-500", ring: "focus:ring-purple-500" },
+  accentClr = { bkg: "bg-teal-p-600", ring: "focus:ring-teal-p-600" },
   onToggle,
   className = "",
 }: TogglePropsType) {
@@ -108,7 +108,7 @@ export function ToggleBtn({
     setIsActive(defaultState);
   }, [defaultState]);
 
-  const btnStyles = `h-min w-full max-w-[calc(2.5rem+8px)] rounded-full border-2 border-zinc-100 p-0.5 transition focus:ring dark:border-slate-900 ${
+  const btnStyles = `transition-colors h-min w-full max-w-[calc(2.5rem+8px)] rounded-full border-2 border-zinc-100 p-0.5 transition focus:ring dark:border-slate-900 ${
     accentClr.ring
   } ${className} ${isActive ? accentClr.bkg : "bg-gray-300"}`;
 
