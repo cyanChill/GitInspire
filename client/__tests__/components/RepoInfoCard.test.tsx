@@ -83,9 +83,9 @@ describe("<RepoInfoCard />", () => {
 
   it("displays correct accredition", () => {
     const element1 = screen.getByTestId("RepoInfoCard-suggested_by");
-    expect(element1).toHaveTextContent("Suggested By: cyanChill");
+    expect(element1).toHaveTextContent("Suggested BycyanChill");
     const element2 = screen.getByTestId("RepoInfoCard-last_updated");
-    expect(element2).toHaveTextContent("Last Updated: 04/06/2023 20:38:43");
+    expect(element2).toHaveTextContent("Last Updated04/06/2023 20:38:43");
   });
 
   it("displays no maintain link", () => {

@@ -182,7 +182,7 @@ export default function DiscoverPage() {
           shadowAccentClr="shadow-blue-500"
         />
 
-        <div className="sm:grid-rows-[minmax(30rem,calc(100vh-15rem))] mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 sm:grid-cols-2">
+        <div className="min-[900px]:grid-rows-[minmax(30rem,calc(100vh-15rem))] mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 min-[900px]:grid-cols-2">
           {/* Data Column */}
           <div className="col-start-1 row-start-1  flex flex-col">
             {/* Filter and Sort button */}
@@ -245,7 +245,7 @@ export default function DiscoverPage() {
 
           {/* Selected Repository Info */}
           <div
-            className={`z-20 col-start-1 row-span-full h-full sm:col-start-2 sm:row-start-1 ${
+            className={`z-20 col-start-1 row-span-full h-full min-[900px]:col-start-2 min-[900px]:row-start-1 ${
               !selectedRepo ? "pointer-events-none" : ""
             }`}
           >

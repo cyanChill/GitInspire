@@ -1,14 +1,15 @@
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { RxCross2, RxStarFilled, RxExternalLink } from "react-icons/rx";
+import { RxCross2, RxStarFilled } from "react-icons/rx";
+import { FaGithub } from "react-icons/fa";
+import { CiSquareInfo, CiRedo, CiRoute } from "react-icons/ci";
 
 import useUserContext from "~hooks/useUserContext";
 import { RepositoryObjType } from "~utils/types";
 import { cleanDate, isXDaysOld, shrinkNum } from "~utils/helpers";
-import Button from "~components/form/Button";
+import { FooterGroup } from "~components/layout/Footer";
 
 /*
   The idea of "handleRefresh" is to:
@@ -25,6 +26,17 @@ type RepoInfoCardProps = {
   repository: RepositoryObjType;
 };
 
+const ACC_CLRS = [
+  "border-blood-red",
+  "border-red-p-400",
+  "border-red-p-600",
+  "border-orange-p-600",
+  "border-orange-p-700",
+  "border-yellow-p-600",
+  "border-teal-p-100",
+  "border-teal-p-700",
+];
+
 export default function RepoInfoCard({
   handleRefresh,
   handleClose,
@@ -34,6 +46,7 @@ export default function RepoInfoCard({
   const { isAuthenticated } = useUserContext();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [clrIdx, setClrIdx] = useState(0);
 
   const handleReport = () => {
     // Redirect to the report route with some information in the URL params
@@ -74,168 +87,161 @@ export default function RepoInfoCard({
     setIsRefreshing(false);
   };
 
+  useEffect(() => {
+    setClrIdx(Math.floor(Math.random() * ACC_CLRS.length));
+  }, [repository]);
+
   return (
-    <article className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white shadow-md dark:bg-slate-800 dark:shadow-slate-700">
-      {/* Card Header */}
-      <section className="h-25 mb-10 flex min-w-0 flex-col items-end bg-gradient-to-t from-amber-400 to-amber-300 p-2 drop-shadow-md dark:from-cyan-700 dark:to-cyan-600 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]">
-        {/* Close Button */}
-        <button
-          onClick={handleClose}
-          className="self-end text-2xl hover:text-red-500"
-        >
-          <RxCross2 />
-        </button>
-
-        <div className="flex w-full">
-          <Image
-            src="/assets/github.svg"
-            width={75}
-            height={75}
-            alt="Github Logo"
-            className="translate-y-[40px] rounded-md bg-white p-1 drop-shadow-md dark:bg-neutral-200 dark:drop-shadow-[0_4px_3px_rgba(125,125,125,0.25)]"
-          />
-
-          <div className="min-w-0 translate-y-[35px] self-end px-2">
-            <a
-              href={repository.repo_link}
-              target="_blank"
-              rel="noreferrer"
-              className="flex min-w-0 items-center pb-3 text-xl font-semibold hover:underline"
-            >
-              <span className="truncate" data-testid="RepoInfoCard-card-title">
-                {repository.author}/{repository.repo_name}
-              </span>{" "}
-              <RxExternalLink className="ml-2 shrink-0" />
-            </a>
-
-            {/* Stars */}
-            <p
-              className="flex w-min items-center justify-center gap-1 rounded-xl bg-yellow-200 px-2 text-sm text-black dark:bg-yellow-400"
-              data-testid="RepoInfoCard-stars"
-            >
-              <RxStarFilled className="shrink-0" />{" "}
-              {shrinkNum(repository.stars)}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Languages & Tags */}
-      <section
-        className="flex flex-wrap gap-1 p-2 text-sm"
-        data-testid="RepoInfoCard-widgets"
-      >
-        {repository.languages.map((lang) => (
-          <span
-            key={lang.name}
-            className="rounded-md bg-orange-300 px-1 py-0.5 dark:bg-amber-700"
+    <article className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white font-sourceCodePro shadow-md dark:bg-slate-800">
+      <header className="grid grid-cols-[1fr_4rem] pb-3 pl-6 pr-3">
+        <div className="min-w-0 pt-6">
+          {/* Repository Name */}
+          <a
+            className="flex min-w-0 flex-col hover:underline"
+            href={repository.repo_link}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="RepoInfoCard-card-title"
           >
-            {lang.display_name}
-          </span>
-        ))}
-
-        <span
-          className={`rounded-xl px-2 py-0.5 ${
-            repository.primary_tag.name === "abandoned"
-              ? "bg-red-300 dark:bg-red-600"
-              : "bg-slate-300 dark:bg-slate-500"
-          }`}
-        >
-          {repository.primary_tag.display_name}
-        </span>
-
-        {repository.tags.map((tg) => (
-          <span
-            key={tg.name}
-            className="rounded-xl bg-neutral-200 px-2 py-0.5 dark:bg-slate-700"
-          >
-            {tg.display_name}
-          </span>
-        ))}
-      </section>
-
-      {/* Repo Description */}
-      <section className="m-2 rounded-sm border-[1px] p-2 text-sm italic">
-        <p data-testid="RepoInfoCard-description">
-          {repository.description ? repository.description : "No Description"}
-        </p>
-
-        {repository.maintain_link && (
+            <span className="truncate text-xs text-slate-600 dark:text-gray-400">
+              {repository.author}/
+            </span>
+            <span className="flex min-w-0 items-center truncate text-xl">
+              <span className="truncate">{repository.repo_name}</span>{" "}
+              <FaGithub className="ml-2 shrink-0" />
+            </span>
+          </a>
+          {/* Star Count */}
           <p
-            className="mt-2 not-italic"
-            data-testid="RepoInfoCard-maintain_link"
+            className="mt-2 flex w-min items-center justify-center gap-1 rounded-xl bg-yellow-300 px-2 text-sm text-black dark:bg-yellow-400"
+            data-testid="RepoInfoCard-stars"
           >
-            <span className="font-semibold underline">
-              New Maintainer Link:
-            </span>{" "}
-            <a
-              href={repository.maintain_link}
-              target="_blank"
-              rel="noreferrer"
-              className="italic hover:underline"
-            >
-              {repository.maintain_link}
-            </a>
+            <RxStarFilled className="shrink-0" /> {shrinkNum(repository.stars)}
           </p>
-        )}
-      </section>
+        </div>
+        {/* Close Button */}
+        <div
+          className={`align-start flex justify-center border-t-[1.5rem] ${ACC_CLRS[clrIdx]}`}
+        >
+          <button
+            onClick={handleClose}
+            className="mt-2 h-min text-3xl hover:text-red-500"
+          >
+            <RxCross2 />
+          </button>
+        </div>
+      </header>
 
-      {/* Accreditation + States */}
-      <section className="mt-auto p-2 text-right text-sm italic">
-        <p data-testid="RepoInfoCard-suggested_by">
-          <span className="font-bold">Suggested By:</span>{" "}
+      <div
+        className={`flex-1 border-l-[1.5rem] border-r-[0.75rem] ${ACC_CLRS[clrIdx]}`}
+      >
+        <div className="px-1">
+          {/* Languages & Tags */}
+          <section
+            className="flex flex-wrap gap-1 py-2 text-xxs"
+            data-testid="RepoInfoCard-widgets"
+          >
+            {repository.languages.map((lang) => (
+              <span
+                key={lang.name}
+                className="rounded-md bg-orange-p-600 px-1 py-0.5 dark:bg-orange-p-700"
+              >
+                {lang.display_name}
+              </span>
+            ))}
+
+            <span
+              className={`rounded-xl px-2 py-0.5 ${
+                repository.primary_tag.name === "abandoned"
+                  ? "bg-red-p-400 text-white dark:bg-red-p-600"
+                  : "bg-slate-300 dark:bg-slate-500"
+              }`}
+            >
+              {repository.primary_tag.display_name}
+            </span>
+
+            {repository.tags.map((tg) => (
+              <span
+                key={tg.name}
+                className="rounded-xl bg-neutral-200 px-2 py-0.5 dark:bg-slate-700"
+              >
+                {tg.display_name}
+              </span>
+            ))}
+          </section>
+
+          {/* Repo Description */}
+          <section className="my-2 text-xs">
+            <p data-testid="RepoInfoCard-description">
+              {repository.description
+                ? repository.description
+                : "No Description"}
+            </p>
+
+            {repository.maintain_link && (
+              <p className="mt-4" data-testid="RepoInfoCard-maintain_link">
+                <span className="font-semibold underline">
+                  New Maintainer Link:
+                </span>
+                <a
+                  href={repository.maintain_link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block truncate italic hover:underline"
+                >
+                  {repository.maintain_link}
+                </a>
+              </p>
+            )}
+          </section>
+        </div>
+      </div>
+
+      <footer className="grid grid-cols-[1fr_1fr_min-content] gap-1 py-3 pl-7 pr-4 min-[400px]:grid-cols-[7.5rem_min-content_1fr]">
+        <FooterGroup testId="RepoInfoCard-suggested_by" label="Suggested By">
           <Link
             href={`/profile/${repository.suggested_by.id}`}
             className="hover:underline"
           >
             {repository.suggested_by.username}
           </Link>
-        </p>
+        </FooterGroup>
+        <FooterGroup testId="RepoInfoCard-last_updated" label="Last Updated">
+          {cleanDate(repository.last_updated)}
+        </FooterGroup>
 
-        <p
-          className="text-right text-sm italic text-slate-500"
-          data-testid="RepoInfoCard-last_updated"
-        >
-          Last Updated: {cleanDate(repository.last_updated)}
-        </p>
-      </section>
-
-      {/* Action */}
-      <hr className="mx-2" />
-      <div className="flex flex-wrap justify-end gap-3 px-2 py-1 text-sm">
-        {isAuthenticated && (
-          <>
-            <button
-              className="text-slate-500 hover:underline dark:text-gray-50"
-              onClick={handleReport}
-            >
-              Report a Problem
-            </button>
-            {repository.primary_tag.name === "abandoned" &&
-              !repository.maintain_link && (
+        {/* Action Buttons */}
+        <div className="ml-auto flex flex-row">
+          {isAuthenticated && (
+            <>
+              <button
+                title="Report a Problem"
+                onClick={handleReport}
+                className="hover:text-red-p-400"
+              >
+                <CiSquareInfo className="h-7 w-7" />
+              </button>
+              {repository.primary_tag.name === "abandoned" && (
                 <button
-                  className="text-red-500 hover:underline dark:text-red-400"
+                  title="Suggest Link"
                   onClick={suggestLink}
+                  className="text-red-p-400 hover:text-blood-red"
                 >
-                  Suggest Link
+                  <CiRoute className="h-7 w-7" />
                 </button>
               )}
-          </>
-        )}
-
-        {/* Allow refresh button for non-authenticated users */}
-        <Button
-          className="w-max"
-          clr={{
-            bkg: "bg-indigo-400 enabled:hover:bg-indigo-500 disabled:opacity-25",
-            txt: "text-white",
-          }}
-          onClick={refreshInfo}
-          disabled={!isXDaysOld(repository.last_updated, 1) || isRefreshing}
-        >
-          Refresh Data
-        </Button>
-      </div>
+            </>
+          )}
+          <button
+            title="Refresh Data"
+            disabled={!isXDaysOld(repository.last_updated, 1) || isRefreshing}
+            onClick={refreshInfo}
+            className="text-teal-p-600 transition-transform duration-700 enabled:hover:rotate-[360deg] enabled:hover:text-teal-p-700 disabled:text-teal-p-700 disabled:opacity-50"
+          >
+            <CiRedo className="h-7 w-7" />
+          </button>
+        </div>
+      </footer>
     </article>
   );
 }

@@ -23,10 +23,12 @@ module.exports = {
       colors: {
         "blood-red": "#bb0a1e",
         "red-p": {
+          400: "#c76356",
           600: "#992d28",
         },
         "orange-p": {
           600: "#eca93c",
+          700: "#dd8844"
         },
         "yellow-p": {
           600: "#eecf68",
