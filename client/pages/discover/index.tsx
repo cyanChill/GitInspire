@@ -14,7 +14,7 @@ import useAppContext from "~hooks/useAppContext";
 import PageHeader from "~components/layout/PageHeader";
 import { Button2 } from "~components/form/Button";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
-import Spinner from "~components/Loading";
+import { LazyText } from "~components/Loading";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
 import Select, { SelectOption } from "~components/form/Select";
 import Pagnation from "~components/form/Pagnation";
@@ -182,7 +182,7 @@ export default function DiscoverPage() {
           shadowAccentClr="shadow-blue-500"
         />
 
-        <div className="mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 sm:grid-cols-2 sm:grid-rows-[minmax(30rem,calc(100vh-15rem))]">
+        <div className="sm:grid-rows-[minmax(30rem,calc(100vh-15rem))] mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 sm:grid-cols-2">
           {/* Data Column */}
           <div className="col-start-1 row-start-1  flex flex-col">
             {/* Filter and Sort button */}
@@ -220,7 +220,13 @@ export default function DiscoverPage() {
                   );
                 })
               ) : isLoading ? (
-                <Spinner />
+                <>
+                  <LazyText dimensionStyle="w-full h-9 mt-4" />
+                  <LazyText dimensionStyle="w-full h-9 mt-4" />
+                  <LazyText dimensionStyle="w-full h-9 mt-4" />
+                  <LazyText dimensionStyle="w-full h-9 mt-4" />
+                  <LazyText dimensionStyle="w-full h-9 mt-4" />
+                </>
               ) : (
                 <p className="text-red:500 mt-5 text-center dark:text-red-400">
                   No repositories found with given filter.

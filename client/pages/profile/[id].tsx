@@ -116,7 +116,7 @@ export default function UserProfilePage() {
         {/* Profile Picture + Name */}
         <header className="flex gap-4">
           {isLoading ? (
-            <div className="lazy-bg h-16 w-16 shrink-0 animate-lazy-bg border border-[1px] border-slate-600 bg-stone-950 p-2 shadow-[5px_5px] shadow-orange-p-600 dark:border-slate-300 dark:bg-white min-[400px]:h-24 min-[400px]:w-24" />
+            <div className="lazy-bg dark:lazy-bg-dark h-16 w-16 shrink-0 animate-lazy-bg border border-[1px] border-slate-600 bg-stone-950 p-2 shadow-[5px_5px] shadow-orange-p-600 dark:border-slate-300 dark:bg-white min-[400px]:h-24 min-[400px]:w-24" />
           ) : (
             <Image
               src={user?.avatar_url ?? "/assets/default_avatar.png"}

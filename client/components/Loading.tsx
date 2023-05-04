@@ -9,11 +9,13 @@ type LazyPropType = { dimensionStyle: string };
 export function LazyText({ dimensionStyle }: LazyPropType) {
   return (
     <span
-      className={`lazy-bg inline-block animate-lazy-bg rounded-md align-text-bottom ${dimensionStyle}`}
+      className={`lazy-bg dark:lazy-bg-dark inline-block animate-lazy-bg rounded-md align-text-bottom ${dimensionStyle}`}
     />
   );
 }
 
 export function LazyImage({ dimensionStyle }: LazyPropType) {
-  <div className={`lazy-bg shrink-0 animate-lazy-bg ${dimensionStyle}`} />;
+  <div
+    className={`lazy-bg dark:lazy-bg-dark shrink-0 animate-lazy-bg ${dimensionStyle}`}
+  />;
 }

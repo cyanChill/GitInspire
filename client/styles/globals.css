@@ -63,4 +63,15 @@
     );
     background-size: 200% 100%;
   }
+
+  .lazy-bg-dark {
+    background-image: linear-gradient(
+      to right,
+      #1d2b3f 0%,
+      #233249 10%,
+      #1d2b3f 20%,
+      #1d2b3f 100%
+    );
+    background-size: 200% 100%;
+  }
 }
