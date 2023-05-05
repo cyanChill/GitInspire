@@ -156,7 +156,6 @@ export default function DiscoverPage() {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log("[FETCH ERROR]", err);
         if (err.name !== "AbortError") {
           // Handle non-AbortError(s)
           toast.error("Something went wrong with fetching results.");
@@ -182,7 +181,7 @@ export default function DiscoverPage() {
           shadowAccentClr="shadow-blue-500"
         />
 
-        <div className="min-[900px]:grid-rows-[minmax(30rem,calc(100vh-15rem))] mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 min-[900px]:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 grid-rows-[minmax(30rem,calc(100vh-17rem))] gap-x-2 overflow-hidden min-[900px]:grid-cols-2 min-[900px]:grid-rows-[minmax(30rem,calc(100vh-15rem))]">
           {/* Data Column */}
           <div className="col-start-1 row-start-1  flex flex-col">
             {/* Filter and Sort button */}
@@ -202,7 +201,7 @@ export default function DiscoverPage() {
             </div>
 
             {/* Found Repositories */}
-            <div className="flex-auto overflow-y-auto px-2">
+            <div className="flex-auto overflow-y-auto px-2 font-sourceCodePro text-sm">
               {results[currPg] && results[currPg].length > 0 && !isLoading ? (
                 results[currPg].map((repo) => {
                   const selected = selectedRepo?.id === repo.id;
@@ -210,9 +209,11 @@ export default function DiscoverPage() {
                   return (
                     <p
                       key={repo.id}
-                      className={`my-2 truncate rounded-md border-[1px] border-slate-300 p-1.5 hover:cursor-pointer hover:underline dark:border-slate-600 ${
-                        selected ? "bg-slate-200 dark:bg-slate-700" : ""
-                      } hover:bg-slate-300 dark:hover:bg-slate-600`}
+                      className={`my-2 truncate border-slate-300 p-1.5 hover:cursor-pointer hover:!border-teal-p-100 not-last:border-b-[1px] dark:border-slate-600 ${
+                        selected
+                          ? "!border-teal-p-100 shadow-[0px_5px] shadow-teal-p-100"
+                          : ""
+                      }`}
                       onClick={() => setSelectedRepo(repo)}
                     >
                       {repo.author}/{repo.repo_name}
@@ -245,7 +246,7 @@ export default function DiscoverPage() {
 
           {/* Selected Repository Info */}
           <div
-            className={`z-20 col-start-1 row-span-full h-full min-[900px]:col-start-2 min-[900px]:row-start-1 ${
+            className={`z-20 col-start-1 row-span-full h-full overflow-y-auto min-[900px]:col-start-2 min-[900px]:row-start-1 ${
               !selectedRepo ? "pointer-events-none" : ""
             }`}
           >

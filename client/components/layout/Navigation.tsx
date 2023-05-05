@@ -48,7 +48,7 @@ export default function Navigation() {
     <nav className="fixed bottom-0 z-50 w-full bg-white shadow-inner shadow-neutral-200 dark:bg-slate-800 dark:shadow-xl dark:shadow-slate-600 sm:sticky sm:top-0 sm:bottom-auto sm:flex sm:h-screen sm:w-24 sm:flex-col sm:items-center sm:gap-3 sm:overflow-y-auto sm:shadow-xl">
       <GitInspire
         aria-label="GitInspire logo"
-        className="my-5 hidden max-h-[64px] max-w-[64px] sm:block"
+        className="my-5 hidden max-h-[64px] max-w-[64px] sm:block shrink-0"
       />
 
       <ul className="flex h-full w-full items-center justify-evenly gap-3 p-2 sm:flex-col sm:items-start sm:justify-start">
