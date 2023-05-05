@@ -45,10 +45,10 @@ export default function Navigation() {
   }).filter((item): item is RouteObjType => !!item);
 
   return (
-    <nav className="fixed bottom-0 z-50 w-full bg-white shadow-inner shadow-neutral-200 dark:bg-slate-800 dark:shadow-xl dark:shadow-slate-600 sm:sticky sm:top-0 sm:bottom-auto sm:flex sm:h-screen sm:w-24 sm:flex-col sm:items-center sm:gap-3 sm:overflow-y-auto sm:shadow-xl">
+    <nav className="fixed bottom-0 z-50 w-full bg-white shadow-inner shadow-neutral-200 dark:bg-slate-800 dark:shadow-xl dark:shadow-slate-600 sm:sticky sm:bottom-auto sm:top-0 sm:flex sm:h-screen sm:w-24 sm:flex-col sm:items-center sm:gap-3 sm:overflow-y-auto sm:shadow-xl">
       <GitInspire
         aria-label="GitInspire logo"
-        className="my-5 hidden max-h-[64px] max-w-[64px] sm:block shrink-0"
+        className="my-5 hidden max-h-[64px] max-w-[64px] shrink-0 sm:block"
       />
 
       <ul className="flex h-full w-full items-center justify-evenly gap-3 p-2 sm:flex-col sm:items-start sm:justify-start">
@@ -92,7 +92,7 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
   return (
     <li
       key={name}
-      className="group relative w-16 text-center text-2xl transition sm:w-full"
+      className="group relative w-16 text-center text-2xl transition sm:w-full sm:text-3xl"
     >
       <Link
         href={href}
@@ -112,7 +112,7 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
         >
           {icon}
         </span>
-        <span className="text-sm max-[400px]:hidden sm:text-base sm:font-medium">
+        <span className="text-xs max-[400px]:hidden sm:font-medium">
           {name}
         </span>
       </Link>
