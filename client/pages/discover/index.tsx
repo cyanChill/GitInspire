@@ -7,12 +7,13 @@ import { FaCompass, FaStar } from "react-icons/fa";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { HiArrowLongDown, HiArrowLongUp } from "react-icons/hi2";
 import { MdFilterList, MdFilterListOff } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
+import { CiTrash, CiPaperplane } from "react-icons/ci";
 
 import { RepositoryObjType } from "~utils/types";
 import { fromURLQueryVal, replaceURLParam } from "~utils/helpers";
 import useAppContext from "~hooks/useAppContext";
 import PageHeader from "~components/layout/PageHeader";
-import { Button2 } from "~components/form/Button";
 import RepoInfoCard from "~components/repository/RepoInfoCard";
 import { LazyText } from "~components/Loading";
 import Input, { InputGroup, InputGroupAlt } from "~components/form/Input";
@@ -371,7 +372,7 @@ function FilterMenu({
       <button
         onClick={toggleVisibility}
         disabled={disabled}
-        className={`flex items-center gap-1 ${
+        className={`flex items-center gap-1 font-sourceCodePro text-sm ${
           disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
         }`}
       >
@@ -380,86 +381,102 @@ function FilterMenu({
         ) : (
           <MdFilterListOff className="shrink-0 text-slate-500" />
         )}{" "}
-        <span className="rounded-md bg-slate-300 px-1.5 text-sm font-medium dark:bg-slate-700">
+        <span className="rounded-md bg-slate-300 px-1.5 text-xs font-medium dark:bg-slate-700">
           {numFilters}
         </span>
         Filters
       </button>
 
       {/* Filter Menu */}
-      <div
+      <article
         className={`${
           isVisible ? "block" : "hidden"
-        } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto rounded-md border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-800`}
+        } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto bg-white font-sourceCodePro dark:bg-slate-800`}
       >
-        <p className="mb-4 text-center text-xl font-medium underline">
-          Filters
-        </p>
+        <header className="grid grid-cols-[1fr_3rem] pb-1.5 pl-3 pr-1.5">
+          <div className="min-w-0 pt-5 pb-3 text-xl underline">Filters</div>
+          <div className="align-start flex justify-center border-t-[12px] border-orange-p-600">
+            <button
+              onClick={() => setIsVisible(false)}
+              className="mt-2 h-min text-2xl hover:text-red-500"
+            >
+              <RxCross2 />
+            </button>
+          </div>
+        </header>
 
-        <div className="mb-2 flex flex-wrap gap-2 text-base">
-          <InputGroup label="Min Stars">
-            <Input
-              type="number"
-              min={0}
-              value={newFilter.minStars}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                updateNewFilter("minStars", +e.target.value)
-              }
-              className="w-full max-w-[6.5rem] text-right text-sm"
-            />
-          </InputGroup>
-          <InputGroup label="Max Stars">
-            <Input
-              type="number"
-              min={0}
-              value={newFilter.maxStars}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                updateNewFilter("maxStars", +e.target.value)
-              }
-              className="w-full max-w-[6.5rem] text-right text-sm"
-            />
-          </InputGroup>
+        <div className="flex-1 border-l-[12px] border-r-8 border-orange-p-600">
+          <div className="px-1">
+            <div className="mb-2 flex flex-wrap gap-2">
+              <InputGroup label="Min Stars">
+                <Input
+                  type="number"
+                  min={0}
+                  value={newFilter.minStars}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    updateNewFilter("minStars", +e.target.value)
+                  }
+                  className="w-full max-w-[6rem] text-right"
+                />
+              </InputGroup>
+              <InputGroup label="Max Stars">
+                <Input
+                  type="number"
+                  min={0}
+                  value={newFilter.maxStars}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    updateNewFilter("maxStars", +e.target.value)
+                  }
+                  className="w-full max-w-[6rem] text-right"
+                />
+              </InputGroup>
+            </div>
+            <InputGroupAlt label="Languages">
+              <Select
+                multiple={true}
+                options={selOptionFormat.languages}
+                value={newFilter.languages}
+                max={5}
+                onChange={(value) => updateNewFilter("languages", value)}
+              />
+            </InputGroupAlt>
+            <InputGroupAlt label="Primary Tag">
+              <Select
+                multiple={false}
+                options={selOptionFormat.primary_tags}
+                value={newFilter.primary_tag}
+                onChange={(value) => updateNewFilter("primary_tag", value)}
+              />
+            </InputGroupAlt>
+            <InputGroupAlt label="Tags">
+              <Select
+                multiple={true}
+                options={selOptionFormat.user_tags}
+                value={newFilter.tags}
+                max={5}
+                onChange={(value) => updateNewFilter("tags", value)}
+              />
+            </InputGroupAlt>
+          </div>
         </div>
 
-        <InputGroupAlt label="Languages">
-          <Select
-            multiple={true}
-            options={selOptionFormat.languages}
-            value={newFilter.languages}
-            max={5}
-            onChange={(value) => updateNewFilter("languages", value)}
-          />
-        </InputGroupAlt>
-
-        <InputGroupAlt label="Primary Tag">
-          <Select
-            multiple={false}
-            options={selOptionFormat.primary_tags}
-            value={newFilter.primary_tag}
-            onChange={(value) => updateNewFilter("primary_tag", value)}
-          />
-        </InputGroupAlt>
-
-        <InputGroupAlt label="Tags">
-          <Select
-            multiple={true}
-            options={selOptionFormat.user_tags}
-            value={newFilter.tags}
-            max={5}
-            onChange={(value) => updateNewFilter("tags", value)}
-          />
-        </InputGroupAlt>
-
-        <div className="flex flex-wrap justify-end gap-x-4 py-2">
+        <div className="flex flex-wrap justify-end gap-x-4 py-2 pl-3 pr-4">
           <button
+            title="Clear Filters"
             onClick={() => setNewFilter(DEFAULT_FILTER)}
-            className="hover:underline"
+            className="hover:text-red-p-400"
           >
-            Clear All
+            <CiTrash className="h-6 w-6" />
           </button>
-          <Button2 onClick={updateFilters}>Update</Button2>
+          <button
+            title="Update Filters"
+            onClick={updateFilters}
+            className="text-teal-p-600 transition-transform duration-300 hover:translate-x-1 hover:text-teal-p-700"
+          >
+            <CiPaperplane className="h-6 w-6" />
+          </button>
         </div>
-      </div>
+      </article>
     </>
   );
 }

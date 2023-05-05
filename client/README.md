@@ -18,3 +18,7 @@ To run the frontend code (in development mode), run `npm run dev` while in the `
 
 - For production, you need to build the code using `npm run build` and then do `npm run start` to run off that build.
 - A suggestion for hosting this frontend application is [Vercel](https://vercel.com/).
+
+## Testing
+
+To run tests associated with the frontent, run `npm test` while in the `client` directory.

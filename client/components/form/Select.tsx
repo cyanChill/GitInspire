@@ -74,7 +74,7 @@ export default function Select({
       // Keeping index in check (don't go beyond)
       const newVal = highlightedIdx + (e.code === "ArrowDown" ? 1 : -1);
       if (newVal >= 0 && newVal < options.length) setHighlightedIdx(newVal);
-      optRef.current?.scrollTo({ top: newVal * 40 });
+      optRef.current?.scrollTo({ top: newVal * 32 });
     }
     // Go to first entry with character in list of avaliable options
     if (/[a-zA-Z]/.test(e.key)) {
@@ -85,7 +85,7 @@ export default function Select({
       );
       if (optionIdx !== -1) {
         setHighlightedIdx(optionIdx);
-        optRef.current?.scrollTo({ top: optionIdx * 40 });
+        optRef.current?.scrollTo({ top: optionIdx * 32 });
       }
     }
 
@@ -93,8 +93,7 @@ export default function Select({
     if (e.code === "Escape") setIsOpen(false);
   };
 
-  const baseClasses =
-    "w-full rounded-md bg-zinc-50 dark:bg-slate-700 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 dark:shadow-slate-600";
+  const baseClasses = "w-full bg-transparent text-xs";
 
   return (
     <div
@@ -102,7 +101,7 @@ export default function Select({
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
       onKeyDown={handleKeyAction}
-      className={`relative flex min-h-[2.5rem] items-center justify-between gap-x-1 p-1.5 ${baseClasses} hover:cursor-pointer`}
+      className={`relative flex min-h-[2rem] items-center justify-between gap-x-1 p-1 ${baseClasses} border-b-[1px] border-slate-400 hover:cursor-pointer`}
     >
       {/* Displaying selected items */}
       <span className="flex flex-wrap gap-2 overflow-hidden">
@@ -150,7 +149,10 @@ export default function Select({
           isOpen ? "visible" : "hidden"
         } absolute left-0 top-[calc(100%+2px)] z-[1] w-full`}
       >
-        <ul className={`max-h-40 overflow-y-auto ${baseClasses}`} ref={optRef}>
+        <ul
+          className={`max-h-40 overflow-y-auto ${baseClasses} bg-zinc-50 dark:bg-slate-700`}
+          ref={optRef}
+        >
           {options.map((o, idx) => (
             <OptItem
               key={o.value}

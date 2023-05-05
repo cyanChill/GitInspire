@@ -28,7 +28,7 @@ module.exports = {
         },
         "orange-p": {
           600: "#eca93c",
-          700: "#dd8844"
+          700: "#dd8844",
         },
         "yellow-p": {
           600: "#eecf68",
@@ -37,6 +37,9 @@ module.exports = {
           100: "#85bdb2",
           600: "#689c96",
           700: "#4b726e",
+        },
+        "pink-p": {
+          400: "#d597ae",
         },
       },
       fontFamily: {
