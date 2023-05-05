@@ -1,6 +1,8 @@
 import { useState, ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { GiRollingDices } from "react-icons/gi";
+import { AiOutlinePlus } from "react-icons/ai";
+import { CiTrash, CiSearch, CiSquareChevRight } from "react-icons/ci";
 
 import { normalizeStr } from "~utils/helpers";
 import { Generic_Obj } from "~utils/types";
@@ -136,7 +138,7 @@ const RandomRepoForm = () => {
   };
 
   return (
-    <main className="mt-8 rounded-xl bg-gray-50 p-4 pb-2 shadow-inner shadow-slate-500 dark:bg-gray-800 dark:shadow-zinc-500">
+    <main className="mt-8 rounded-lg bg-gray-50 p-4 pb-2 dark:bg-gray-800">
       <h2 className="mb-2 text-xl font-semibold">
         Languages{" "}
         <span className="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-400">
@@ -164,17 +166,14 @@ const RandomRepoForm = () => {
             }}
             className="w-full max-w-[10rem] rounded-r-none"
           />
-          <Button
+          <button
+            title="Add Language to Filter"
             disabled={isLoading}
             onClick={addToLang}
-            clr={{
-              bkg: "bg-gradient-to-r from-rose-400 enabled:hover:from-rose-500 to-pink-400 enabled:hover:to-pink-500 disabled:opacity-25",
-              txt: "text-white",
-            }}
-            className="!m-0 rounded-l-none"
+            className="hover:text-teal-p-100"
           >
-            Add
-          </Button>
+            <AiOutlinePlus />
+          </button>
         </div>
       </InputGroup>
 
@@ -208,28 +207,22 @@ const RandomRepoForm = () => {
       </div>
 
       <div className="flex justify-end gap-3 p-2 text-base">
-        <Button
+        <button
+          title="Clear Filters"
           disabled={isLoading}
           onClick={clearForm}
-          clr={{
-            bkg: "",
-            txt: "text-red-400 dark:text-red-300 hover:text-red-500",
-          }}
-          className="!tracking-wide !shadow-none"
+          className="hover:text-red-p-400"
         >
-          Reset Filters
-        </Button>
-        <Button
+          <CiTrash className="h-6 w-6" />
+        </button>
+        <button
+          title="Search"
           disabled={isLoading}
           onClick={findRepo}
-          clr={{
-            bkg: "bg-gradient-to-r from-cyan-500 enabled:hover:from-sky-500 to-blue-500 enabled:hover:to-indigo-500 disabled:opacity-25",
-            txt: "text-white",
-          }}
-          className="!tracking-wide"
+          className="text-teal-p-600 hover:text-teal-p-700"
         >
-          Search
-        </Button>
+          <CiSearch className="h-6 w-6" />
+        </button>
       </div>
 
       {isLoading && <Spinner />}
@@ -240,9 +233,13 @@ const RandomRepoForm = () => {
           <div className="mt-1.5">
             <h2 className="my-3 mb-2 text-xl font-semibold">Result:</h2>
             <BriefWidget data={display} fixedDim={true} />
-            <Button onClick={newDisplayRepo} className="ml-auto">
-              Next
-            </Button>
+            <button
+              title="Next Result"
+              onClick={newDisplayRepo}
+              className="block my-2 ml-auto text-3xl hover:text-orange-p-600"
+            >
+              <CiSquareChevRight />
+            </button>
           </div>
         </>
       )}

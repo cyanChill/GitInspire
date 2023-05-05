@@ -460,7 +460,7 @@ function FilterMenu({
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-end gap-x-4 py-2 pl-3 pr-4">
+        <footer className="flex flex-wrap justify-end gap-x-4 py-2 pl-3 pr-4">
           <button
             title="Clear Filters"
             onClick={() => setNewFilter(DEFAULT_FILTER)}
@@ -475,7 +475,7 @@ function FilterMenu({
           >
             <CiPaperplane className="h-6 w-6" />
           </button>
-        </div>
+        </footer>
       </article>
     </>
   );
