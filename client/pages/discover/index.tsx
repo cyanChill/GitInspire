@@ -394,7 +394,7 @@ function FilterMenu({
         } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto bg-white dark:bg-slate-800`}
       >
         <header className="grid grid-cols-[1fr_3rem] pb-1.5 pl-3 pr-1.5">
-          <div className="min-w-0 pt-5 pb-3 text-xl underline">Filters</div>
+          <div className="min-w-0 pb-3 pt-5 text-xl underline">Filters</div>
           <div className="align-start flex justify-center border-t-[12px] border-orange-p-600">
             <button
               onClick={() => setIsVisible(false)}
@@ -549,7 +549,7 @@ function SortMenu({
 
   return (
     <div
-      className={`relative z-10 ml-auto flex items-center ${
+      className={`relative z-10 ml-auto flex items-center text-sm ${
         disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
       }`}
     >
@@ -557,7 +557,7 @@ function SortMenu({
         className={`flex shrink-0 items-center ${
           !disabled ? "hover:cursor-pointer" : ""
         }`}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => !disabled && setIsOpen((prev) => !prev)}
       >
         Sort
         <HiOutlineChevronDown className="mx-1 text-slate-500" />
@@ -566,7 +566,7 @@ function SortMenu({
       <div
         className={`${
           isOpen ? "visible" : "hidden"
-        } absolute right-0 top-12 top-[calc(100%+0.25rem)] w-max animate-load-in overflow-hidden rounded-md border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800`}
+        } absolute right-0 top-12 top-[calc(100%+0.25rem)] w-max animate-load-in overflow-hidden border border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-800`}
       >
         {SORT_OPTS.map((opt) => {
           const selected = opt.value === currentSortMethod;
@@ -575,8 +575,8 @@ function SortMenu({
             <div
               key={opt.value}
               onClick={() => updateSortMethod(opt.value)}
-              className={`p-1 px-3 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 ${
-                selected ? "bg-slate-100 dark:bg-slate-600" : ""
+              className={`p-1 px-2 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 border-l-4 ${
+                selected ? "border-orange-p-600" : "border-transparent"
               }`}
             >
               {opt.display}
