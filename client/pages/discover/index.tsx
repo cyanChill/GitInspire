@@ -202,7 +202,7 @@ export default function DiscoverPage() {
             </div>
 
             {/* Found Repositories */}
-            <div className="flex-auto overflow-y-auto px-2 font-sourceCodePro text-sm">
+            <div className="flex-auto overflow-y-auto px-2 text-sm">
               {results[currPg] && results[currPg].length > 0 && !isLoading ? (
                 results[currPg].map((repo) => {
                   const selected = selectedRepo?.id === repo.id;
@@ -372,7 +372,7 @@ function FilterMenu({
       <button
         onClick={toggleVisibility}
         disabled={disabled}
-        className={`flex items-center gap-1 font-sourceCodePro text-sm ${
+        className={`flex items-center gap-1 text-sm ${
           disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
         }`}
       >
@@ -391,7 +391,7 @@ function FilterMenu({
       <article
         className={`${
           isVisible ? "block" : "hidden"
-        } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto bg-white font-sourceCodePro dark:bg-slate-800`}
+        } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto bg-white dark:bg-slate-800`}
       >
         <header className="grid grid-cols-[1fr_3rem] pb-1.5 pl-3 pr-1.5">
           <div className="min-w-0 pt-5 pb-3 text-xl underline">Filters</div>

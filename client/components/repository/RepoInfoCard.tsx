@@ -92,7 +92,7 @@ export default function RepoInfoCard({
   }, [repository]);
 
   return (
-    <article className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white font-sourceCodePro shadow-md dark:bg-slate-800">
+    <article className="flex h-full w-full animate-load-in flex-col overflow-y-auto bg-white shadow-md dark:bg-slate-800">
       <header className="grid grid-cols-[1fr_4rem] pb-3 pl-6 pr-3">
         <div className="min-w-0 pt-6">
           {/* Repository Name */}

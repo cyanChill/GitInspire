@@ -21,7 +21,7 @@ export default function MiscPage() {
           shadowAccentClr="shadow-teal-500"
         />
 
-        <main className="mt-8 grid grid-cols-[1fr_3.75rem] gap-x-2.5 gap-y-3 font-sourceCodePro">
+        <main className="mt-8 grid grid-cols-[1fr_3.75rem] gap-x-2.5 gap-y-3">
           <h2 className="col-span-2 text-xl">General Settings</h2>
           <div>
             <p className="text-sm">Theme</p>

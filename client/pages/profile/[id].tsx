@@ -112,7 +112,7 @@ export default function UserProfilePage() {
     <>
       <SEO pageName={isLoading ? "Profile" : `${user?.username} Profile`} />
 
-      <main className="animate-load-in font-sourceCodePro">
+      <main className="animate-load-in">
         {/* Profile Picture + Name */}
         <header className="flex gap-4">
           {isLoading ? (
