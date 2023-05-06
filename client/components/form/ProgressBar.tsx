@@ -26,22 +26,22 @@ export default function ProgressBar({ steps, completed }: ProgressBarProps) {
   return (
     <div
       ref={barRef}
-      className="[&::-webkit-scrollbar]:hidden overflow-x-auto flex flex-wrap-none my-2 rounded-lg border-[3px] border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800"
+      className="flex-wrap-none my-2 flex overflow-x-auto rounded-md border-2 border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800 [&::-webkit-scrollbar]:hidden"
     >
       {steps.map((title, idx) => (
         <div
           key={idx}
           style={{ width: `${100 / steps.length}%` }}
-          className={`overflow-hidden relative isolate min-w-fit progress-bar-border border-0 before:z-[-2] before:absolute before:inset-0 before:bg-gray-200 dark:before:bg-slate-700 after:z-[-1] after:absolute after:inset-0 after:progress-bar-border after:translate-x-[-3px] after:bg-white dark:after:bg-slate-800 last:before:hidden last:after:hidden`}
+          className={`progress-bar-border after:progress-bar-border relative isolate min-w-fit overflow-hidden border-0 before:absolute before:inset-0 before:z-[-2] before:bg-gray-200 after:absolute after:inset-0 after:z-[-1] after:translate-x-[-3px] after:bg-white last:before:hidden last:after:hidden dark:before:bg-slate-700 dark:after:bg-slate-800`}
         >
-          <div className="h-full inline-flex items-center gap-2 p-2">
+          <div className="inline-flex h-full items-center gap-2 p-2">
             {idx < completed ? (
-              <AiFillCheckCircle className="shrink-0 h-7 sm:h-10 w-7 sm:w-10 text-orange-400" />
+              <AiFillCheckCircle className="h-7 w-7 shrink-0 text-orange-p-600 sm:h-8 sm:w-8" />
             ) : (
               <div
-                className={`shrink-0 h-7 sm:h-10 w-7 sm:w-10 flex items-center justify-center rounded-full transition-colors border-2 text-sm sm:text-base font-semibold ${
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors sm:h-8 sm:w-8 ${
                   idx == completed
-                    ? "text-orange-400 border-orange-400"
+                    ? "border-orange-p-600 text-orange-p-600"
                     : "text-gray-400 dark:text-gray-300"
                 }`}
               >
@@ -50,9 +50,9 @@ export default function ProgressBar({ steps, completed }: ProgressBarProps) {
             )}
 
             <span
-              className={`pr-3 transition-colors font-semibold ${
+              className={`pr-3 text-sm font-semibold transition-colors ${
                 idx == completed
-                  ? "text-orange-400"
+                  ? "text-orange-p-600"
                   : idx > completed
                   ? "text-gray-400 dark:text-gray-300"
                   : ""

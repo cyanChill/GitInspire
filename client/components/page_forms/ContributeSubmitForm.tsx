@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CiPaperplane } from "react-icons/ci";
+import { FaGithub } from "react-icons/fa";
 
 import useAppContext from "~hooks/useAppContext";
 import { authFetch } from "~utils/cookies";
@@ -122,6 +123,7 @@ export default function ContributeSubmitForm({
                   className="hover:underline"
                 >
                   {author}/{repo_name}
+                  <FaGithub className="ml-1 inline h-4 w-4" />
                 </a>
               </DisplayItem>
               <DisplayItem label="Primary Tag">

@@ -2,7 +2,7 @@ import React, { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { IoCreate } from "react-icons/io5";
-import { CiSquareChevLeft, CiSquareChevRight } from "react-icons/ci";
+import { CiSquareChevLeft, CiSquareChevRight, CiRedo } from "react-icons/ci";
 
 import useUserContext from "~hooks/useUserContext";
 import useAppContext from "~hooks/useAppContext";
@@ -12,7 +12,6 @@ import { ReactChildren } from "~utils/types";
 import SEO from "~components/layout/SEO";
 import PageHeader from "~components/layout/PageHeader";
 import ProgressBar from "~components/form/ProgressBar";
-import Button from "~components/form/Button";
 
 import ContributeTypeForm from "~components/page_forms/ContributeTypeForm";
 import RepoSuggForm from "~components/page_forms/RepoSuggForm";
@@ -43,15 +42,6 @@ export default function ContributePage() {
     null
   );
 
-  const handleTypeSelection = (value: string) => {
-    setData((prev) => ({ ...prev, formType: value }));
-    next();
-  };
-
-  const updateField = (fields: Partial<FormDataType>) => {
-    setData((prev) => ({ ...prev, ...fields }));
-  };
-
   const { completed, currStep, isLastStep, goTo, next, back } =
     useMultistepForm([
       <ContributeTypeForm key="Step 1" handler={handleTypeSelection} />,
@@ -67,6 +57,16 @@ export default function ContributePage() {
       />,
     ]);
 
+  function handleTypeSelection(value: string) {
+    setData((prev) => ({ ...prev, formType: value }));
+    next();
+  }
+
+  function updateField(fields: Partial<FormDataType>) {
+    setData((prev) => ({ ...prev, ...fields }));
+  }
+
+  /* Validate inputs before moving on to the next form */
   const handleNext = (e: FormEvent) => {
     e.preventDefault();
 
@@ -93,13 +93,13 @@ export default function ContributePage() {
       }
     }
 
+    // Make sure the tag doesn't already exist
     const inPrimary = tags.primary.find(
       (val) => val.name === normalizeStr(data.new_tag_name)
     );
     const inUserGen = tags.user_gen.find(
       (val) => val.name === normalizeStr(data.new_tag_name)
     );
-
     if (data.formType === "tag" && (inPrimary || inUserGen)) {
       toast.error("That tag already exists.");
       return;
@@ -114,16 +114,16 @@ export default function ContributePage() {
     setDoneInfo(null);
   };
 
+  /* Reset form when user clicks on the "Contribute" navigation button */
   useEffect(() => {
     resetForm();
-  }, []); /* eslint-disable-line */
+  }, [router]); /* eslint-disable-line */
 
+  /* Redirect user to repository page after retrieval of completion data from final form */
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (doneInfo) {
       next();
-      // Redirect to repository page after retrieval of completion data from
-      // final form
       if (doneInfo.redirect_link) {
         timeout = setTimeout(() => {
           router.push(doneInfo.redirect_link);
@@ -197,7 +197,7 @@ export default function ContributePage() {
 
           {completed !== 0 && !doneInfo && (
             <div className="ml-auto mt-3 border-t-[1px] border-black dark:border-white sm:max-w-[25rem]">
-              <div className="ml-auto flex max-w-[8.5rem] items-center justify-end gap-1 border border-t-0 border-black dark:border-white p-1 py-0.5">
+              <div className="ml-auto flex max-w-[8.5rem] items-center justify-end gap-1 border border-t-0 border-black p-1 py-0.5 dark:border-white">
                 <button type="button" onClick={back}>
                   <CiSquareChevLeft className="h-7 w-7 hover:text-red-p-400" />
                 </button>
@@ -213,25 +213,23 @@ export default function ContributePage() {
 
         {completed === 3 && (
           <div className="mt-10 flex animate-load-in flex-col items-center text-center">
-            <p className="text-xl font-bold">
+            <p className="text-xl font-semibold">
               Successfully contributed to GitInspire!
             </p>
+
             {doneInfo?.redirect_link ? (
-              <p className="mt-1 italic">
+              <p className="mt-1 text-sm italic">
                 Redirecting you to newly suggested repository...
               </p>
             ) : (
-              <Button
+              <button
                 type="button"
                 onClick={resetForm}
-                clr={{
-                  bkg: "bg-gradient-to-r from-green-500 enabled:hover:from-green-500 to-emerald-500 enabled:hover:to-emerald-600",
-                  txt: "text-white",
-                }}
-                className="mt-5"
+                className="group mt-5 flex items-center gap-1 border border-teal-p-600 px-2 py-0.5 text-sm text-teal-p-600 transition-colors hover:border-teal-p-700 hover:text-teal-p-700 hover:underline dark:hover:border-teal-p-100 dark:hover:text-teal-p-100"
               >
-                Contribute more?
-              </Button>
+                Contribute More?{" "}
+                <CiRedo className="h-7 w-7 transition-transform duration-700 group-hover:rotate-[360deg] group-hover:text-teal-p-600" />
+              </button>
             )}
           </div>
         )}
