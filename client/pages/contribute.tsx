@@ -2,6 +2,7 @@ import React, { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { IoCreate } from "react-icons/io5";
+import { CiSquareChevLeft, CiSquareChevRight } from "react-icons/ci";
 
 import useUserContext from "~hooks/useUserContext";
 import useAppContext from "~hooks/useAppContext";
@@ -153,7 +154,7 @@ export default function ContributePage() {
   if (isBanned) {
     return (
       <ContributePageWrapper>
-        <p className="mt-10 text-center text-2xl font-bold text-red-500 dark:text-red-400">
+        <p className="mt-10 text-center text-xl font-semibold text-red-500 dark:text-red-400">
           Sorry, but your account is banned and doesn&apos;t have access to this
           feature.
         </p>
@@ -164,19 +165,19 @@ export default function ContributePage() {
   if (!isAccAge(3)) {
     return (
       <ContributePageWrapper>
-        <p className="mt-10 font-bold text-amber-500 sm:text-xl">
+        <p className="mt-10 text-sm font-semibold text-amber-500 sm:text-base">
           Sorry, but your account isn&apos;t old enough to contribute to
           GitInspire. Accounts may suggest the following given they meet the
           criterias:
         </p>
-        <ul className="ml-10 list-disc text-sm sm:text-base">
+        <ul className="ml-10 list-disc text-xs sm:text-base">
           <li>
             You can suggest a repository if your GitHub account age is older
-            than <span className="font-bold">3 months</span>.
+            than <span className="font-semibold underline">3 months</span>.
           </li>
           <li>
             You can suggest a tag if your GitHub account age is older than{" "}
-            <span className="font-bold">1 year</span>.
+            <span className="font-semibold underline">1 year</span>.
           </li>
         </ul>
       </ContributePageWrapper>
@@ -195,11 +196,17 @@ export default function ContributePage() {
           {currStep}
 
           {completed !== 0 && !doneInfo && (
-            <div className="mt-3 flex justify-end gap-3">
-              <Button type="button" onClick={back}>
-                Back
-              </Button>
-              {!isLastStep && <Button>Next</Button>}
+            <div className="ml-auto mt-3 border-t-[1px] border-black dark:border-white sm:max-w-[25rem]">
+              <div className="ml-auto flex max-w-[8.5rem] items-center justify-end gap-1 border border-t-0 border-black dark:border-white p-1 py-0.5">
+                <button type="button" onClick={back}>
+                  <CiSquareChevLeft className="h-7 w-7 hover:text-red-p-400" />
+                </button>
+                {!isLastStep && (
+                  <button type="submit">
+                    <CiSquareChevRight className="h-7 w-7 hover:text-teal-p-600" />
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </form>

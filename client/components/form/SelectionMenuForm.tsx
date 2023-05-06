@@ -31,8 +31,8 @@ export default function SelectionMenuForm({
 }: SelectionMenuFormType) {
   return (
     <div className={className}>
-      <h2 className="text-xl font-bold">{title}</h2>
-      <p className="mt-2 text-sm">{description}</p>
+      <h2 className="font-semibold sm:text-xl">{title}</h2>
+      <p className="mt-1 text-xs sm:text-sm">{description}</p>
 
       <SelectionMenuFormOptions options={options} selectOption={selectOption} />
     </div>
@@ -55,19 +55,19 @@ export function SelectionMenuFormOptions({
           onClick={() => selectOption(opt.value)}
         >
           <div
-            className={`shrink-0 rounded-lg p-2 ${opt.bkgClr} text-3xl text-white`}
+            className={`shrink-0 rounded-lg p-2 text-xl text-white sm:text-2xl ${opt.bkgClr}`}
           >
             {opt.icon}
           </div>
 
           <div className="min-w-0">
-            <p className="flex items-center gap-1 truncate font-semibold">
+            <p className="flex items-center gap-1 truncate text-sm font-semibold sm:text-base">
               {opt.title}
             </p>
-            <p className="truncate text-sm">{opt.description}</p>
+            <p className="truncate text-xxs sm:text-xs">{opt.description}</p>
           </div>
 
-          <MdKeyboardArrowRight className="ml-auto shrink-0 self-center text-3xl text-gray-300 group-hover:text-gray-400 dark:text-slate-700 group-hover:dark:text-slate-500" />
+          <MdKeyboardArrowRight className="ml-auto shrink-0 self-center text-xl text-gray-300 group-hover:text-gray-400 dark:text-slate-700 group-hover:dark:text-slate-500 sm:text-2xl" />
         </li>
       ))}
     </ul>

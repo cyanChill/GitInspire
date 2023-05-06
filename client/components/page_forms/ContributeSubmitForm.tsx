@@ -1,11 +1,12 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { CiPaperplane } from "react-icons/ci";
 
 import useAppContext from "~hooks/useAppContext";
 import { authFetch } from "~utils/cookies";
 import { TagObjType, RepositoryObjType } from "~utils/types";
 import { SelectOption } from "~components/form/Select";
-import Button from "~components/form/Button";
+import { SubmissionFormWrapper } from "./ContributeFormWrapper";
 
 export type FormDataType = {
   formType: string;
@@ -63,9 +64,10 @@ export default function ContributeSubmitForm({
   };
 
   const submitData = async () => {
+    if (isLoading) return;
+
     setIsLoading(true);
     let response: ResponseType;
-
     if (formType === "repository") response = await submitNewRepo();
     else response = await submitNewTag();
 
@@ -96,24 +98,76 @@ export default function ContributeSubmitForm({
   }
 
   return (
-    <div className="mt-10 flex animate-load-in flex-col items-center text-center">
-      <p className="text-xl font-bold">You&apos;re approaching the end.</p>
-      <p className="mt-1">
-        There&apos;s one click left before you helped contributed to GitInspire!
+    <>
+      <p className="font-semibold sm:text-xl">Review</p>
+      <p className="mb-6 mt-1 text-xs sm:mb-8">
+        Review your suggestion to GitInspire, then click the{" "}
+        <span className="font-semibold">submit</span> button to contribute.
       </p>
-
-      <Button
-        type="button"
-        onClick={submitData}
-        disabled={isLoading}
-        clr={{
-          bkg: "bg-gradient-to-r from-green-500 enabled:hover:from-green-500 to-emerald-500 enabled:hover:to-emerald-600 disabled:opacity-25",
-          txt: "text-white",
-        }}
-        className="mt-5"
+      <SubmissionFormWrapper
+        bdrClr={
+          formType === "tag" ? "border-orange-p-600" : "border-purple-p-500"
+        }
+        variant={formType === "tag" ? "Tag" : "Repository"}
+        className="!text-xs sm:pt-8"
       >
-        Submit
-      </Button>
-    </div>
+        <div className="flex-1 py-6 pt-4 text-xs text-slate-800 dark:text-gray-300 sm:py-8 sm:pt-6">
+          {formType === "repository" ? (
+            <>
+              <DisplayItem label="Repository Name">
+                <a
+                  href={`https://www.github.com/${author}/${repo_name}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:underline"
+                >
+                  {author}/{repo_name}
+                </a>
+              </DisplayItem>
+              <DisplayItem label="Primary Tag">
+                <span>{primary_tag?.label}</span>
+              </DisplayItem>
+              <DisplayItem label="Additional Tags">
+                <span>{add_tags.map((tg) => tg.label).join(", ")}</span>
+              </DisplayItem>
+            </>
+          ) : (
+            <>
+              <DisplayItem label="Tag Name">
+                <span>{new_tag_name}</span>
+              </DisplayItem>
+              <DisplayItem label="Tag Type">
+                <span>{new_tag_type.toUpperCase()}</span>
+              </DisplayItem>
+            </>
+          )}
+        </div>
+      </SubmissionFormWrapper>
+
+      <div className="ml-auto w-min animate-load-in sm:mt-4">
+        <button
+          type="button"
+          onClick={submitData}
+          disabled={isLoading}
+          className="group flex items-center gap-1 border border-teal-p-600 px-2 py-0.5 text-sm text-teal-p-600 transition-colors hover:border-teal-p-700 hover:text-teal-p-700 hover:underline disabled:opacity-25 dark:hover:border-teal-p-100 dark:hover:text-teal-p-100"
+        >
+          Submit{" "}
+          <CiPaperplane className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1" />
+        </button>
+      </div>
+    </>
+  );
+}
+
+type DisplayItem = {
+  label: string;
+  children: React.ReactNode;
+};
+
+function DisplayItem({ label, children }: DisplayItem) {
+  return (
+    <p className="mt-2">
+      <span className="font-semibold underline">{label}:</span> {children}
+    </p>
   );
 }
