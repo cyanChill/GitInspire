@@ -391,10 +391,13 @@ function FilterMenu({
       <article
         className={`${
           isVisible ? "block" : "hidden"
-        } absolute left-0 top-12 z-10 max-h-[24rem] w-full animate-load-in overflow-y-auto bg-white dark:bg-slate-800`}
+        } absolute left-0 top-12 z-10 max-h-[24.5rem] w-full animate-load-in overflow-y-auto bg-white dark:bg-slate-800`}
       >
         <header className="grid grid-cols-[1fr_3rem] pb-1.5 pl-3 pr-1.5">
-          <div className="min-w-0 pb-3 pt-5 text-xl underline">Filters</div>
+          <div className="flex min-w-0 pb-3 pt-5">
+            <div className="h-full w-6 border-t-4 border-orange-p-600" />
+            <p className="ml-1 text-sm font-bold">Filters</p>
+          </div>
           <div className="align-start flex justify-center border-t-[12px] border-orange-p-600">
             <button
               onClick={() => setIsVisible(false)}
@@ -405,7 +408,7 @@ function FilterMenu({
           </div>
         </header>
 
-        <div className="flex-1 border-l-[12px] border-r-8 border-orange-p-600">
+        <div className="ml-4 flex-1 border-l-8 border-orange-p-600 pr-4 sm:ml-6">
           <div className="px-1">
             <div className="mb-2 flex flex-wrap gap-2">
               <InputGroup label="Min Stars">
@@ -460,21 +463,23 @@ function FilterMenu({
           </div>
         </div>
 
-        <footer className="flex flex-wrap justify-end gap-x-4 py-2 pl-3 pr-4">
-          <button
-            title="Clear Filters"
-            onClick={() => setNewFilter(DEFAULT_FILTER)}
-            className="hover:text-red-p-400"
-          >
-            <CiTrash className="h-6 w-6" />
-          </button>
-          <button
-            title="Update Filters"
-            onClick={updateFilters}
-            className="text-teal-p-600 transition-transform duration-300 hover:translate-x-1 hover:text-teal-p-700"
-          >
-            <CiPaperplane className="h-6 w-6" />
-          </button>
+        <footer className="my-2 ml-3 mr-4 mt-3 border-t-[1px] border-black dark:border-white sm:ml-auto sm:max-w-[25rem]">
+          <div className="ml-auto flex max-w-[8.5rem] items-center justify-end gap-1 border border-t-0 border-black p-1 py-0.5 dark:border-white">
+            <button
+              title="Clear Filters"
+              onClick={() => setNewFilter(DEFAULT_FILTER)}
+              className="hover:text-red-p-400"
+            >
+              <CiTrash className="h-6 w-6" />
+            </button>
+            <button
+              title="Update Filters"
+              onClick={updateFilters}
+              className="text-teal-p-600 transition-transform duration-300 hover:translate-x-1 hover:text-teal-p-700"
+            >
+              <CiPaperplane className="h-6 w-6" />
+            </button>
+          </div>
         </footer>
       </article>
     </>
@@ -575,7 +580,7 @@ function SortMenu({
             <div
               key={opt.value}
               onClick={() => updateSortMethod(opt.value)}
-              className={`p-1 px-2 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 border-l-4 ${
+              className={`border-l-4 p-1 px-2 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 ${
                 selected ? "border-orange-p-600" : "border-transparent"
               }`}
             >
