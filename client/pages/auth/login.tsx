@@ -58,7 +58,7 @@ export default function LoginPage() {
               href={GITHUB_AUTH_URL}
               link={true}
               clr={{
-                bkg: "bg-teal-p-600 hover:bg-teal-p-700",
+                bkg: "bg-teal-p-600 hocus:bg-teal-p-700",
                 txt: "text-white",
               }}
               className="w-full"
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 router.push("/");
               }}
               clr={{ bkg: "", txt: "" }}
-              className="mx-auto animate-[load-in_250ms_ease-in-out_300ms_forwards] text-sm opacity-0 !shadow-none hover:underline"
+              className="mx-auto animate-[load-in_250ms_ease-in-out_300ms_forwards] text-sm opacity-0 !shadow-none hocus:underline"
             >
               Return Home
             </Button>

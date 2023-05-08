@@ -45,13 +45,13 @@ export function SelectionMenuFormOptions({
   className,
 }: SelectionMenuFormOptionsType) {
   return (
-    <ul
+    <div
       className={`mt-7 border-y-2 border-gray-200 dark:border-slate-700 ${className}`}
     >
       {options.map((opt, idx) => (
-        <li
+        <button
           key={idx}
-          className="group flex gap-2 border-b-[1px] border-gray-200 py-4 last:border-0 hover:cursor-pointer dark:border-slate-700"
+          className="group flex w-full gap-2 border-b-[1px] border-gray-200 py-4 last:border-0 dark:border-slate-700"
           onClick={() => selectOption(opt.value)}
         >
           <div
@@ -67,9 +67,9 @@ export function SelectionMenuFormOptions({
             <p className="truncate text-xxs sm:text-xs">{opt.description}</p>
           </div>
 
-          <MdKeyboardArrowRight className="ml-auto shrink-0 self-center text-xl text-gray-300 group-hover:text-gray-400 dark:text-slate-700 group-hover:dark:text-slate-500 sm:text-2xl" />
-        </li>
+          <MdKeyboardArrowRight className="group-hocus:text-gray-400 group-hocus:dark:text-slate-500 ml-auto shrink-0 self-center text-xl text-gray-300 dark:text-slate-700 sm:text-2xl" />
+        </button>
       ))}
-    </ul>
+    </div>
   );
 }

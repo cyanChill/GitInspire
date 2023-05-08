@@ -195,7 +195,7 @@ export default function AdminRepositoriesPage() {
           />
           <button
             type="submit"
-            className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hover:bg-sky-600"
+            className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hocus:bg-sky-600"
           >
             <IoSearch className="text-white" />
           </button>
@@ -228,7 +228,7 @@ export default function AdminRepositoriesPage() {
                     href={selRepo.repo_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="block truncate font-semibold hover:underline"
+                    className="block truncate font-semibold hocus:underline"
                   >
                     {selRepo.author}/{selRepo.repo_name}
                   </a>
@@ -249,7 +249,7 @@ export default function AdminRepositoriesPage() {
               <div className="flex gap-2 overflow-x-auto font-semibold">
                 <button
                   className={
-                    action === "update" ? "underline" : "hover:underline"
+                    action === "update" ? "underline" : "hocus:underline"
                   }
                   disabled={action === "update"}
                   onClick={() => setAction("update")}
@@ -258,7 +258,7 @@ export default function AdminRepositoriesPage() {
                 </button>
                 <button
                   className={
-                    action === "delete" ? "underline" : "hover:underline"
+                    action === "delete" ? "underline" : "hocus:underline"
                   }
                   disabled={action === "delete"}
                   onClick={() => setAction("delete")}
@@ -319,8 +319,8 @@ export default function AdminRepositoriesPage() {
                     type="submit"
                     className={`mt-2 self-end font-semibold text-green-500 active:text-green-900 ${
                       isLoading
-                        ? "hover:cursor-not-allowed"
-                        : "hover:text-green-700 hover:underline"
+                        ? "hocus:cursor-not-allowed"
+                        : "hocus:text-green-700 hocus:underline"
                     }`}
                     disabled={isLoading}
                   >
@@ -337,8 +337,8 @@ export default function AdminRepositoriesPage() {
                 >
                   <button
                     type="submit"
-                    className={`mt-2 self-end font-semibold text-red-500 hover:text-red-700 active:text-red-900 ${
-                      isLoading ? "" : "hover:underline"
+                    className={`mt-2 self-end font-semibold text-red-500 hocus:text-red-700 active:text-red-900 ${
+                      isLoading ? "" : "hocus:underline"
                     }`}
                     disabled={isLoading}
                   >

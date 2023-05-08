@@ -120,7 +120,7 @@ export default function ContributeSubmitForm({
                   href={`https://www.github.com/${author}/${repo_name}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:underline"
+                  className="hocus:underline"
                 >
                   {author}/{repo_name}
                   <FaGithub className="ml-1 inline h-4 w-4" />
@@ -151,10 +151,10 @@ export default function ContributeSubmitForm({
           type="button"
           onClick={submitData}
           disabled={isLoading}
-          className="group flex items-center gap-1 border border-teal-p-600 px-2 py-0.5 text-sm text-teal-p-600 transition-colors hover:border-teal-p-700 hover:text-teal-p-700 hover:underline disabled:opacity-25 dark:hover:border-teal-p-100 dark:hover:text-teal-p-100"
+          className="group flex items-center gap-1 border border-teal-p-600 px-2 py-0.5 text-sm text-teal-p-600 transition-colors hocus:border-teal-p-700 hocus:text-teal-p-700 hocus:underline disabled:opacity-25 dark:hocus:border-teal-p-100 dark:hocus:text-teal-p-100"
         >
           Submit{" "}
-          <CiPaperplane className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1" />
+          <CiPaperplane className="h-6 w-6 transition-transform duration-300 group-hocus:translate-x-1" />
         </button>
       </div>
     </>

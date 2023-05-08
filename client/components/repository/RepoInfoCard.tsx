@@ -97,7 +97,7 @@ export default function RepoInfoCard({
         <div className="min-w-0 pt-6">
           {/* Repository Name */}
           <a
-            className="flex min-w-0 flex-col hover:underline"
+            className="flex min-w-0 flex-col hocus:underline"
             href={repository.repo_link}
             target="_blank"
             rel="noreferrer"
@@ -125,7 +125,7 @@ export default function RepoInfoCard({
         >
           <button
             onClick={handleClose}
-            className="mt-2 h-min text-3xl hover:text-red-500"
+            className="mt-2 h-min text-3xl hocus:text-red-500"
           >
             <RxCross2 />
           </button>
@@ -187,7 +187,7 @@ export default function RepoInfoCard({
                   href={repository.maintain_link}
                   target="_blank"
                   rel="noreferrer"
-                  className="block truncate italic hover:underline"
+                  className="block truncate italic hocus:underline"
                 >
                   {repository.maintain_link}
                 </a>
@@ -201,7 +201,7 @@ export default function RepoInfoCard({
         <FooterGroup testId="RepoInfoCard-suggested_by" label="Suggested By">
           <Link
             href={`/profile/${repository.suggested_by.id}`}
-            className="hover:underline"
+            className="hocus:underline"
           >
             {repository.suggested_by.username}
           </Link>
@@ -217,7 +217,7 @@ export default function RepoInfoCard({
               <button
                 title="Report a Problem"
                 onClick={handleReport}
-                className="hover:text-red-p-400"
+                className="hocus:text-red-p-400"
               >
                 <CiSquareInfo className="h-7 w-7" />
               </button>
@@ -225,7 +225,7 @@ export default function RepoInfoCard({
                 <button
                   title="Suggest Link"
                   onClick={suggestLink}
-                  className="text-red-p-400 hover:text-blood-red"
+                  className="text-red-p-400 hocus:text-blood-red"
                 >
                   <CiRoute className="h-7 w-7" />
                 </button>
@@ -236,7 +236,7 @@ export default function RepoInfoCard({
             title="Refresh Data"
             disabled={!isXDaysOld(repository.last_updated, 1) || isRefreshing}
             onClick={refreshInfo}
-            className="text-teal-p-600 transition-transform duration-700 enabled:hover:rotate-[360deg] enabled:hover:text-teal-p-700 disabled:text-teal-p-700 disabled:opacity-50"
+            className="text-teal-p-600 transition-transform duration-700 enabled:hocus:rotate-[360deg] enabled:hocus:text-teal-p-700 disabled:text-teal-p-700 disabled:opacity-50"
           >
             <CiRedo className="h-7 w-7" />
           </button>

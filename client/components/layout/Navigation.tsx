@@ -80,14 +80,14 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
   /* Classes for icons [Mobile] */
   const mobOnlyActive =
     "translate-y-[-1.5rem] outline outline-zinc-100 dark:outline-slate-900 bg-orange-500 text-white";
-  const mobOnlyHover =
-    "group-hover:translate-y-[-1.5rem] group-hover:outline outline-white group-hover:outline-zinc-100 dark:outline-slate-800 dark:group-hover:outline-slate-900 bg-white group-hover:bg-orange-400 dark:bg-slate-800 text-slate-500 dark:text-zinc-400 group-hover:text-white";
-  const iconMobClass = isActive ? mobOnlyActive : mobOnlyHover;
+  const mobOnlyHocus =
+    "group-hocus:translate-y-[-1.5rem] group-hocus:outline outline-white group-hocus:outline-zinc-100 dark:outline-slate-800 dark:group-hocus:outline-slate-900 bg-white group-hocus:bg-orange-400 dark:bg-slate-800 text-slate-500 dark:text-zinc-400 group-hocus:text-white";
+  const iconMobClass = isActive ? mobOnlyActive : mobOnlyHocus;
 
   /* Classes for icons [Desktop] */
   const iconDeskClass = isActive
     ? "sm:bg-gradient-to-r sm:from-orange-500 sm:to-amber-500 sm:text-white"
-    : "sm:hover:bg-gradient-to-r sm:from-orange-400 sm:to-amber-400 sm:hover:text-white";
+    : "sm:hocus:bg-gradient-to-r sm:from-orange-400 sm:to-amber-400 sm:hocus:text-white";
 
   return (
     <li
@@ -107,7 +107,7 @@ const NavItem = ({ routeInfo, isActive }: NavItemProps) => {
           className={`hidden sm:block ${
             isActive
               ? "text-white"
-              : "text-slate-500 group-hover:text-white dark:text-zinc-400"
+              : "text-slate-500 group-hocus:text-white dark:text-zinc-400"
           }`}
         >
           {icon}

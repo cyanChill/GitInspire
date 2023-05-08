@@ -17,11 +17,11 @@ type ButtonProps = {
 } & (LinkBtnProps | BtnProps);
 
 const DEFAULT_COLORS = {
-  bkg: "bg-gradient-to-r from-amber-500 enabled:hover:from-amber-600 to-orange-500 enabled:hover:to-orange-600 disabled:opacity-25",
+  bkg: "bg-gradient-to-r from-amber-500 enabled:hocus:from-amber-600 to-orange-500 enabled:hocus:to-orange-600 disabled:opacity-25",
   txt: "text-white",
 };
 const DEFAULT_COLORS_LINK = {
-  bkg: "bg-gradient-to-r from-amber-500 hover:from-amber-600 to-orange-500 hover:to-orange-600 disabled:opacity-25",
+  bkg: "bg-gradient-to-r from-amber-500 hocus:from-amber-600 to-orange-500 hocus:to-orange-600 disabled:opacity-25",
   txt: "text-white",
 };
 
@@ -51,11 +51,11 @@ export default function Button({
 }
 
 const DEFAULT_COLORS2 = {
-  bkg: "bg-violet-500 enabled:hover:bg-violet-600 disabled:opacity-25",
+  bkg: "bg-violet-500 enabled:hocus:bg-violet-600 disabled:opacity-25",
   txt: "text-white",
 };
 const DEFAULT_COLORS2_LINK = {
-  bkg: "bg-violet-500 hover:bg-violet-600 disabled:opacity-25",
+  bkg: "bg-violet-500 hocus:bg-violet-600 disabled:opacity-25",
   txt: "text-white",
 };
 
@@ -93,7 +93,7 @@ type TogglePropsType = {
 
 export function ToggleBtn({
   defaultState,
-  accentClr = { bkg: "bg-teal-p-600", ring: "focus:ring-teal-p-600" },
+  accentClr = { bkg: "bg-teal-p-600", ring: "hocus:ring-teal-p-600" },
   onToggle,
   className = "",
 }: TogglePropsType) {
@@ -108,7 +108,7 @@ export function ToggleBtn({
     setIsActive(defaultState);
   }, [defaultState]);
 
-  const btnStyles = `transition-colors h-min w-full max-w-[calc(2.5rem+8px)] rounded-full border-2 border-zinc-100 p-0.5 transition focus:ring dark:border-slate-900 ${
+  const btnStyles = `transition-colors h-min w-full max-w-[calc(2.5rem+8px)] rounded-full border-2 border-zinc-100 p-0.5 transition hocus:ring dark:border-slate-900 ${
     accentClr.ring
   } ${className} ${isActive ? accentClr.bkg : "bg-gray-300"}`;
 

@@ -170,7 +170,7 @@ const RandomRepoForm = () => {
             title="Add Language to Filter"
             disabled={isLoading}
             onClick={addToLang}
-            className="hover:text-teal-p-100"
+            className="hocus:text-teal-p-100"
           >
             <AiOutlinePlus />
           </button>
@@ -211,7 +211,7 @@ const RandomRepoForm = () => {
           title="Clear Filters"
           disabled={isLoading}
           onClick={clearForm}
-          className="hover:text-red-p-400"
+          className="hocus:text-red-p-400"
         >
           <CiTrash className="h-6 w-6" />
         </button>
@@ -219,7 +219,7 @@ const RandomRepoForm = () => {
           title="Search"
           disabled={isLoading}
           onClick={findRepo}
-          className="text-teal-p-600 hover:text-teal-p-700"
+          className="text-teal-p-600 hocus:text-teal-p-700"
         >
           <CiSearch className="h-6 w-6" />
         </button>
@@ -236,7 +236,7 @@ const RandomRepoForm = () => {
             <button
               title="Next Result"
               onClick={newDisplayRepo}
-              className="block my-2 ml-auto text-3xl hover:text-orange-p-600"
+              className="block my-2 ml-auto text-3xl hocus:text-orange-p-600"
             >
               <CiSquareChevRight />
             </button>

@@ -208,9 +208,9 @@ export default function DiscoverPage() {
                   const selected = selectedRepo?.id === repo.id;
 
                   return (
-                    <p
+                    <button
                       key={repo.id}
-                      className={`my-2 truncate border-slate-300 p-1.5 hover:cursor-pointer hover:!border-teal-p-100 not-last:border-b-[1px] dark:border-slate-600 ${
+                      className={`my-2 block w-full truncate border-slate-300 p-1.5 text-start not-last:border-b-[1px] hocus:!border-teal-p-100 dark:border-slate-600 ${
                         selected
                           ? "!border-teal-p-100 shadow-[0px_5px] shadow-teal-p-100"
                           : ""
@@ -218,7 +218,7 @@ export default function DiscoverPage() {
                       onClick={() => setSelectedRepo(repo)}
                     >
                       {repo.author}/{repo.repo_name}
-                    </p>
+                    </button>
                   );
                 })
               ) : isLoading ? (
@@ -401,7 +401,7 @@ function FilterMenu({
           <div className="align-start flex justify-center border-t-[12px] border-orange-p-600">
             <button
               onClick={() => setIsVisible(false)}
-              className="mt-2 h-min text-2xl hover:text-red-500"
+              className="mt-2 h-min text-2xl hocus:text-red-500"
             >
               <RxCross2 />
             </button>
@@ -468,14 +468,14 @@ function FilterMenu({
             <button
               title="Clear Filters"
               onClick={() => setNewFilter(DEFAULT_FILTER)}
-              className="hover:text-red-p-400"
+              className="hocus:text-red-p-400"
             >
               <CiTrash className="h-6 w-6" />
             </button>
             <button
               title="Update Filters"
               onClick={updateFilters}
-              className="text-teal-p-600 transition-transform duration-300 hover:translate-x-1 hover:text-teal-p-700"
+              className="text-teal-p-600 transition-transform duration-300 hocus:translate-x-1 hocus:text-teal-p-700"
             >
               <CiPaperplane className="h-6 w-6" />
             </button>
@@ -558,15 +558,14 @@ function SortMenu({
         disabled ? "touch-none text-gray-400 dark:text-gray-600" : ""
       }`}
     >
-      <div
-        className={`flex shrink-0 items-center ${
-          !disabled ? "hover:cursor-pointer" : ""
-        }`}
-        onClick={() => !disabled && setIsOpen((prev) => !prev)}
+      <button
+        disabled={disabled}
+        className="flex shrink-0 items-center"
+        onClick={() => setIsOpen((prev) => !prev)}
       >
         Sort
         <HiOutlineChevronDown className="mx-1 text-slate-500" />
-      </div>
+      </button>
 
       <div
         className={`${
@@ -577,15 +576,15 @@ function SortMenu({
           const selected = opt.value === currentSortMethod;
 
           return (
-            <div
+            <button
               key={opt.value}
               onClick={() => updateSortMethod(opt.value)}
-              className={`border-l-4 p-1 px-2 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-500 ${
+              className={`block w-full border-l-4 p-1 px-2 hocus:bg-slate-200 dark:hocus:bg-slate-500 ${
                 selected ? "border-orange-p-600" : "border-transparent"
               }`}
             >
               {opt.display}
-            </div>
+            </button>
           );
         })}
       </div>

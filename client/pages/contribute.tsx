@@ -199,11 +199,11 @@ export default function ContributePage() {
             <div className="ml-auto mt-3 border-t-[1px] border-black dark:border-white sm:max-w-[25rem]">
               <div className="ml-auto flex max-w-[8.5rem] items-center justify-end gap-1 border border-t-0 border-black p-1 py-0.5 dark:border-white">
                 <button type="button" onClick={back}>
-                  <CiSquareChevLeft className="h-7 w-7 hover:text-red-p-400" />
+                  <CiSquareChevLeft className="h-7 w-7 hocus:text-red-p-400" />
                 </button>
                 {!isLastStep && (
                   <button type="submit">
-                    <CiSquareChevRight className="h-7 w-7 hover:text-teal-p-600" />
+                    <CiSquareChevRight className="h-7 w-7 hocus:text-teal-p-600" />
                   </button>
                 )}
               </div>
@@ -225,10 +225,10 @@ export default function ContributePage() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="group mt-5 flex items-center gap-1 border border-teal-p-600 px-2 py-0.5 text-sm text-teal-p-600 transition-colors hover:border-teal-p-700 hover:text-teal-p-700 hover:underline dark:hover:border-teal-p-100 dark:hover:text-teal-p-100"
+                className="group mt-5 flex items-center gap-1 border border-teal-p-600 px-2 py-0.5 text-sm text-teal-p-600 transition-colors hocus:border-teal-p-700 hocus:text-teal-p-700 hocus:underline dark:hocus:border-teal-p-100 dark:hocus:text-teal-p-100"
               >
                 Contribute More?{" "}
-                <CiRedo className="h-7 w-7 transition-transform duration-700 group-hover:rotate-[360deg] group-hover:text-teal-p-600" />
+                <CiRedo className="h-7 w-7 transition-transform duration-700 group-hocus:rotate-[360deg] group-hocus:text-teal-p-600" />
               </button>
             )}
           </div>

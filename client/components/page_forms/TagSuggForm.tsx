@@ -60,9 +60,9 @@ export default function TagSuggForm({
                       value={tg.value}
                       checked={tg.value === new_tag_type}
                       onChange={() => updateFields({ new_tag_type: tg.value })}
-                      className="hover:cursor-pointer"
+                      className="hocus:cursor-pointer"
                     />
-                    <label className="ml-2 text-xs hover:cursor-pointer">
+                    <label className="ml-2 text-xs hocus:cursor-pointer">
                       {tg.label}
                     </label>
                     <br />

@@ -157,7 +157,7 @@ export default function AdminReportsPage() {
           <aside className="sticky top-2 mb-2 rounded-md bg-zinc-50 p-2 shadow dark:bg-slate-700">
             {/* Closed State */}
             <div
-              className={`flex hover:cursor-pointer ${
+              className={`flex hocus:cursor-pointer ${
                 menuOpen ? "hidden" : "block"
               }`}
               onClick={() => setMenuOpen(true)}
@@ -174,14 +174,14 @@ export default function AdminReportsPage() {
                   <li
                     key={type}
                     onClick={() => handleTypeSelection(type)}
-                    className="mb-2 last:mb-0 hover:cursor-pointer"
+                    className="mb-2 last:mb-0 hocus:cursor-pointer"
                   >
                     {type[0].toUpperCase() + type.substring(1)}
                   </li>
                 ))}
               </ul>
               <BiX
-                className="text-xl hover:cursor-pointer"
+                className="text-xl hocus:cursor-pointer"
                 onClick={() => setMenuOpen(false)}
               />
             </div>
@@ -218,7 +218,7 @@ export default function AdminReportsPage() {
                           href={redirectLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="hover:cursor-pointer hover:underline"
+                          className="hocus:cursor-pointer hocus:underline"
                         >
                           ({rpt.content_id})
                         </a>
@@ -242,7 +242,7 @@ export default function AdminReportsPage() {
                       href={rpt.maintain_link}
                       target="_blank"
                       rel="noreferrer"
-                      className="hover:underline"
+                      className="hocus:underline"
                     >
                       {rpt.maintain_link}
                     </a>
@@ -260,7 +260,7 @@ export default function AdminReportsPage() {
                     href={`/admin/users?user=${rpt.reported_by.id}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:cursor hover:underline"
+                    className="hocus:cursor hocus:underline"
                   >
                     ({rpt.reported_by.id})
                   </a>
@@ -268,7 +268,7 @@ export default function AdminReportsPage() {
                 {/* Report Actions */}
                 <div className="mt-1 flex items-center gap-4">
                   <button
-                    className="flex items-center text-sm font-bold leading-6 text-green-500 hover:text-green-700 active:text-green-900"
+                    className="flex items-center text-sm font-bold leading-6 text-green-500 hocus:text-green-700 active:text-green-900"
                     onClick={() => handleReportAction(rpt.id, "resolve")}
                   >
                     <TbClipboardCheck />
@@ -276,7 +276,7 @@ export default function AdminReportsPage() {
                   </button>
                   <span>/</span>
                   <button
-                    className="flex items-center text-sm font-bold leading-6 text-rose-500 hover:text-rose-700 active:text-rose-900"
+                    className="flex items-center text-sm font-bold leading-6 text-rose-500 hocus:text-rose-700 active:text-rose-900"
                     onClick={() => handleReportAction(rpt.id, "dismiss")}
                   >
                     Dismiss

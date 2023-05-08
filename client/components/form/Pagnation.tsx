@@ -68,14 +68,15 @@ export default function Pagnation({
 
   return (
     <div className="flex w-full items-center justify-center border-t-2 border-gray-300 dark:border-gray-600">
-      <MdKeyboardArrowLeft
+      <button
+        disabled={currPg === 1}
         onClick={() => (currPg > 1 ? onPgChange(currPg - 1) : null)}
         className={`flex shrink-0 items-center ${
-          currPg === 1
-            ? "text-gray-400 hover:cursor-not-allowed dark:text-gray-600"
-            : "hover:cursor-pointer"
+          currPg === 1 ? "text-gray-400 dark:text-gray-600" : ""
         }`}
-      />
+      >
+        <MdKeyboardArrowLeft />
+      </button>
       {pagnationRage?.map((item, idx) => {
         if (typeof item === "string") {
           return <HiOutlineDotsHorizontal key={idx} className="shrink-0" />;
@@ -90,14 +91,15 @@ export default function Pagnation({
           );
         }
       })}
-      <MdKeyboardArrowRight
+      <button
+        disabled={currPg === maxPg}
         onClick={() => (currPg < maxPg ? onPgChange(currPg + 1) : null)}
         className={`flex shrink-0 items-center ${
-          currPg === maxPg
-            ? "text-gray-400 hover:cursor-not-allowed dark:text-gray-600"
-            : "hover:cursor-pointer"
+          currPg === maxPg ? "text-gray-400 dark:text-gray-600" : ""
         }`}
-      />
+      >
+        <MdKeyboardArrowRight />
+      </button>
     </div>
   );
 }
@@ -113,10 +115,8 @@ function PagnationButton({ onClick, current, pg }: PagnationButtonPropTypes) {
     <button
       onClick={onClick}
       disabled={current}
-      className={`relative h-min w-min p-1 px-3 after:absolute after:top-0 after:left-0 after:h-0.5 after:w-full after:translate-y-[-2px] ${
-        !current
-          ? "hover:cursor-pointer"
-          : "after:bg-violet-500 hover:cursor-not-allowed"
+      className={`relative h-min w-min p-1 px-3 after:absolute after:left-0 after:top-0 after:h-0.5 after:w-full after:translate-y-[-2px] ${
+        current ? "after:bg-violet-500" : ""
       }`}
     >
       {pg}

@@ -17,14 +17,14 @@ export default function BriefWidget({
       href={data.html_url}
       className={`${
         fixedDim ? "h-[140px] sm:h-[92px]" : ""
-      } group my-1 flex flex-col rounded-lg bg-slate-100 p-2.5 shadow-md shadow-slate-300 hover:cursor-pointer dark:bg-slate-700 dark:shadow-slate-900 sm:flex-row`}
+      } group my-1 flex flex-col rounded-lg bg-slate-100 p-2.5 shadow-md shadow-slate-300 hocus:cursor-pointer dark:bg-slate-700 dark:shadow-slate-900 sm:flex-row`}
       rel="noreferrer"
     >
       <div className="mb-1 flex-1 sm:min-w-0">
         <p
           className={`${
             fixedDim ? "truncate" : ""
-          } text-sm font-semibold group-hover:underline`}
+          } text-sm font-semibold group-hocus:underline`}
         >
           {data.full_name}
         </p>

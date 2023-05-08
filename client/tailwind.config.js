@@ -75,6 +75,7 @@ module.exports = {
     plugin(function ({ addVariant }) {
       addVariant("not-last", "&:not(:last-child)");
       addVariant("has-clip", '&:has(div[data-overflow="clip"])');
+      addVariant("hocus", ["&:hover", "&:focus"]);
     }),
   ],
 };

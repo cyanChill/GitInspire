@@ -125,7 +125,7 @@ export default function AdminLogsPage() {
                         href={link}
                         target="_blank"
                         rel="noreferrer"
-                        className="hover:underline"
+                        className="hocus:underline"
                       >
                         {log.content_id}
                       </a>
@@ -148,7 +148,7 @@ export default function AdminLogsPage() {
                           href={`/profile/${log.enacted_by.id}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="hover:underline"
+                          className="hocus:underline"
                         >
                           {log.enacted_by.username}
                         </a>

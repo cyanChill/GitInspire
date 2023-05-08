@@ -48,7 +48,7 @@ export default function MiscPage() {
               </div>
               <Link
                 href="/report"
-                className="block w-full self-center rounded-md bg-red-600 p-2 text-xs text-white hover:bg-red-700"
+                className="block w-full self-center rounded-md bg-red-600 p-2 text-xs text-white hocus:bg-red-700"
               >
                 Report
               </Link>
@@ -63,7 +63,7 @@ export default function MiscPage() {
               </div>
               <Button2
                 onClick={logout}
-                clr={{ bkg: "bg-red-600 hover:bg-red-700", txt: "text-white" }}
+                clr={{ bkg: "bg-red-600 hocus:bg-red-700", txt: "text-white" }}
                 className="w-full self-center !rounded-md !p-2 text-xs"
               >
                 Logout

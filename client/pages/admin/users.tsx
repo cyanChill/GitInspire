@@ -163,14 +163,14 @@ export default function AdminUsersPage() {
         {/* Tabs Options */}
         <div className="flex gap-2 overflow-x-auto font-semibold">
           <button
-            className={tab === "update" ? "underline" : "hover:underline"}
+            className={tab === "update" ? "underline" : "hocus:underline"}
             disabled={tab === "update"}
             onClick={() => setTab("update")}
           >
             Update
           </button>
           <button
-            className={tab === "list" ? "underline" : "hover:underline"}
+            className={tab === "list" ? "underline" : "hocus:underline"}
             disabled={tab === "list"}
             onClick={() => setTab("list")}
           >
@@ -198,7 +198,7 @@ export default function AdminUsersPage() {
               />
               <button
                 type="submit"
-                className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hover:bg-sky-600"
+                className="align-center rounded-r-md bg-sky-500 p-1.5 px-3 hocus:bg-sky-600"
               >
                 <IoSearch className="text-white" />
               </button>
@@ -233,7 +233,7 @@ export default function AdminUsersPage() {
                       name="account_status"
                       defaultValue={selUser.account_status}
                       required
-                      className="w-full rounded-md bg-zinc-50 p-1.5 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 hover:cursor-pointer dark:bg-slate-700 dark:shadow-slate-600"
+                      className="w-full rounded-md bg-zinc-50 p-1.5 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.5)] shadow-slate-400 hocus:cursor-pointer dark:bg-slate-700 dark:shadow-slate-600"
                     >
                       <option value="user">User</option>
                       <option value="banned">Banned</option>
@@ -255,8 +255,8 @@ export default function AdminUsersPage() {
                     type="submit"
                     className={`mt-2 self-end font-semibold text-green-500 active:text-green-900 ${
                       isLoading
-                        ? "hover:cursor-not-allowed"
-                        : "hover:text-green-700 hover:underline"
+                        ? "hocus:cursor-not-allowed"
+                        : "hocus:text-green-700 hocus:underline"
                     }`}
                     disabled={isLoading}
                   >

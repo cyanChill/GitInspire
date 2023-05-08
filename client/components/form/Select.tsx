@@ -104,7 +104,7 @@ export default function Select({
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
       onKeyDown={handleKeyAction}
-      className={`relative flex min-h-[2rem] items-center justify-between gap-x-1 p-1 ${baseClasses} border-b-[1px] border-slate-400 hover:cursor-pointer`}
+      className={`relative flex min-h-[2rem] items-center justify-between gap-x-1 p-1 ${baseClasses} border-b-[1px] border-slate-400 hocus:cursor-pointer`}
     >
       {/* Displaying selected items */}
       <span className="flex flex-wrap gap-2 overflow-hidden">
@@ -120,10 +120,10 @@ export default function Select({
                 e.stopPropagation();
                 selOption(v);
               }}
-              className="group inline-flex items-center gap-2 truncate rounded-md bg-slate-200 p-2 py-0.5 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500"
+              className="group inline-flex items-center gap-2 truncate rounded-md bg-slate-200 p-2 py-0.5 hocus:bg-slate-300 dark:bg-slate-600 dark:hocus:bg-slate-500"
             >
               <span className="truncate">{v.label}</span>
-              <FiX className="shrink-0 group-hover:text-red-500 group-focus:text-red-500" />
+              <FiX className="shrink-0 group-hocus:text-red-500 group-hocus:text-red-500" />
             </button>
           ))
         )}
@@ -139,7 +139,7 @@ export default function Select({
           }}
           className={`${
             (multiple ? value.length === 0 : !value) ? "hidden" : ""
-          } hover:text-red-500 focus:text-red-500`}
+          } hocus:text-red-500 hocus:text-red-500`}
         >
           <FiX />
         </button>

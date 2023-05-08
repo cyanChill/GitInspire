@@ -133,7 +133,7 @@ export default function UserProfilePage() {
               href={`https://github.com/${user?.username}`}
               target="_blank"
               rel="noreferrer"
-              className="flex min-w-0 items-center gap-2 self-end text-xl font-semibold hover:underline min-[400px]:text-3xl"
+              className="flex min-w-0 items-center gap-2 self-end text-xl font-semibold hocus:underline min-[400px]:text-3xl"
             >
               <span className="truncate">{user?.username}</span>
               <FaGithub className="shrink-0" />
@@ -182,7 +182,7 @@ export default function UserProfilePage() {
                   <Link
                     key={repo.id}
                     href={`/repository/${repo.id}`}
-                    className={`my-1 truncate rounded-md border-[1px] border-slate-300 p-1.5 hover:cursor-pointer hover:bg-slate-200 hover:underline dark:border-slate-600 dark:hover:bg-slate-600`}
+                    className={`my-1 truncate rounded-md border-[1px] border-slate-300 p-1.5 hocus:cursor-pointer hocus:bg-slate-200 hocus:underline dark:border-slate-600 dark:hocus:bg-slate-600`}
                   >
                     {repo.author}/{repo.repo_name}
                   </Link>
@@ -202,7 +202,7 @@ export default function UserProfilePage() {
             <div className="flex flex-wrap justify-end gap-3 px-2 text-sm">
               {isAuthenticated && (
                 <button
-                  className="text-slate-500 hover:underline dark:text-gray-50"
+                  className="text-slate-500 hocus:underline dark:text-gray-50"
                   onClick={handleReport}
                 >
                   Report a Problem
@@ -212,7 +212,7 @@ export default function UserProfilePage() {
               <Button
                 className="my-0 w-max"
                 clr={{
-                  bkg: "bg-teal-p-600 enabled:hover:bg-teal-p-700 disabled:opacity-25",
+                  bkg: "bg-teal-p-600 enabled:hocus:bg-teal-p-700 disabled:opacity-25",
                   txt: "text-white",
                 }}
                 onClick={refreshInfo}
@@ -239,22 +239,22 @@ function ProfileAccordion({ amount, variant, children }: ProfileAccordionType) {
 
   return (
     <div className="my-4 rounded-md bg-white dark:bg-slate-800">
-      <p
-        className="p-2 text-sm hover:cursor-pointer"
+      <button
+        className="block w-full p-2 text-sm text-start"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <span className="rounded-md bg-neutral-100 p-1 font-semibold dark:bg-slate-900">
           {amount}
         </span>{" "}
         {variant}
-      </p>
+      </button>
       <div
         className={`grid text-xs transition-[grid-template-rows] duration-300 ${
           isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
         <div className="overflow-hidden px-2">
-          <div className="my-2">{children}</div>
+          <div className={`my-2 ${isOpen ? "visible" : "invisible"}`}>{children}</div>
         </div>
       </div>
     </div>
