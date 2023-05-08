@@ -62,6 +62,9 @@ export default function Select({
   );
 
   const handleKeyAction = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // ALlow clicking "Tab" to work as expected for accessibility
+    if (e.code === "Tab") return;
+
     e.preventDefault();
     // Open list when in focused
     if (["Enter", "Space"].includes(e.code)) {
