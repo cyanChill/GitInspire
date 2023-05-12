@@ -22,3 +22,27 @@ To run the frontend code (in development mode), run `npm run dev` while in the `
 ## Testing
 
 To run tests associated with the frontent, run `npm test` while in the `client` directory.
+
+## Routes
+
+|        Route        |                                      Description                                      |   Auth Required?   |
+| :-----------------: | :-----------------------------------------------------------------------------------: | :----------------: |
+|         `/`         |                          Home page with random repo search.                           |        :x:         |
+|    `/auth/login`    |      The login page (user can only view this page if they're not authenticated).      | `User w/out Auth`  |
+|     `/discover`     |             Route to search our database of user-suggested repositories.              |        :x:         |
+|    `/contribute`    | Form to either contribute a tag or suggest a repository (has additional constraints). | :white_check_mark: |
+|  `/profile/[:id]`   |                         View the profile of a specific user.                          |        :x:         |
+| `/repository/[:id]` |                              View a specific repository.                              |        :x:         |
+|      `/report`      |                        A form to report or suggest something.                         | :white_check_mark: |
+|       `/misc`       |                                  The settings page.                                   |        :x:         |
+
+### Admin Routes
+
+|         Route         |                              Description                               |
+| :-------------------: | :--------------------------------------------------------------------: |
+|       `/admin`        |             Page with links to the other management pages.             |
+|     `/admin/logs`     | Page displaying some logs of admin actions or automatic server action. |
+|   `/admin/reports`    |                Page displaying a list of user reports.                 |
+| `/admin/repositories` |           Page to manage repostories (ie: update & delete).            |
+|     `/admin/tags`     |               Page to manage tags (ie: update & delete).               |
+|    `/admin/users`     |                   Page to manage users (ie: update).                   |
