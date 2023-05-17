@@ -109,7 +109,7 @@ For this project, you're required to have `npm` and `pip` installed.
 1. Create a free GitHub OAuth App at [https://github.com/settings/developers](https://github.com/settings/developers)
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/cyanChill/GitInspire.git
    ```
 3. Follow the associated install instructions from `backend` & `client` folders.
 
