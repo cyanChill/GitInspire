@@ -242,7 +242,7 @@ Distributed under the MIT License. See `license.md` for more information.
 [client-tests-url]: https://github.com/cyanChill/GitInspire/actions/workflows/test_deploy_frontend.yml
 [Flask]: https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white
 [Flask-url]: https://flask.palletsprojects.com/en/
-[license-shield]: https://badgen.net/github/license/cyanChill/GitInspire
+[license-shield]: https://img.shields.io/github/license/cyanchill/gitinspire
 [license-url]: https://github.com/cyanChill/GitInspire/blob/main/license.md
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
