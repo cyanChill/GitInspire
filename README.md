@@ -91,9 +91,6 @@ GitInspire aims to help developers to come up with ideas more easily by providin
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
 
 For this project, you're required to have `npm` and `pip` installed.
@@ -108,8 +105,6 @@ For this project, you're required to have `npm` and `pip` installed.
   ```
 
 ### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
 1. Create a free GitHub OAuth App at [https://github.com/settings/developers](https://github.com/settings/developers)
 2. Clone the repo
