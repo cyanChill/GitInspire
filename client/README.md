@@ -1,5 +1,47 @@
-# GitInspire [Client]
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
 
+
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/cyanChill/GitInspire">
+    <img src="public/assets/gitinspire.svg" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">GitInspire [Client]</h3>
+
+  <p align="center">
+    A platform to discover new repositories and bring life back to abandoned ones.
+    <br />
+    <a href="https://github.com/cyanChill/GitInspire"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://gitinspire.vercel.app/">View Demo</a>
+    ·
+    <a href="https://github.com/cyanChill/GitInspire/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/cyanChill/GitInspire/issues">Request Feature</a>
+  </p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#setup">Setup</a></li>
+    <li><a href="#running-the-frontend">Running the Frontend</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#routes">Routes</a></li>
+  </ol>
+</details>
+
+
+
+<!-- SETUP -->
 ## Setup
 
 For this project, we require a `.env.local` file to store our environment variables in the `client` folder. The variables that should be included are the following:
@@ -12,6 +54,11 @@ For this project, we require a `.env.local` file to store our environment variab
 | `NEXT_PUBLIC_DOMAIN`          | This refers to the site where we'll host the frontend for SEO (Search Engine Optimization) purposes.                                                                                                                                                                                                                                                                                                                           |
 | `NEXT_PUBLIC_BACKEND_URL`     | This refers to the URL where our backend is located (ie: `http://localhost:5000`).                                                                                                                                                                                                                                                                                                                                             |
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- RUNNING THE FRONTEND -->
 ## Running the Frontend
 
 To run the frontend code (in development mode), run `npm run dev` while in the `client` directory.
@@ -19,10 +66,20 @@ To run the frontend code (in development mode), run `npm run dev` while in the `
 - For production, you need to build the code using `npm run build` and then do `npm run start` to run off that build.
 - A suggestion for hosting this frontend application is [Vercel](https://vercel.com/).
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- TESTING -->
 ## Testing
 
 To run tests associated with the frontent, run `npm test` while in the `client` directory.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ROUTES -->
 ## Routes
 
 |        Route        |                                      Description                                      |   Auth Required?   |
@@ -46,3 +103,5 @@ To run tests associated with the frontent, run `npm test` while in the `client` 
 | `/admin/repositories` |           Page to manage repostories (ie: update & delete).            |
 |     `/admin/tags`     |               Page to manage tags (ie: update & delete).               |
 |    `/admin/users`     |                   Page to manage users (ie: update).                   |
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
