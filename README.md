@@ -86,6 +86,8 @@ GitInspire aims to help developers to come up with ideas more easily by providin
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+https://github.com/cyanChill/GitInspire/assets/83375816/7ed30eea-77ee-43b5-9a2f-4a62a6f6f113
+
 
 
 <!-- GETTING STARTED -->
