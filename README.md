@@ -2,6 +2,22 @@
 <a name="readme-top"></a>
 
 
+<pre>
+  <code>
+    View the latest implementation of this application at <a href="https://github.com/cyanChill/RepoSift">RepoSift</a> which is built entirely in Next.js.
+  </code>
+</pre>
+
+
+I've updated this project through <a href="https://github.com/cyanChill/RepoSift">RepoSift</a> due to the challenges hosting GitInspire in its current form.
+  - As it's written in Python using Flask, free hosting options leads the experience using GitInspire to be subpar due to the cold-starts.
+  - Another issue is with my choice in the database provider, in which I have used Render's free PostgreSQL instance, which expires after 90 days.
+
+
+<hr />
+<br />
+<br />
+
 
 <!-- PROJECT SHIELDS -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -26,8 +42,6 @@
     <a href="https://github.com/cyanChill/GitInspire"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://gitinspire.vercel.app/">View Demo</a>
-    ·
     <a href="https://github.com/cyanChill/GitInspire/issues">Report Bug</a>
     ·
     <a href="https://github.com/cyanChill/GitInspire/issues">Request Feature</a>
