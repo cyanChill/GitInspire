@@ -1,17 +1,13 @@
+> **Note**
+> View the latest implementation of this application at <a href="https://github.com/cyanChill/RepoSift">RepoSift</a> which is built entirely in Next.js.
+>
+> I've updated this project through <a href="https://github.com/cyanChill/RepoSift">RepoSift</a> due to the challenges hosting GitInspire in its current form.
+>   - As it's written in Python using Flask, free hosting options leads the experience using GitInspire to be subpar due to the cold-starts.
+>   - Another issue is with my choice in the database provider, in which I have used Render's free PostgreSQL instance, which expires after 90 days.
+
+
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-
-
-<pre>
-  <code>
-    View the latest implementation of this application at <a href="https://github.com/cyanChill/RepoSift">RepoSift</a> which is built entirely in Next.js.
-  </code>
-</pre>
-
-
-I've updated this project through <a href="https://github.com/cyanChill/RepoSift">RepoSift</a> due to the challenges hosting GitInspire in its current form.
-  - As it's written in Python using Flask, free hosting options leads the experience using GitInspire to be subpar due to the cold-starts.
-  - Another issue is with my choice in the database provider, in which I have used Render's free PostgreSQL instance, which expires after 90 days.
 
 
 <hr />
