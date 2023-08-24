@@ -18,8 +18,6 @@
     <a href="https://github.com/cyanChill/GitInspire"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://gitinspire.vercel.app/">View Demo</a>
-    ·
     <a href="https://github.com/cyanChill/GitInspire/issues">Report Bug</a>
     ·
     <a href="https://github.com/cyanChill/GitInspire/issues">Request Feature</a>
