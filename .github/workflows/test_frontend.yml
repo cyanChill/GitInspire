@@ -27,11 +27,15 @@ jobs:
     name: Node.js ${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm ci and test
+          cache: "pnpm"
+      - name: pnpm i and test
         run: |
-          npm ci
-          npm test
+          pnpm i --frozen-lockfile
+          pnpm test

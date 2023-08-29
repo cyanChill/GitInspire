@@ -107,12 +107,9 @@ https://github.com/cyanChill/GitInspire/assets/83375816/7ed30eea-77ee-43b5-9a2f-
 
 ### Prerequisites
 
-For this project, you're required to have `npm` and `pip` installed.
+For this project, you're required to have `pnpm` and `pip` installed.
 
-- npm
-  ```sh
-  npm install npm@latest -g
-  ```
+- You can find out how to install `pnpm` at: https://pnpm.io/installation.
 - pip
   ```sh
   python -m pip install --upgrade pip
