@@ -1,6 +1,6 @@
 from flask import Blueprint, g, jsonify, request, current_app as app
 from flask_jwt_extended import jwt_required
-from sqlalchemy import delete, update
+from sqlalchemy import delete, update, text
 import requests
 from math import ceil
 import traceback
@@ -313,7 +313,9 @@ def refresh_repository(repoId):
         )
         try:
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                )
             )
         except:
             pass
@@ -495,7 +497,9 @@ def update_repository(repoId):
         )
         try:
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                )
             )
         except:
             pass
@@ -543,7 +547,9 @@ def delete_repository(repoId):
         )
         try:
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                )
             )
         except:
             pass

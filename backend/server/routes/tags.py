@@ -1,6 +1,6 @@
 from flask import Blueprint, g, jsonify, request
 from flask_jwt_extended import jwt_required
-from sqlalchemy import update, delete
+from sqlalchemy import update, delete, text
 import traceback
 
 from server.db import db
@@ -173,7 +173,9 @@ def update_tag():
             # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id for Postgresql Database)
             #   - Ref: https://stackoverflow.com/a/37972960
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                )
             )
         except:
             pass
@@ -263,8 +265,11 @@ def delete_tag():
         try:
             # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id for Postgresql Database)
             #   - Ref: https://stackoverflow.com/a/37972960
+            # SQLAlchemy 2.0 requires using "text()" inside an "execute()"
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                )
             )
         except:
             pass

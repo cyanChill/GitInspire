@@ -1,6 +1,6 @@
 from flask import Blueprint, g, jsonify, request
 from flask_jwt_extended import jwt_required
-from sqlalchemy import delete
+from sqlalchemy import delete, text
 import traceback
 
 from server.db import db
@@ -83,8 +83,11 @@ def create_report():
         try:
             # Make sure ids sequence value is correct (help prevent creating record w/ duplicate id for Postgresql Database)
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('reports', 'id'), coalesce(max(id)+1, 1), false) FROM reports"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('reports', 'id'), coalesce(max(id)+1, 1), false) FROM reports"
+                )
             )
+            db.session.commit()
         except:
             pass
         # Add the Report to the database and commit the transaction.

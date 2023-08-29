@@ -1,5 +1,5 @@
 from flask import Blueprint, g, jsonify, request, current_app as app
-from sqlalchemy import update
+from sqlalchemy import update, text
 import requests
 import traceback
 
@@ -209,7 +209,9 @@ def update_user(userId):
         )
         try:
             db.session.execute(
-                "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                text(
+                    "SELECT setval(pg_get_serial_sequence('logs', 'id'), coalesce(max(id)+1, 1), false) FROM logs"
+                )
             )
         except:
             pass
