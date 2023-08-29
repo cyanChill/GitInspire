@@ -8,7 +8,8 @@ on:
       - README.md
       - client/** # Should only run on backend changes
       - .gitignore
-  
+  workflow_dispatch:
+
 jobs:
   test:
     runs-on: ubuntu-latest
