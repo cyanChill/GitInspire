@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { Source_Code_Pro } from "@next/font/google";
+import { Source_Code_Pro } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "react-hot-toast";
 
